@@ -6,5 +6,5 @@
  * and open the template in the editor.
  */
 echo "Bonjour<br/>";
-echo "test";
+echo "test aujourd'hui";
 ?>
