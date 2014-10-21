@@ -1,0 +1,57 @@
+{#% render "AppBundle:App:checkAuth" %#}
+{% extends 'AppBundle::page.html.twig' %}
+
+{% block titre %}Bienvenue sur {{app_name}} {% endblock %}
+{% block body %}
+{#{ app.session.flashbag.set('page_flash',[{ message: "MESSAGE STATIQUE issue de 'index.html.twig'...", type : "info" , start:false, stop:false}]) }#}
+
+{%set feminin=((app.session.get("supannCivilite","")=="Mme")?1:0) %}
+{%set colPromo=(((app.session.get('doublant')==true or app.session.get('population')==2))?"red":"green") %}  {# DOUBLANT #}
+<p class="block block-views ">{{app_welcome}}</p>
+
+ <!--[if lte IE 8]> 
+ <br>
+ <div class="ui-state-error ui-corner-all" style="padding:15px;">
+  <img src="{{ asset('bundles/app/images/ico/48/terre.png') }}" align="absmiddle" />&nbsp;
+   Attention votre navigateur semble être obsolète et risque donc de poser des problèmes de compatibilité...</br>
+   Pour plus de sécurité veuillez vous connecter avec Mozilia FireFox...</br>
+   ou du moins avec une version d'Internet Explorer de 9.0 ou plus récente (version 11 conseillée)
+ </div>
+ <br>
+ <![endif]-->
+ 
+<center>
+  <div class="ui-corner-all ui-state-active TabInfos" style="padding: 10px;color: gray; max-width: 70%;">
+    </br><img src= "{{ asset('bundles/app/images/ico/32/'~((feminin==1)?"woman":"men")~'.png') }}" align="absmiddle" />&nbsp;{{ app.session.get('displayName') }} ({{app.session.get('amuMail')}})</br>
+    {%if (app.security.token.authenticated==true) and is_granted("ROLE_AUTHENTIFIED") and  is_expr_granted("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")  %}
+      </br><img src= "{{ asset('bundles/app/images/ico/32/admin.png') }}" align="absmiddle" />&nbsp;Vous &ecirc;tes Administrateur de l'applications...
+    {%elseif (app.security.token.authenticated==true) and is_granted("ROLE_AUTHENTIFIED") and  is_granted("ROLE_MANAGER")  %}
+      </br><img src= "{{ asset('bundles/app/images/ico/32/manager.png') }}" align="absmiddle" />&nbsp;Vous &ecirc;tes un "Manager" de l'applications...
+    {%elseif (app.security.token.authenticated==true) and is_granted("ROLE_AUTHENTIFIED") and  is_granted("ROLE_VIEWER")  %}
+      </br><img src= "{{ asset('bundles/app/images/ico/32/users.png') }}" align="absmiddle" /><img src= "{{ asset('bundles/app/images/ico/32/view-page.png') }}" align="absmiddle" />&nbsp;Vous avez le droit de "Visualiser" certaines informations de l'applications...
+      {%if  is_granted("ROLE_MODIFIER") %}
+        </br><img src= "{{ asset('bundles/app/images/ico/32/users.png') }}" align="absmiddle" /><img src= "{{ asset('bundles/app/images/ico/32/modif.png') }}" align="absmiddle" />&nbsp;Vous avez aussi le droit de "Modifier" certaines informations de l'applications...
+      {%endif%}
+    {%elseif (app.security.token.authenticated==true) and is_granted("ROLE_AUTHENTIFIED") and  is_granted("ROLE_MODIFIER")  %}
+      </br><img src= "{{ asset('bundles/app/images/ico/32/user.png') }}" align="absmiddle" /><img src= "{{ asset('bundles/app/images/ico/32/modif.png') }}" align="absmiddle" />&nbsp;Vous avez le droit de "Modifier" certaines informations de l'applications...
+    {%elseif (app.security.token.authenticated==true) and is_granted("ROLE_AUTHENTIFIED") and  is_granted("ROLE_STUDENT_MED")  %}
+      </br>&nbsp;&nbsp;<img src= "{{ asset('bundles/app/images/ico/16/valid.png') }}" align="absmiddle" />&nbsp;Vous avez bien &eacute;t&eacute; reconnu{{ (feminin==1)?"e":""}} comme un{{ (feminin==1)?"e":""}} <font color=green>&eacute;tudiant{{ (feminin==1)?"e":""}} de M&eacute;decine</font>...
+      </br>&nbsp;&nbsp;<img src= "{{ asset('bundles/app/images/ico/16/valid.png') }}" align="absmiddle" />&nbsp;Vous faite partie de la promotion "<font color={{colPromo}}>{{ app.session.get('promotionLib') }}</font>" sur la campagne "<font color={{colPromo}}>{{ app.session.get('etuYear')}}</font>". 
+    {%if (app.session.get('promotion')==5) or (app.session.get('promotion')==25) %}
+      </br>&nbsp;&nbsp;<img src="{{ asset("bundles/app/images/ico/16/color-launchpad.png")}}" align="absmiddle" />&nbsp;<font color=red>le choix du Groupes Fili&egrave;res est d&eacute;sactiv&eacute;</font>.
+      </br>&nbsp;&nbsp;<img src="{{ asset("bundles/app/images/ico/16/valid.png")}}" align="absmiddle" />&nbsp;<u>TOUS les services de la promotion D4</u> vous seront proposés.
+   {%endif%}
+
+      </br><br>Pour continuer veuillez acc&eacute;der au Menu "Voeux" ci-dessus...
+    {%endif%}
+  </div>
+</center>
+<br>
+
+{%if (app.security.token.authenticated==true) and is_granted("ROLE_AUTHENTIFIED") and  is_expr_granted("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN','ROLE_MANAGER')")  %}
+  <span class="ui-state-default ui-corner-all" ><small><a class="ui-button jqtip" onclick="this.blur();"  target="_blank" href="http://projets-dev.univ-amu.fr/projects/gestion-stage-medecien/wiki" style="padding:2px;"  title="<small>Cliquez ici pour afficher l'aide au param&egrave;trage de l'application...</small>" ><img src="{{ asset('bundles/app/images/ico/32/help-book.png') }}" align="absmiddle" />&nbsp;Afficher les s&eacute;narios...</a></small></span>
+{%endif%}
+<br><span class="ui-state-default ui-corner-all" ><small><a class="ui-button jqtip" onclick="this.blur();"  target="_blank" href="../pdf/Acces_etudiants_-_Saisi_des_voeux.pdf" style="padding:2px;"  title="<small>Cliquez ici pour afficher l'aide de l'application...</small>" ><img src="{{ asset('bundles/app/images/ico/32/pdf.png') }}" align="absmiddle" />&nbsp;Manuel d'aide...</a></small></span>
+<br><span class="ui-state-default ui-corner-all" ><small><a class="ui-button jqtip" onclick="this.blur();"  target="_blank" href="../help/AccesEtudiants.html" style="padding:2px;"  title="<small>Cliquez ici pour afficher l'aide de l'application...</small>" ><img src="{{ asset('bundles/app/images/ico/32/help-book.png') }}" align="absmiddle" />&nbsp;Aide en ligne...</a></small></span>
+
+{% endblock %}

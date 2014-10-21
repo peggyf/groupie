@@ -1,0 +1,24 @@
+{%set icoActions={
+    'delete':'bundles/app/images/ico/16/trash.png',
+    'edit':'bundles/app/images/ico/16/modif.png',
+    'new':'bundles/app/images/ico/16/add.png', 
+    'show':'bundles/app/images/ico/16/view-page.png', 
+    'update':'bundles/app/images/ico/16/valid.png',
+    'create':'bundles/app/images/ico/16/add-blue.png',
+    'cancel':'bundles/app/images/ico/16/cancel.png',
+    'back':'bundles/app/images/ico/16/back.png'
+}
+ %}
+{%set icoTips={
+    'delete':'Supprimer...',
+    'edit':'Modifier...',
+    'new':'Ajouter...', 
+    'show':'Visualiser...', 
+    'update':'Valider...',
+    'create':'Ajouter...' 
+}
+ %}
+
+{%- for action in record_actions %}
+{{ "&nbsp;&nbsp;" }}<img class="jqtip ui-button" align="absmiddle" src="{{ '{{asset("'~icoActions[action]~'")}}' }}" title="<small>{{icoTips[action]}}</small>" class="ui-button" onclick='{{ action=='delete'?"if(confirm('&Ecirc;tes-vous certain de vouloir supprimer cette Campagne ?'))":"" }}loadPage("{{ "{{ path('"~ route_name_prefix ~"_"~ action ~"', { 'id': entity.id }) }}" }}");' />
+{%- endfor %}

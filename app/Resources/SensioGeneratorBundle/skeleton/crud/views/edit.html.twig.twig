@@ -1,0 +1,46 @@
+{% block extends %}
+{{"{% extends 'AppBundle::page.html.twig' %}"}}
+{% endblock extends %}
+{% block body %}
+{{ "{% block titre %}Modification d'un/d'une "~ entity ~"{% endblock %}" }}
+{{ "{% block body %}" }}
+
+{{ "{% if app.session.has('_saved') and app.session.get('_saved',0)==1 %}" }}
+{{ "{{ app.session.remove('_saved') }}" }}
+<script language="JavaScript" type="text/javascript">
+$(function() {
+  loadPage('{{ "{{ path('"~ route_name_prefix ~"') }}" }}');
+});
+</script>
+{{ "{% else %}" }}
+
+    {#{ '{{ form(edit_form) }}' }#}
+
+<form class="amuForms" id="_ajxFromModifier" {#action="{{ "{{ path('"~ route_name_prefix ~"_update', { 'id': entity.id }) }}" }}" method="post" {{ "{{ form_enctype(edit_form) }}" }}#}>
+  {{ "{{ form_widget(edit_form) }}" }}
+  <br>
+  <p>
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ "{{ path('"~ route_name_prefix ~"') }}" }}');" ><img align="absmiddle" src="{{ "{{asset('bundles/app/images/ico/16/cancel.png')}}" }}" />&nbsp;Annuler&nbsp;</button>
+    &nbsp;&nbsp;<button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ "{{ path('"~ route_name_prefix ~"_update', { 'id': entity.id }) }}"}}',$('#_ajxFromModifier').serializeArray());" ><img align="absmiddle" src="{{ "{{asset('bundles/app/images/ico/16/valid.png')}}" }}" />&nbsp;Valider&nbsp;</button>
+    {#% set hide_edit, hide_delete = true, false %#}
+    {% set hide_edit, hide_delete, hide_cancel, hide_back = true, true, true, true %}
+    {% include 'crud/views/others/record_actions.html.twig.twig' %}
+  </p>
+</form>
+
+{#<center><a class="ui-button ui-widget-content ui-corner-all" style="clear:both;padding:5px;" onclick="loadPage('{{ "{{ path('"~ route_name_prefix ~"') }}" }}');" ><img align="absmiddle" src="{{ "{{asset('bundles/app/images/ico/16/cancel.png')}}" }}" />&nbsp;Annuler&nbsp;</a>&nbsp;&nbsp;<a class="ui-button ui-widget-content ui-corner-all" style="clear:both;padding:5px;" onclick="$.post('{{ "{{ path('"~ route_name_prefix ~"_update', { 'id': entity.id }) }}"}}',$('#_ajxFromModifier').serializeArray(),function(){loadPage('{{ "{{ path('"~ route_name_prefix ~"') }}" }}');});" ><img align="absmiddle" src="{{ "{{asset('bundles/app/images/ico/16/valid.png')}}" }}" />&nbsp;Valider&nbsp;</a></center>#}
+
+
+<script language="JavaScript" type="text/javascript">
+$(function() {
+  // rajouter ici vos lignes d'initialisation...
+  
+});
+</script>
+{{ "{% endif %}" }}
+{{ "{% endblock %}" }}
+{% endblock body %}
+
+{% block javascripts %}
+
+{% endblock %}

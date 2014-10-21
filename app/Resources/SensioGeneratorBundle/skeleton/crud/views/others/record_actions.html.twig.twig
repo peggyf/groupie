@@ -1,0 +1,21 @@
+<span class="record_actions">
+{% if (not hide_back) %} 
+  {{"&nbsp;&nbsp;"}}<img class="jqtip ui-button" align="absmiddle" src="{{ "{{asset('bundles/app/images/ico/16/back.png')}}" }}" class="ui-button ui-widget-content ui-corner-all" style="clear:both;padding:5px;"  onclick='loadPage("{{ "{{ path('"~ route_name_prefix ~"') }}" }}");' title="<small>Retour...</small>" />
+{% endif %}
+{% if (not hide_cancel) %} 
+  {{"&nbsp;&nbsp;"}}<img class="jqtip ui-button" align="absmiddle" src="{{ "{{asset('bundles/app/images/ico/16/cancel.png')}}" }}" class="ui-button ui-widget-content ui-corner-all" style="clear:both;padding:5px;"  onclick='loadPage("{{ "{{ path('"~ route_name_prefix ~"') }}" }}");' title="<small>Annuler...</small>" />
+{% endif %}
+{% if ('edit' in actions) and (not hide_edit) %}
+  {{"&nbsp;&nbsp;"}}<img class="jqtip ui-button" align="absmiddle" src="{{ "{{asset('bundles/app/images/ico/16/modif.png')}}" }}" class="ui-button ui-widget-content ui-corner-all" style="clear:both;padding:5px;"  onclick='loadPage("{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': entity.id }) }}" }}");' title="<small>Modifier...</small>" />
+{% endif %}
+{% if (('delete' in actions) and (not hide_delete))  %}
+  {{"&nbsp;&nbsp;"}}<img class="jqtip ui-button" align="absmiddle" src="{{ "{{asset('bundles/app/images/ico/16/trash.png')}}" }}" class="ui-button ui-widget-content ui-corner-all" style="clear:both;padding:5px;"  onclick="if(confirm('&Ecirc;tes-vous certain de vouloir supprimer cet &eacute;l&eacute;ment  ?')){$.post('{{ "{{ path('"~ route_name_prefix ~"_delete', { 'id': entity.id }) }}" }}',$('#_ajxFromDeleter_{{'{{ entity.id }}'}}').serializeArray(),function(){loadPage('{{ "{{ path('"~ route_name_prefix ~"') }}" }}');});}" title="<small>Supprimer...</small>" />
+{% endif %}
+</span>
+{% if (('delete' in actions) and (not hide_delete))  %}
+<span style="display: none;">
+<form id="_ajxFromDeleter_{{'{{ entity.id }}'}}" action="{{ "{{ path('"~ route_name_prefix ~"_delete', { 'id': entity.id }) }}" }}" method="post">
+{{ '{{ form_widget(delete_form) }}' }}
+</form>
+</span>
+{% endif %}
