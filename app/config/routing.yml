@@ -1,0 +1,80 @@
+# Internal routing configuration to handle ESI
+# ****** WARNING ******
+# This route should be enabled with caution as it can open a security vulnerability
+# see http://symfony.com/blog/security-release-symfony-2-0-20-and-2-1-5-released for more information
+# ****** WARNING ******
+#_internal:
+#    resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
+#    prefix:   /_internal
+   
+################################################
+#   AJAX, CAS, GROUPER, DEBUG, LDAP, APOGEE...
+################################################
+#amu_ajax_services:
+#    resource: "@AmuServicesBundle/Controller/"
+#    type:       annotation
+#    prefix:    /_amu/services/
+
+app:
+  resource: "@AppBundle/Controller/"
+  type:     annotation
+  prefix:   /_amu/app/
+
+loader:
+  resource: "@AppBundle/Controller/LoaderController.php"
+  type:     annotation
+  prefix:   /
+  
+rss:
+  resource: "@AppBundle/Controller/RssController.php"
+  type:     annotation
+  prefix:   /rss
+  
+homepage:
+  pattern: /
+  defaults: { _controller: AppBundle:App:index}
+  
+_demo:
+  resource: "@AmuDemoBundle/Controller/DemoController.php"
+  type:     annotation
+  prefix:   /demo
+  
+#amu_cas:
+#    resource: "@AmuCasBundle/Controller/"
+#    type:     annotation
+#    prefix:   /
+#
+#amu_config:
+#    resource: "@AmuConfigBundle/Controller/"
+#    type:     annotation
+#    prefix:   /
+#
+#amu_applications:
+#    resource: "@AmuApplicationsBundle/Controller/"
+#    type:     annotation
+#    prefix:   /
+
+
+
+
+#########
+# CAS
+#########
+
+#login_path
+login_path: 
+  pattern: /login
+  defaults: { _controller: AppBundle:Cas:login, url:""  }
+
+check_path:
+  pattern: /login_check
+  defaults: { _controller: AppBundle:Cas:securityCheck }
+
+logout:
+  pattern: /logout
+  defaults: { _controller: AppBundle:Cas:logout }
+
+forcelogin:
+  pattern: /forcelogin
+  defaults: { _controller: AppBundle:Cas:forceAuthentification }
+  

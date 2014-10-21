@@ -1,0 +1,20 @@
+
+ivory_ck_editor:
+    default_config: light
+    configs:
+        light:
+            toolbar: [ [ 'Styles','Format','Font','FontSize' ] [ "Bold", "Italic", "Underline", "Strike", "colors", '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock', "-", "RemoveFormat", "NumberedList", "BulletedList", "-", "Outdent", "Indent", "-", "Blockquote", 'Image', 'PageBreak','TextColor','BGColor' ] ]
+            forcePasteAsPlainText: true
+            toolbarCanCollapse: true
+            #filebrowserBrowseUrl: '/browser/browse.php'
+            #filebrowserImageBrowseUrl: '/browser/browse.php?type=Images'
+            #filebrowserUploadUrl: '/uploader/upload.php'
+            #filebrowserImageUploadUrl: '/uploader/upload.php?type=Images'
+            font_names: "Oswald;Open Sans;Lustria;Verdana"
+            #font_style: { element: 'span', styles: { 'font-family' : '#(family)' }, overrides: [ { element: 'font', attributes: { 'face': null } } ] }
+            fontSize_sizes: '10/10px;12/12px;14/14px;16/16px;24/24px;'
+            fontSize_defaultLabel: '12px'
+            font_defaultLabel: 'Verdana'
+            contentsCss: 'bundles/app/css/cke_contents.css'
+            stylesSet: 'amu:../../bundles/app/js/cke_styles.js'
+#            extraPlugins: "wordcount"

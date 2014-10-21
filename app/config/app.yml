@@ -1,0 +1,161 @@
+########################
+#  CONFIG GENERAL APP  #
+########################
+parameters:
+    app.width: 980 #Tablet 660, 1200,... min = 655   
+    app.page_color: "#F5F5F5"
+    app.charte: 1
+    app.version: 2.52
+    app.type: "r" # [ 'a/A'=>alpha , 'b/B'=> beta , 'r/R'=>release candidate ] => influt sur l'icone à coté du titre    
+    # active les traces sur AppListener & ConfigListener
+    app.active_trace: false
+#    app.url: "http://localhost/symfony211/web/app_dev.php/"
+    app.tools_links: ['site', 'intramu', 'ent', 'annuaire', 'cas_logout']
+    app.help_url: "http://dud.univ-amu.fr/content/dud-documentation-utilisateur-dynamique"
+    app.front_end: true
+    app.back_end: true
+    app.show_yml_configs: true
+    app.messages: true
+    app.awstats: "application.univ-amu.fr"
+    app.use_workflow: false
+    app.use_ext_accounts: false
+    app.reload_menus_all_page: false
+    app.reload_contacts_all_page: false
+    app.forceAuthentification: true
+    app.need_authentificate_message: "<center><div style='padding:50px;'><div class='ui-state-active ui-corner-all' style='padding:25px;text-align:left;'><center>Pour accéder à cette application, vous devez être authentifié...</center></br><p class='TabInfos' style='color:black;font-weight:normal;'><u><b>Procédure à suivre :</b></u><br>Veuillez cliquer sur le cadenas dans la barre supérieure de la page,</br>puis saisir votre couple identifiant/mot de passe dans la fenêtre centrale...<p></div></div></center>"
+    app.no_access_message: "<center><div style='padding:50px;'><div class='ui-state-error ui-corner-all' style='padding:50px;text-align:left;'><center><h1>L'accès à cette page vous a été refusé.</h1></center></br><p class='TabInfos' style='color:black;'><br><b>Code:</b> #err_code#</br><b>Message:</b> #err_msg#</br><p></div></div></center>"
+    #app.maintenance.message: "<hr>Bonjour, l'application est actuellement en cours de maintenance.</br> merci de votre compréhension."
+    #app.maintenance.icon: "bundles/app/images/maintenance.gif"
+    app.maintenance.message: "<hr>Bonjour, l'application est actuellement en cours de paramétrage.</br> merci de votre compréhension."
+    app.maintenance.icon: "bundles/app/images/ico/128/app-params.png"
+# app.maintenances: false
+# Valeurs possibles pour "app.maintenances": false/true/array  
+    app.maintenances: 
+        - { start: "15/01/2013 18:00", stop: "16/01/2013 08:00", pre: "12/01/2013 8:00", message_pre: "Attention: le [start] l'application sera placé en mode maintenance jusqu'au [stop]...", message: "maintenance pour mise à jour de la base de données..." }
+        - { start: "01/01/2013 18:00", stop: "04/01/2013 08:00", pre: "31/12/2012 8:00", message_pre: "Attention: le [start] l'application sera placé en mode maintenance jusqu'au [stop]...", message: "maintenance pour mise à jour du référentiel nationnal..." }
+#        
+    app.maintenances_users: ["10.193.1.1", "127.0.0.1", "mubeda", "login_betatesteur_1", "login_betatesteur_2"]
+#    app.campagnes: false
+#   Valeurs possibles pour "app.campagnes": false/array      
+    app.campagnes: true
+#        - { name: "Campagne de test 1", start: "01/12/2012 8:00", stop: "31/12/2012 23:59", pre : "01/09/2012 8:00", message_pre: "La campagne 1 '[name]' n'a pas encore commencé : <br> Elle sera active à partir '[start]' jusqu'au '[stop]'...", message_on: "La campagne applicative 1 '[name]' est en cours...", message_off: "La campagne applicative 1 '[name]' est terminée.", pass_through_roles: ["ROLE_APP_MANAGER","ROLE_ADMIN"] }
+#        - { name: "Campagne de test 2", start: "05/03/2013 8:00", stop: "20/03/2013 23:59", pre : "02/01/2013 8:00", post : "25/03/2013 23:59", message_pre: "La campagne 2 '[name]' n'a pas encore commencé : <br> Elle  sera active à partir '[start]' jusqu'au '[stop]'.", message_on: "La campagne applicative 2 '[name]' est en cours.", message_off: "La campagne applicative 2 '[name]' est terminée.", pass_through_roles: ["ROLE_APP_MANAGER","ROLE_ADMIN"] }
+    app.no_campagnes_users: [ "127.0.0.1", "mubeda", "ROLE_ADMIN"]
+
+# Variables app.accessXXX OBSOLETES
+#    app.accesGroups: ["amu:....","amu:...2"]
+#    app.accesLogins: ["mubeda","login_betatesteur_1", "login_betatesteur_2", ...]
+#    app.accesIPs: ["127.0.0.1","195.xx.xx.xx", "193.xx.xx.xx", ...]
+    app.grouper.group: "amu:app:grp:siamu:users"
+    app.grouper.user: "siamu"
+    app.grouper.pass: "$siamu-2011!"
+    app.cron.user: "www-data"
+    app.rss: true
+
+
+##############
+#   HEADER   #
+##############
+    app.titleLogo: "bundles/app/images/ico/48/terre.png"
+    # 48x48
+    app.background: ~ 
+    # "bundles/app/images/amu/fond_dosi_social.png"
+    # "bundles/app/images/amu/fond_standard.png"
+    app.title: "CliGrouper"
+    app.name: "Grouper [app.yml]"
+    app.slogan: "Exemple de slogan issue de app.yml."
+    app.sm_iconizeTitleSlogan: false #Mettre (en mode sm 'SMartphone'), le nom et le slogan de l'application dans une icone/tips
+    app.logo: "web/picture/logo.png"
+    app.menu_min_width: false # 250
+    app.menu_force_upper: false # true
+    app.welcome: "Bienvenue sur l'application."
+    app.logon_tip: "<font color=red><center><b><u>Attention</u></b></center>Vous n'êtes <i>pas encore authentifiés...</i></font><br><br>Veuillez cliquer ici, pour saisir vos identifiants de connection."
+    app.logout_tip: "Vous êtes actuellement <font color=green><b>authentifiés</b></font>.<br>en tant que '<b>%s</b>'.</br></br> Si vous désirez vous déconnecter : cliquez sur le cadenas."
+    app.ent: false
+    app.effects: true
+    # si =true => on MASQUE l entete... (cas des application "embedded"
+    app.flags:
+       - { into: "app_name", value: "<font color=green><i>DÉMO</i></font>", routes: ["/demo/*"], roles:[] }
+       - { into: "app_name", value: "<font color=red>[Admin]</font>", routes: [], roles:["ROLE_ADMIN","ROLE_SUPER_ADMIN"] }
+       - { into: "app_slogan", value: "<font color=orange><b>Accès STUDENT</b></font>", routes: ["/demo/student*"], roles:[] }
+       - { into: "app_slogan", value: "<font color=blue><b>Accès PERSONAL</b></font>", routes: ["/demo/personal*"], roles:[] }
+    app.flash.opacity: 99 #97
+    app.flash: 
+        - { message: "<b><font color=red>[from 'app.yml' => app.flash]</font></b><br> Voici un petit message d'INFORMATION STATIQUE (affichage en continu), GLOBAL à toute l'application à partir du 1/12/2012 jusqu'au 31/12/2012.", type : "info", show_roles: ["ROLE_USER_BASIC", "ROLE_USER_ADVANCED"], start: "12/01/2012 01:23", stop: "31/12/2012 16:11" }
+        - { message: "<b><font color=red>[from 'app.yml' => app.flash]</font></b><br> Voici un autre message d'ALERTE.<br> Il ne sera disponible que pour les routes _demo_student  et _demo_personal de l'application.", type : "alert", show_roles: ["ROLE_USER_BASIC", "ROLE_USER_ADVANCED"], start: false, stop: false, only_routes:["_demo_student","_demo_personal"] }
+        - { message: "<b><font color=red>[from 'app.yml' => app.flash]</font></b><br> Voici un petit message d'INFOS GLOBAL STATIQUE à affichage programmé</br> (visible uniquement pour un intervalle de temps défini start et stop ).", type : "info", show_roles: ["ROLE_USER_BASIC", "ROLE_USER_ADVANCED"], start: "01/01/2013 12:00", stop: "31/01/2013 12:00"}
+        - { message: "<b><font color=red>[from 'app.yml' => app.flash]</font></b><br> Voici un message d'ERREUR GLOBAL STATIQUE à affichage programmé</br> (visible uniquement pour un intervalle de temps défini start et stop ).", type : "error", show_roles: ["ROLE_USER_BASIC", "ROLE_USER_ADVANCED"], start: "01/01/2013 12:00", stop: "31/01/2013 12:00"}
+        - { message: "<b><font color=red>[from 'app.yml' => app.flash]</font></b><br> Voici un message d'INFORMATION GLOBAL à affichage programmé</br> (visible uniquement à partir d'une date start définie ).", type : "info", show_roles: ["ROLE_USER", "ROLE_USER_ADVANCED"], start: "29/11/2011 12:00", stop: false }
+       
+##############
+#   FOOTER   #
+##############
+    app.support: "michel.ubeda@univ-amu.fr"
+    app.footerInfos:
+        - { key: 0, color: "", label: "Contacts : ", name: "", tips: "", link: "" }
+        - { key: 1, color: "red", label: "Aix: ", name: "Mme Untel", tips: "exemple d'informations...", link: "mailto:madame.untel@univ-amu.fr" }
+        - { key: 2, color: "green",  label: "Marseille: ", name: "M. Dupond ", tips: "exemple d'informations...2", link: "mailto:monsieur.dupond@univ-amu.fr" }
+        - { key: 3, color: "red",  label: "Contact: ", name: "Admin ", tips: "exemple d'informations...3", link: "mailto:admin.aasf@univ-amu.fr", show_roles: [ROLE_ADMIN,ROLE_SUPER_ADMIN], show_routes:["_demo_student"] }
+        - { key: 4, color: "red",  label: "Contact2: ", name: "SUPER Admin ", tips: "exemple d'informations...4", link: "mailto:super-admin.aasf@univ-amu.fr", show_roles: [ROLE_SUPER_ADMIN], show_routes:["_demo_student","_demo_personal"] }
+        
+    app.authors: 
+       - { name: "Pascal AVALLE",                 mail: "pascal.avalle@univ-amu.fr" , isMain: false   }
+       - { name: "Christophe CAVALIER",           mail: "c.cavalier@univ-amu.fr"  }
+       - { name: "Jean-Philippe FLORET",          mail: "jp.floret@univ-amu.fr"  }
+       - { name: "Arnaud SALVUCCI",               mail: "arnaud.salvucci@univ-amu.fr"  }
+       - { name: "Michel UBEDA SAN JOS&Eacute;",  mail: "michel.ubeda@univ-amu.fr", isMain: true }
+       #- { ... }
+
+
+#################
+#  GLOBAL TWIG  #
+#################
+twig:
+     globals:
+         app_background: %app.background%
+         app_tools_links: %app.tools_links%
+         app_charte: %app.charte%
+         app_version: %app.version%
+         app_type: %app.type%
+         app_help_url: %app.help_url%
+         app_rss: %app.rss%
+         app_front_end: %app.front_end%
+         app_back_end: %app.back_end%
+         app_awstats: %app.awstats%
+         app_use_cdn: %app.use_cdn%
+         app_cdn_links: %app.cdn%
+         app_use_workflow: %app.use_workflow%
+         app_use_ext_accounts: %app.use_ext_accounts%
+         app_title: %app.title%
+         app_titleLogo: %app.titleLogo%
+         app_name: %app.name%
+         app_slogan: %app.slogan%
+         app_logo: %app.logo%
+         app_logon_tip: %app.logon_tip%
+         app_logout_tip: %app.logout_tip%
+         app_ent: %app.ent%
+         app_footer: %app.footerInfos%
+         app_authors: %app.authors%
+         app_forceAuthentification: %app.forceAuthentification%
+         app_maintenances: %app.maintenances%  
+         app_maintenance_message: %app.maintenance.message%
+         app_maintenance_icon: %app.maintenance.icon%
+         app_flash_opacity: %app.flash.opacity%
+         app_flash: %app.flash%
+         app_campagnes: %app.campagnes%  
+         app_flags: %app.flags%
+         app_need_authentificate_message: %app.need_authentificate_message%
+         app_effects: %app.effects%
+         app_welcome: %app.welcome%
+         app_no_access_message: %app.no_access_message%
+         app_reload_menus_all_page: %app.reload_menus_all_page%
+         app_reload_contacts_all_page: %app.reload_contacts_all_page%
+         app_background: %app.background%
+         app_no_campagnes_users: %app.no_campagnes_users%    
+         app_width: %app.width%
+         app_page_color: %app.page_color%
+         app_env: %kernel.environment%
+         app_menu_force_upper: %app.menu_force_upper%
+         app_menu_min_width: %app.menu_min_width%
+         app_sm_iconizeTitleSlogan: %app.sm_iconizeTitleSlogan%
+         app_cdn_links: %app.cdn%
