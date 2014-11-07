@@ -62,8 +62,8 @@ parameters:
     # "bundles/app/images/amu/fond_dosi_social.png"
     # "bundles/app/images/amu/fond_standard.png"
     app.title: "CliGrouper"
-    app.name: "Grouper [app.yml]"
-    app.slogan: "Exemple de slogan issue de app.yml."
+    app.name: "CliGrouper"
+    app.slogan: "Application de gestion des groupes LDAP"
     app.sm_iconizeTitleSlogan: false #Mettre (en mode sm 'SMartphone'), le nom et le slogan de l'application dans une icone/tips
     app.logo: "web/picture/logo.png"
     app.menu_min_width: false # 250
@@ -75,10 +75,13 @@ parameters:
     app.effects: true
     # si =true => on MASQUE l entete... (cas des application "embedded"
     app.flags:
-       - { into: "app_name", value: "<font color=green><i>DÉMO</i></font>", routes: ["/demo/*"], roles:[] }
-       - { into: "app_name", value: "<font color=red>[Admin]</font>", routes: [], roles:["ROLE_ADMIN","ROLE_SUPER_ADMIN"] }
-       - { into: "app_slogan", value: "<font color=orange><b>Accès STUDENT</b></font>", routes: ["/demo/student*"], roles:[] }
-       - { into: "app_slogan", value: "<font color=blue><b>Accès PERSONAL</b></font>", routes: ["/demo/personal*"], roles:[] }
+       #- { into: "app_name", value: "<font color=green><i>DÉMO</i></font>", routes: ["/demo/*"], roles:[] }
+       #- { into: "app_name", value: "<font color=red>[Admin]</font>", routes: [], roles:["ROLE_ADMIN","ROLE_SUPER_ADMIN"] }
+       #- { into: "app_slogan", value: "<font color=orange><b>Accès STUDENT</b></font>", routes: ["/demo/student*"], roles:[] }
+       #- { into: "app_slogan", value: "<font color=blue><b>Accès PERSONAL</b></font>", routes: ["/demo/personal*"], roles:[] }
+       - { into: "app_name", value: "<font color=green>[Gestionnaire]</font>", routes: [], roles:["ROLE_GESTIONNAIRE"] }
+       - { into: "app_name", value: "<font color=orange>[DOSI]</font>", routes: [], roles:["ROLE_DOSI"] }
+       - { into: "app_name", value: "<font color=red>[Admin]</font>", routes: [], roles:["ROLE_SUPER_ADMIN"] }
     app.flash.opacity: 99 #97
     app.flash: 
         - { message: "<b><font color=red>[from 'app.yml' => app.flash]</font></b><br> Voici un petit message d'INFORMATION STATIQUE (affichage en continu), GLOBAL à toute l'application à partir du 1/12/2012 jusqu'au 31/12/2012.", type : "info", show_roles: ["ROLE_USER_BASIC", "ROLE_USER_ADVANCED"], start: "12/01/2012 01:23", stop: "31/12/2012 16:11" }
@@ -90,20 +93,16 @@ parameters:
 ##############
 #   FOOTER   #
 ##############
-    app.support: "michel.ubeda@univ-amu.fr"
+    app.support: "peggy.fernandez-blanco@univ-amu.fr"
     app.footerInfos:
-        - { key: 0, color: "", label: "Contacts : ", name: "", tips: "", link: "" }
-        - { key: 1, color: "red", label: "Aix: ", name: "Mme Untel", tips: "exemple d'informations...", link: "mailto:madame.untel@univ-amu.fr" }
-        - { key: 2, color: "green",  label: "Marseille: ", name: "M. Dupond ", tips: "exemple d'informations...2", link: "mailto:monsieur.dupond@univ-amu.fr" }
-        - { key: 3, color: "red",  label: "Contact: ", name: "Admin ", tips: "exemple d'informations...3", link: "mailto:admin.aasf@univ-amu.fr", show_roles: [ROLE_ADMIN,ROLE_SUPER_ADMIN], show_routes:["_demo_student"] }
-        - { key: 4, color: "red",  label: "Contact2: ", name: "SUPER Admin ", tips: "exemple d'informations...4", link: "mailto:super-admin.aasf@univ-amu.fr", show_roles: [ROLE_SUPER_ADMIN], show_routes:["_demo_student","_demo_personal"] }
+        - { key: 0, color: "", label: "Contacts : ", name: "Peggy Fernandez", tips: "", link: "mailto:peggy.fernandez-blanco@univ-amu.fr" }
+        #- { key: 1, color: "red", label: "Aix: ", name: "Mme Untel", tips: "exemple d'informations...", link: "mailto:madame.untel@univ-amu.fr" }
+        #- { key: 2, color: "green",  label: "Marseille: ", name: "M. Dupond ", tips: "exemple d'informations...2", link: "mailto:monsieur.dupond@univ-amu.fr" }
+        #- { key: 3, color: "red",  label: "Contact: ", name: "Admin ", tips: "exemple d'informations...3", link: "mailto:admin@univ-amu.fr", show_roles: [ROLE_ADMIN,ROLE_SUPER_ADMIN], show_routes:["_demo_student"] }
+        #- { key: 4, color: "red",  label: "Contact2: ", name: "SUPER Admin ", tips: "exemple d'informations...4", link: "mailto:super-admin@univ-amu.fr", show_roles: [ROLE_SUPER_ADMIN], show_routes:["_demo_student","_demo_personal"] }
         
     app.authors: 
-       - { name: "Pascal AVALLE",                 mail: "pascal.avalle@univ-amu.fr" , isMain: false   }
-       - { name: "Christophe CAVALIER",           mail: "c.cavalier@univ-amu.fr"  }
-       - { name: "Jean-Philippe FLORET",          mail: "jp.floret@univ-amu.fr"  }
-       - { name: "Arnaud SALVUCCI",               mail: "arnaud.salvucci@univ-amu.fr"  }
-       - { name: "Michel UBEDA SAN JOS&Eacute;",  mail: "michel.ubeda@univ-amu.fr", isMain: true }
+       - { name: "Peggy FERNANDEZ",  mail: "peggy.fernandez-blanco@univ-amu.fr", isMain: true }
        #- { ... }
 
 

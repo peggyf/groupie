@@ -9,8 +9,7 @@ security:
     Amu\AppBundle\Security\User\AmuUser: plaintext
 
   role_hierarchy:
-    ROLE_ADMIN:       [ROLE_USER, ROLE_MANAGER]
-    ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+    ROLE_SUPER_ADMIN: [ROLE_GESTIONNAIRE, ROLE_DOSI]
 
   providers:
 

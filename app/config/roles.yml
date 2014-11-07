@@ -5,32 +5,38 @@ parameters:
   
     roles_manager:
       
-          - { name: "ROLE_LUMINY",   type: "ldap2",  link: "",  values: "", filter: "(&(&(uid=$login)(amuCampus=L))(|(eduPersonAffiliation=employee)(eduPersonAffiliation=staff)(eduPersonAffiliation=faculty)(eduPersonAffiliation=researcher))) " }  
+
+        #- { name: "ROLE_GESTIONNAIRE", type: "grouper", link: "isMember", values: "amu:app:grp:pedagiciels:lum:gest" }
+        - { name: "ROLE_GESTIONNAIRE",   type: "ldap2",    link: "",  values: "", filter: "(memberof=cn=amu:app:grp:grouper-ent,ou=groups,dc=univ-amu,dc=fr)" } 
+        - { name: "ROLE_DOSI",           type: "ldap2",    link: "",  values: "", filter: "(memberof=cn=amu:svc:dosi:tous,ou=groups,dc=univ-amu,dc=fr)" }
+        - { name: "ROLE_SUPER_ADMIN",    type: "session",  link: "_isDevelopper",  values: "1" }
+        
+          #- { name: "ROLE_LUMINY",   type: "ldap2",  link: "",  values: "", filter: "(&(&(uid=$login)(amuCampus=L))(|(eduPersonAffiliation=employee)(eduPersonAffiliation=staff)(eduPersonAffiliation=faculty)(eduPersonAffiliation=researcher))) " }  
             # amuSite=M301
             # amuCampus=L
             # amuComposante
             # supannAffectation=DOSI
             # supannEntiteAffectation=
-          - { name: "ROLE_BETA_TESTEUR", type: "session",  link: "_isBetaTesteur",     values: "1" }
-          - { name: "ROLE_DOSI",        type: "grouper",  link: "isMember",             values: "amu::srv:dosi" }
+          #- { name: "ROLE_BETA_TESTEUR", type: "session",  link: "_isBetaTesteur",     values: "1" }
+          #- { name: "ROLE_DOSI",        type: "grouper",  link: "isMember",             values: "amu:svc:dosi:tous" }
 #          - { name: "ROLE_PERSONAL",    type: "session", link: "eduPersonAffiliation",  values: ["employee","member"] }
 #          - { name: "ROLE_STUDENT",     type: "session",  link: "eduPersonAffiliation",  values: ["student","alum"] }
 #          - { name: "ROLE_STUDENT2",    type: "ldap",    link: "suppanAfflilliation",  values: ["student","alum"] }
-          - { name: "ROLE_PERSONAL",    type: "session",  link: "_isDevelopper",  values: "1" }
-          - { name: "ROLE_STUDENT",     type: "session",  link: "_isDevelopper",  values: "1" }
-          - { name: "ROLE_STUDENT2",    type: "session",  link: "_isDevelopper",  values: "1" }
-          - { name: "ROLE_STUDENT_ADM", type: "session",  link: "uid",            values: ["123456","7891011"] }
-          - { name: "ROLE_SUPER_ADMIN", type: "session",  link: "_isDevelopper",  values: "1" }
-          - { name: "ROLE_ADMIN",       type: "session",  link: "_isDevelopper",  values: "1" }
-          - { name: "ROLE_MANAGER",     type: "session",  link: "_isDevelopper",  values: "1" }
-          - { name: "ROLE_VIEWER",      type: "session",  link: "_isDevelopper",  values: "1" }
-          - { name: "ROLE_MODIFIER",    type: "session",  link: "_isDevelopper",  values: "1" }
+          #- { name: "ROLE_PERSONAL",    type: "session",  link: "_isDevelopper",  values: "1" }
+          #- { name: "ROLE_STUDENT",     type: "session",  link: "_isDevelopper",  values: "1" }
+          #- { name: "ROLE_STUDENT2",    type: "session",  link: "_isDevelopper",  values: "1" }
+          #- { name: "ROLE_STUDENT_ADM", type: "session",  link: "uid",            values: ["123456","7891011"] }
+          #- { name: "ROLE_SUPER_ADMIN", type: "session",  link: "_isDevelopper",  values: "1" }
+          #- { name: "ROLE_ADMIN",       type: "session",  link: "_isDevelopper",  values: "1" }
+          #- { name: "ROLE_MANAGER",     type: "session",  link: "_isDevelopper",  values: "1" }
+          #- { name: "ROLE_VIEWER",      type: "session",  link: "_isDevelopper",  values: "1" }
+          #- { name: "ROLE_MODIFIER",    type: "session",  link: "_isDevelopper",  values: "1" }
 #          - { name: "ROLE_MODIFIER",type: "grouper",      link: "isMember",  values: "amu:app:grp:geststmed:modifier" } # SAMPLE
 #          - { name: "ROLE_FONC1",   type: "bdd",          link: "select fldFunction1 from TABLE where fldUID='session:uid'" }
 #          - { name: "ROLE_FONC2",   type: "bv",           link: "isMember",              values: "monGroupBV"  }
 
-          - { name: "ROLE_USER",        type: "session",  link: "_isDevelopper",  values: "1" }  
+          #- { name: "ROLE_USER",        type: "session",  link: "_isDevelopper",  values: "1" }  
 #          - { name: "ROLE_MENU1", type: "session", link: "_isDevelopper", values: "1" }  
 #          - { name: "ROLE_MENU1_3", type: "session", link: "_isDevelopper", values: "1" }  
-          - { name: "ROLE_MENU2", type: "session", link: "login", values: "mubeda" }  
+          #- { name: "ROLE_MENU2", type: "session", link: "login", values: "mubeda" }  
 #          - { name: "ROLE_MENU23",     type: "session",     link: "_isDevelopper",  values: "1" }
