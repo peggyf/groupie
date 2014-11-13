@@ -1,67 +1,63 @@
 <?php
 
-namespace Amu\AppBundle\Entity;
+namespace Amu\CliGrouperBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="APP_USERS")
+use Symfony\Component\Validator\Constraints as Assert;
+
+
+class Groupe {
+
+  public $cn;
+  public $description;
+  public $member;
+  public $amugroupadmin;
+  public $amugroupfilter;
+
+ /**
+  * Set cn
+  *
+  * @param string $cn
  */
-class AmuUser implements UserInterface {
-
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue(strategy="AUTO")
-   */
-  protected $id;
-  private $username;
-  private $password;
-  private $roles;
-
-  function __construct($id, $username, $password, $roles) {
-    $this->id = $id;
-    $this->username = $username;
-    $this->password = $password;
-    $this->roles = $roles;
-  }
-
-//  function __construct() {
-//
-//  }
-
-  public function equals(UserInterface $user) {
-    
-  }
-
-  public function eraseCredentials() {
-    
-  }
-
-  public function getSalt() {
-    
-  }
-
-  public function getId() {
-    return $this->id;
-  }
-
-  public function getRoles() {
-    return $this->roles;
-  }
-
-  public function setRole($role) {
-    $this->role = $role;
-  }
-
-  public function getUsername() {
-    return $this->username;
-  }
-
-  public function getPassword() {
-    return $this->password;
-  }
+ public function setCn($cn)
+ {
+    $this->cn = $cn;
+ }
+ /**
+  * Set description
+  *
+  * @param string $description
+ */
+ public function setDescription($desc)
+ {
+    $this->description = $desc;
+ }
+ /**
+  * Set amugroupfilter
+  *
+  * @param string $amugroupfilter
+ */
+ public function setAmugroupfilter($amugroupfilter)
+ {
+    $this->amugroupfilter = $amugroupfilter;
+ } 
+ /**
+  * Set member
+  *
+  * @param string $member
+ */
+ public function setMember($member)
+ {
+    $this->member = $member;
+ } 
+ /**
+  * Set amugroupadmin
+  *
+  * @param string $amugroupadmin
+ */
+ public function setAmugroupadmin($amugroupadmin)
+ {
+    $this->amugroupadmin = $amugroupadmin;
+ } 
 
 }
