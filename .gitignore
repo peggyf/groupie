@@ -1,0 +1,8 @@
+/nbproject/private/
+/app/cache/*
+/app/logs/*
+/web/bundles/
+*~
+*.swp
+*.bak
+*.bck
