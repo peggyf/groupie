@@ -8,11 +8,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Groupe {
 
-  public $cn;
-  public $description;
-  public $member;
-  public $amugroupadmin;
-  public $amugroupfilter;
+  protected $cn;
+  protected $description;
+  protected $member;
+  protected $amugroupadmin;
+  protected $amugroupfilter;
 
  /**
   * Set cn
@@ -60,4 +60,31 @@ class Groupe {
     $this->amugroupadmin = $amugroupadmin;
  } 
 
+ /**
+  * Set cn
+  *
+  * @param string $cn
+ */
+ public function getCn()
+ {
+    return($this->cn);
+ }
+ /**
+  * Set description
+  *
+  * @param string $description
+ */
+ public function getDescription()
+ {
+    return ($this->description);
+ }
+ /**
+  * Set amugroupfilter
+  *
+  * @param string $amugroupfilter
+ */
+ public function getAmugroupfilter()
+ {
+    return ($this->amugroupfilter);
+ } 
 }
