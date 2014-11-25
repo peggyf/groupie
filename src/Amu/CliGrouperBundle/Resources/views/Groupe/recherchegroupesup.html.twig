@@ -1,0 +1,32 @@
+{% extends 'AppBundle::page.html.twig' %}
+
+{% block titre %}Liste des groupes à supprimer{% endblock %}
+
+{% block body %}
+
+<table class="ui-widget-content dataTable TabInfos" filter="25">
+    <thead>
+        <tr>
+            <th>cn</th>
+	    <th>Description</th>
+            <th>amuGroupFilter</th>
+            <th>Supprimer</th>
+	    
+        </tr>
+    </thead>
+    <tbody>
+    {% for group in groups %}
+	<tr > 
+	  <td style="vertical-align: middle;">{{group.cn}}</td>
+          <td style="vertical-align: middle;">{{group.description}}</td>
+          <td style="vertical-align: middle;">{{group.amugroupfilter}}</td>
+          <td style="vertical-align: middle;">
+              <a href="{{ path('delete_groupe', { 'cn': group.cn }) }}">Supprimer</a>
+          </td>
+        </tr>
+   {% endfor %}
+    </tbody>
+      
+       
+</table>
+{% endblock %}
