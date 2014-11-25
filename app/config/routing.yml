@@ -11,6 +11,7 @@ amu_cli_grouper:
     resource: "@AmuCliGrouperBundle/Controller/"
     type:     annotation
     prefix:   /CliGrouper/
+       
     
 ################################################
 #   AJAX, CAS, GROUPER, DEBUG, LDAP, APOGEE...

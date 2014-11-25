@@ -8,6 +8,7 @@ imports:
     - { resource: "@AppBundle/Resources/config/amu.yml" }
     - { resource: betatesteurs.yml }
     - { resource: security.yml }
+
     
 framework:
 #    esi:
@@ -94,3 +95,14 @@ swiftmailer:
 #    debug.twig.extension:
 #        class: Twig_Extensions_Extension_Debug
 #        tags: [{ name: 'twig.extension' }]
+
+services:
+    amu_app.form.type.createButton:
+        class: Amu\CliGrouperBundle\Form\Type\CreateButtonType
+        tags:
+            - { name: form.type, alias: createButton }
+
+    amu_app.form.type.cancelButton:
+        class: Amu\CliGrouperBundle\Form\Type\CancelButtonType
+        tags:
+            - { name: form.type, alias: cancelButton }
