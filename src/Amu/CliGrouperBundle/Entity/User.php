@@ -13,6 +13,7 @@ class User {
   protected $displayname;
   protected $mail;
   protected $tel;
+  protected $memberof;
 
   /**
   * Set uid
@@ -64,6 +65,16 @@ class User {
  } 
  
  /**
+  * Set memberof
+  *
+  * @param string $memberof
+ */
+ public function setMemberof($memberof)
+ {
+    $this->memberof = $memberof;
+ } 
+ 
+ /**
   * Get uid
   *
  */
@@ -108,5 +119,13 @@ class User {
     return ($this->tel);
  } 
 
+ /**
+  * Get memberof
+  *
+ */
+ public function getMemberof()
+ {
+    return ($this->memberof);
+ } 
   
 }

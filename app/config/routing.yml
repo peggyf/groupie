@@ -1,17 +1,14 @@
-# Internal routing configuration to handle ESI
-# ****** WARNING ******
-# This route should be enabled with caution as it can open a security vulnerability
-# see http://symfony.com/blog/security-release-symfony-2-0-20-and-2-1-5-released for more information
-# ****** WARNING ******
-#_internal:
-#    resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
-#    prefix:   /_internal
-   
 amu_cli_grouper:
     resource: "@AmuCliGrouperBundle/Controller/"
     type:     annotation
     prefix:   /CliGrouper/
-       
+
+#hello:
+#    path:   /hello/
+#    defaults:  { _controller: AmuCliGrouperBundle:Default:index }
+
+# importe les routes d'une classe Contrôleur
+
     
 ################################################
 #   AJAX, CAS, GROUPER, DEBUG, LDAP, APOGEE...
@@ -20,7 +17,6 @@ amu_cli_grouper:
 #    resource: "@AmuServicesBundle/Controller/"
 #    type:       annotation
 #    prefix:    /_amu/services/
-
 app:
   resource: "@AppBundle/Controller/"
   type:     annotation
@@ -30,12 +26,12 @@ loader:
   resource: "@AppBundle/Controller/LoaderController.php"
   type:     annotation
   prefix:   /
-  
+
 rss:
   resource: "@AppBundle/Controller/RssController.php"
   type:     annotation
   prefix:   /rss
-  
+
 homepage:
   pattern: /
   defaults: { _controller: AppBundle:App:index}

@@ -11,7 +11,8 @@
 	    <th>Description</th>
             <th>amuGroupFilter</th>
             <th>Voir</th>
-	    
+            <th>Ajouter des droits</th>
+	    <th>Supprimer des droits</th>
         </tr>
     </thead>
     <tbody>
@@ -22,6 +23,12 @@
           <td style="vertical-align: middle;">{{group.amugroupfilter}}</td>
           <td style="vertical-align: middle;">
               <a href="{{ path('voir_groupe', { 'cn': group.cn }) }}">Voir</a>
+          </td>
+          <td style="vertical-align: middle;">
+              <a href="{{ path('ajout_droits', { 'cn': group.cn }) }}">Ajouter</a>
+          </td>
+          <td style="vertical-align: middle;">
+              <a href="{{ path('suppression_droits', { 'cn': group.cn }) }}">Supprimer</a>
           </td>
         </tr>
    {% endfor %}
