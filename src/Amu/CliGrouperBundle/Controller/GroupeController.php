@@ -100,14 +100,14 @@ class GroupeController extends Controller {
     /**
      * Recherche de groupes
      *
-     * @Route("/recherche_groupe",name="recherche_groupe")
+     * @Route("/recherche_groupe/{opt}",name="recherche_groupe")
      * @Template()
      */
-    public function recherchegroupeAction(Request $request) {
-        $groupesearch = new GroupeSearch();
+    public function searchAction(Request $request, $opt='del') {
+        $groupesearch = new Groupe();
         $groups = array();
         
-        $form = $this->createForm(new GroupeSearchType(), new GroupeSearch());
+        $form = $this->createForm(new GroupeSearchType(), new Groupe());
         $form->handleRequest($request);
         if ($form->isValid()) {
             $groupesearch = $form->getData();
@@ -126,10 +126,10 @@ class GroupeController extends Controller {
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
             }
             
-           return $this->render('AmuCliGrouperBundle:Groupe:recherchegroupe.html.twig',array('groups' => $groups));
+           return $this->render('AmuCliGrouperBundle:Groupe:recherchegroupe.html.twig',array('groups' => $groups, 'opt' => $opt));
                        
         }
-        return $this->render('AmuCliGrouperBundle:Groupe:groupesearch.html.twig', array('form' => $form->createView(), 'del' => false));
+        return $this->render('AmuCliGrouperBundle:Groupe:groupesearch.html.twig', array('form' => $form->createView(), 'opt' => $opt));
         
     }
     
@@ -248,10 +248,10 @@ class GroupeController extends Controller {
      */
     public function SuppressionGroupeAction(Request $request) {
         
-        $groupesearch = new GroupeSearch();
+        $groupesearch = new Groupe();
         $groups = array();
         
-        $form = $this->createForm(new GroupeSearchType(), new GroupeSearch());
+        $form = $this->createForm(new GroupeSearchType(), new Groupe());
         $form->handleRequest($request);
         if ($form->isValid()) {
             $groupesearch = $form->getData();
@@ -276,5 +276,6 @@ class GroupeController extends Controller {
         return $this->render('AmuCliGrouperBundle:Groupe:groupesearch.html.twig', array('form' => $form->createView(), 'del' => TRUE));
         
     }
-  
+    
+      
 }

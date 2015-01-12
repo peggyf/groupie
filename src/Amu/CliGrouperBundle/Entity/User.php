@@ -4,6 +4,7 @@ namespace Amu\CliGrouperBundle\Entity;
 
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 class User {
@@ -14,7 +15,14 @@ class User {
   protected $mail;
   protected $tel;
   protected $memberof;
+  protected $adminof;
+  protected $memberships;
 
+  public function __construct()
+  {
+      $this->memberships = new ArrayCollection();
+  }
+    
   /**
   * Set uid
   *
@@ -75,6 +83,16 @@ class User {
  } 
  
  /**
+  * Set adminof
+  *
+  * @param string $adminof
+ */
+ public function setAdminof($adminof)
+ {
+    $this->adminof = $adminof;
+ } 
+ 
+ /**
   * Get uid
   *
  */
@@ -127,5 +145,23 @@ class User {
  {
     return ($this->memberof);
  } 
-  
+ 
+ /**
+  * Get getAdminof
+  *
+ */
+ public function getAdminof()
+ {
+    return ($this->adminof);
+ } 
+
+ public function getMemberships()
+ {
+     return $this->memberships;
+ }
+
+ public function setMemberships(ArrayCollection $memberships)
+ {
+     $this->memberships = $memberships;
+ }
 }

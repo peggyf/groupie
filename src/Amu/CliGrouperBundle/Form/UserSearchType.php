@@ -13,17 +13,17 @@ class UserSearchType extends AbstractType
         $builder
              ->add('uid', 'text', array(
                                          'required' => true
-                                         ))
-            ->getForm();
+                                         )); 
 
     }
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('data_class' => 'Amu\CliGrouperBundle\Entity\UserSearch')
-                               );
+        $resolver->setDefaults(array(
+                                     'data_class' => null
+                                     ));
     }
     public function getName()
     {
-        return 'amu_cligrouperbundle_usersearch';
+        return 'usersearch';
     }
 }

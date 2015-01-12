@@ -19,11 +19,11 @@ class GroupeSearchType extends AbstractType
     }
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('data_class' => 'Amu\CliGrouperBundle\Entity\GroupeSearch')
+        $resolver->setDefaults(array('data_class' => 'Amu\CliGrouperBundle\Entity\Groupe')
                                );
     }
     public function getName()
     {
-        return 'amu_cligrouperbundle_groupesearch';
+        return 'groupesearch';
     }
 }
