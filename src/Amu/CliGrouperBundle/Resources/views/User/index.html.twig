@@ -1,0 +1,122 @@
+{% extends 'AppBundle::page.html.twig' %}
+
+
+{% block body %}
+    
+{#{% if app.session.has('_saved') and app.session.get('_saved', 0) == 1 %}
+{{ app.session.remove('_saved') }}
+
+<script language="JavaScript" type="text/javascript">
+$(function() {
+  loadPage('{{ path('user') }}');
+});
+</script>
+{% else %}    
+#}
+{% if app.session.flashbag.has('flash-notice') %}
+<center>
+    <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+    {% for flashMessage in app.session.flashbag.get('flash-notice') %}
+        <p>{{ flashMessage }}</p>
+    {% endfor %}
+    </div>
+</center>
+{% endif %}
+
+{% if app.session.flashbag.has('flash-error') %}
+<center>
+    <div class="ui-state-error ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;margin:auto;">
+    {% for flashMessage in app.session.flashbag.get('flash-error') %}
+        <p>{{ flashMessage }}</p>
+    {% endfor %}
+    </div>
+</center>
+{% endif %}
+
+{% set hilightColor='#C7FE74' %}
+
+{% if app.session.get('_saved', 1) != 1 %}
+{% include 'AmuCliGrouperBundle:User:searchform.html.twig' %}
+
+{%set legendeCouleurs="<center><b>L&eacute;gende</b></center><small><font color=blue>&Eacute;l&eacute;ments en bleu</font> =  &eacute;l&eacute;ments optionnels</br><font color=red>&Eacute;l&eacute;ments en rouge</font> =  &eacute;l&eacute;ments obligatoires</br><span style='background-color:"~hilightColor~" ;' >&Eacute;l&eacute;ments sous fond color&eacute; vert</span> =  Mise en surbrillance du dernier &eacute;l&eacute;ment ajout&eacute;/modifi&eacute;</small>" %}
+<p><small><a class="ui-button jqtip" title="{{legendeCouleurs}}"><img src="{{ asset("bundles/app/images/ico/16/help-book.png")}}" align="absmiddle" />&nbsp;<b>L&eacute;gende...</b></a></small></p>
+
+
+
+
+    {# SAMPLE :
+
+    Ajouter un style si l'element est desactive/supprimer..
+    Remplacer/completer le <tr> du Tableau avec la ligne suivante:
+
+      <tr id="dataLine_{{entity.id}}" class="jqtip" title="{{stateTip}}" style="{{ lineStyle }}">
+
+    #}
+{% else %} 
+  <table class="ui-widget-content dataTable TabInfos" filter="25">
+    <thead>
+        <tr>
+            <th>uid</th>
+	    <th>DisplayName</th>
+            <th>Mail</th>
+            <th>Tel</th>
+            <th>Groupes</th>
+            <th>Modifier</th>
+            <th>Ajouter</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for us in users %}
+	<tr > 
+	  <td style="vertical-align: middle;">{{us.uid}}</td>
+          <td style="vertical-align: middle;">{{us.displayname}}</td>
+          <td style="vertical-align: middle;">{{us.mail}}</td>
+          <td style="vertical-align: middle;">{{us.tel}}</td>
+          <td style="vertical-align: middle;">
+          <table>
+              {% for group in us.memberof %}
+                  <tr><td style="vertical-align: middle;">{{group}} </td></tr>
+              {% endfor %}    
+        </table>
+          </td>
+          <td style="vertical-align: middle;"><a href="{{ path('user_update', { 'uid': us.uid }) }}">Editer</a></td>
+          <td style="vertical-align: middle;"><a href="{{ path('user_add', { 'uid': us.uid }) }}">Ajouter</a></td>
+        </tr>
+   {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{# SAMPLE : 
+
+    1. Generer une ligne ico Flag red/green pour les champs de type boolean:
+    
+      Ajouter dans la boucle for avant le <tr> les lignes suivantes:
+        {%set lineStyle=(entity.state==1?"":"color:red;font-style:italic;") %}
+        {%set stateTip="<small><center><b> <font color=blue>"~ entity.INFOS_FIELD~"</font> =></b>.</br><font color=blue>Ce ....  </font>est <b><font color="~(entity.state==1?"green>Actif":"red>D&eacute;sactiv&eacute;")~"</font></b></center>"|raw %}
+
+      Puis modifier la ligne du champ boolean comme suit :
+       <td align="center" style="vertical-align: middle;"><span style="display:none;">{{entity.state}}</span><img class="jqtip" title="{{stateTip}}" align="absmiddle" src="{{asset("bundles/app/images/ico/16/"~(entity.state==1?"flag-green":"flag-red")~".png")}}" /> </td>
+
+
+     2. Pour Forcer la colonne "id" toujours en 1ier, modifier son td en ajoutant la ligne suivante AVANT {{ entity.id }}
+  
+      <span style="display: none;">_</span>
+
+
+     3. Visualiser la valeur d'un champs color :
+
+      <td style="vertical-align: middle;" align="center"><div style="background-color:{{ entity.color }};padding:5px;width:8px;height:8px;border: #000000 solid 1px" > </div></td>
+
+
+
+    #}
+
+
+{#{% endif %}#}
+
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

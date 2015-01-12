@@ -1,0 +1,13 @@
+{% extends 'AppBundle::page.html.twig' %}
+
+{% block titre %}Recherche des personnes{% endblock %}
+
+{% block body %}
+
+    <form action="{{ path('user')}}" method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}
+
+    <input type="submit"  value="Rechercher" />
+    </form>
+    
+{% endblock %}
