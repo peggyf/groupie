@@ -1,0 +1,12 @@
+{% extends 'AppBundle::page.html.twig' %}
+
+{% block titre %} Appartenance au groupe {% endblock %}
+
+{% block body %}
+{% if success %}        
+    L'appartenance au groupe {{cn}} a été ajoutée.
+{% else %}
+    Erreur lors de l'ajout au groupe {{cn}}.
+{% endif %}
+
+{% endblock %}

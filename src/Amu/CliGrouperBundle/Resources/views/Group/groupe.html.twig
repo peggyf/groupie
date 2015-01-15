@@ -1,0 +1,13 @@
+{% extends 'AppBundle::page.html.twig' %}
+
+{% block titre %}Création de groupe{% endblock %}
+
+{% block body %}
+
+<form action="{{ path('group_create')}}" method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}
+
+    <input type="submit"  value="Créer" />
+</form>
+    
+{% endblock %}

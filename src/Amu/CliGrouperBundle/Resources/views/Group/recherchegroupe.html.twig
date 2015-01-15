@@ -1,0 +1,52 @@
+{% extends 'AppBundle::page.html.twig' %}
+
+{% block titre %}Liste des groupes{% endblock %}
+
+{% block body %}
+
+<table class="ui-widget-content dataTable TabInfos" filter="25">
+    <thead>
+        <tr>
+            <th>cn</th>
+	    <th>Description</th>
+            <th>amuGroupFilter</th>
+            {% if opt=='search' %}
+                <th>Voir</th>
+                <th>Modifier</th>
+                <th>Ajouter</th>
+            {% endif %}
+            {% if opt=='del' %}
+                <th>Supprimer</th>
+            {% endif %}
+            {% if opt=='add' %}
+                <th>Ajouter</th>
+            {% endif %}
+            
+        </tr>
+    </thead>
+    <tbody>
+    {% for group in groups %}
+	<tr > 
+	  <td style="vertical-align: middle;">{{group.cn}}</td>
+          <td style="vertical-align: middle;">{{group.description}}</td>
+          <td style="vertical-align: middle;">{{group.amugroupfilter}}</td>
+          <td style="vertical-align: middle;">
+              {% if opt=='search' %}
+                <a href="{{ path('voir_groupe', { 'cn': group.cn }) }}"><img src="{{ asset('bundles/app/images/voir.png') }}" alt="Voir" /> </a>
+                <a href="{{ path('group_update', { 'cn': group.cn }) }}"><img src="{{ asset('bundles/app/images/modifier.png') }}" alt="Modifier" /></a>
+                <a href="{{ path('user_search', { 'opt': opt, 'cn': group.cn }) }}"><img src="{{ asset('bundles/app/images/ajouter.png') }}" alt="Ajouter" /></a>
+              {% endif %}
+              {% if opt=='del' %}
+                <a href="{{ path('group_delete', { 'cn': group.cn }) }}"><img src="{{ asset('bundles/app/images/supprimer.png') }}" alt="Supprimer" /></a>
+              {% endif %}
+              {% if opt=='add' %}
+                <a href="{{ path('user_add', { 'uid': uid, 'cn': group.cn }) }}">Ajouter droits</a>
+              {% endif %}
+          </td>
+        </tr>
+   {% endfor %}
+    </tbody>
+      
+       
+</table>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'AppBundle::page.html.twig' %}
+
+{% block titre %}Recherche de groupe{% endblock %}
+
+{% block body %}
+
+<form action="{{ path('group_search', { 'opt': opt, 'uid' : uid })}}" method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}
+    <input type="submit"  value="Rechercher" />
+</form>
+    
+{% endblock %}
