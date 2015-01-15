@@ -80,7 +80,7 @@ $(function() {
         </table>
           </td>
           <td style="vertical-align: middle;"><a href="{{ path('user_update', { 'uid': us.uid }) }}">Editer</a></td>
-          <td style="vertical-align: middle;"><a href="{{ path('user_add', { 'uid': us.uid }) }}">Ajouter</a></td>
+          <td style="vertical-align: middle;"><a href="{{ path('group_search', { 'opt': 'add', 'uid': us.uid }) }}"><img src="{{ asset('bundles/app/images/ajouter.png') }}" alt="Ajouter" /></a></td>
         </tr>
    {% endfor %}
     </tbody>

@@ -11,20 +11,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Amu\CliGrouperBundle\Entity\Groupe;
-use Amu\CliGrouperBundle\Form\GroupeType;
-use Amu\CliGrouperBundle\Entity\GroupeSearch;
-use Amu\CliGrouperBundle\Form\GroupeSearchType;
+use Amu\CliGrouperBundle\Entity\Group;
 use Amu\CliGrouperBundle\Entity\User;
-use Amu\CliGrouperBundle\Form\UserType;
 use Amu\CliGrouperBundle\Form\UserEditType;
-use Amu\CliGrouperBundle\Entity\UserSearch;
 use Amu\CliGrouperBundle\Form\UserSearchType;
 use Amu\CliGrouperBundle\Entity\Membership;
 
 /**
  * user controller
- *
+ * @Route("/user")
  * 
  */
 class UserController extends Controller {
@@ -195,7 +190,7 @@ class UserController extends Controller {
             {
                 if ($memb->getMemberof())
                 {
-                    $this->getLdap()->addMemberGroup($memb->getGroupname(), array($uid));
+                    //$this->getLdap()->addMemberGroup($memb->getGroupname(), array($uid));
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupes</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
                 else
@@ -221,51 +216,31 @@ class UserController extends Controller {
     /**
      * Ajoute l'appartenance d'un utilisateur à un groupe.
      *
-     * @Route("/user_add/{uid}/{group}", name="user_add")
+     * @Route("/add/{uid}/{cn}", name="user_add")
      * @Template("AmuCliGrouperBundle:User:add.html.twig")
      * // AMU Modif's 06/2014
      */
-    public function addAction(Request $request, $uid, Groupe $group)
+    public function addAction(Request $request, $uid, $cn)
     {
-        $dn_group = "cn=" . $group->getCn() . ", ou=groups, dc=univ-amu, dc=fr";
+        $dn_group = "cn=" . $cn . ", ou=groups, dc=univ-amu, dc=fr";
         $b = $this->getLdap()->addMemberGroup($dn_group, array($uid));
-        if ($b==true)
-        {
-            //Le groupe a bien été ajouté pour l'utilsateur
-            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>retour create groupe ldap</B>=><FONT color =green><PRE>" . $b . "</PRE></FONT></FONT>";
-            
-            // affichage groupe ajouté
-            $groups[0] = $groupe;
-            return $this->render('AmuCliGrouperBundle:User:useradd.html.twig',array('cn' => $group->getCn()));
-        }
-        else 
-            return $this->render('AmuCliGrouperBundle:Groupe:groupesearch.html.twig', array('form' => $form->createView()));
+                
+        return $this->render('AmuCliGrouperBundle:User:useradd.html.twig',array('cn' => $cn, 'success' => $b));
         
     }
     
-     /**
-     * Recherche d'une personne
-     *
-     * @Route("/usersearch",name="usersearch")
-     * @Template()
-     */
-    public function usersearchAction()
-    {
-        $form = $this->createForm(new UserSearchType(), new UserSearch());
-
-        return $this->render('AmuCliGrouperBundle:user:usersearch.html.twig', array('form' => $form->createView()));
-    }
+     
     /**
     * Recherche de personnes
     *
-    * @Route("/user_recherche",name="user_recherche")
+    * @Route("/search/{opt}/{cn}",name="user_search")
     * @Template()
     */
-    public function userrechercheAction(Request $request) {
-        $usersearch = new UserSearch();
+    public function searchAction(Request $request, $opt='search', $cn) {
+        $usersearch = new User();
         $users = array();
         
-        $form = $this->createForm(new UserSearchType(), new UserSearch());
+        $form = $this->createForm(new UserSearchType(), new User());
         $form->handleRequest($request); 
         if ($form->isValid()) {
             $usersearch = $form->getData();
@@ -284,14 +259,14 @@ class UserController extends Controller {
             
             $users[] = $user;
             $this->getRequest()->getSession()->set('_saved',1);
-            return array('users' => $users);
-            //return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users));
+            //return array('users' => $users);
+            return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'cn' => $cn));
                        
         }
         $this->getRequest()->getSession()->set('_saved',0);
-        return array('form' => $form->createView());
+        //return array('form' => $form->createView());
         
-        //return $this->render('AmuCliGrouperBundle:User:usersearch.html.twig', array('form' => $form->createView()));
+        return $this->render('AmuCliGrouperBundle:User:usersearch.html.twig', array('form' => $form->createView(), 'opt' => $opt, 'cn' => $cn));
         
     }
 

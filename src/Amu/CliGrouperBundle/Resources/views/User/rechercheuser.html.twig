@@ -14,7 +14,14 @@
 	    <th>DisplayName</th>
             <th>Mail</th>
             <th>Tel</th>
-            <th>Groupes</th>
+            {% if opt == 'search' %}
+            <th> Groupe </th>
+            {% else %}
+                <th>Groupes</th>
+            {% endif %}
+            {% if opt == 'search' %}
+            <th> Ajouter </th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -25,12 +32,19 @@
           <td style="vertical-align: middle;">{{user.mail}}</td>
           <td style="vertical-align: middle;">{{user.tel}}</td>
           <td style="vertical-align: middle;">
-          <table>
+          {% if opt == 'search' %}
+              <td style="vertical-align: middle;">cn</td>
+          {% else %}
+           <table>
               {% for group in user.memberof %}
                   <tr><td style="vertical-align: middle;">{{group}} </td></tr>
               {% endfor %}    
-        </table>
+           </table>
+          {% endif %}
           </td>
+          {% if opt == 'search' %}
+            <td style="vertical-align: middle;"> <a href="{{ path('user_add', { 'uid': user.uid, 'cn': cn }) }}"><img src="{{ asset('bundles/app/images/ajouter.png') }}" alt="Ajouter" /> </a> </td>
+          {% endif %}
         </tr>
    {% endfor %}
     </tbody>

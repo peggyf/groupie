@@ -19,7 +19,7 @@ class UserSearchType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-                                     'data_class' => null
+                                     'data_class' =>  'Amu\CliGrouperBundle\Entity\User'
                                      ));
     }
     public function getName()
