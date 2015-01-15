@@ -28,16 +28,16 @@ parameters:
     #app.maintenance.icon: "bundles/app/images/maintenance.gif"
     app.maintenance.message: "<hr>Bonjour, l'application est actuellement en cours de paramétrage.</br> merci de votre compréhension."
     app.maintenance.icon: "bundles/app/images/ico/128/app-params.png"
-# app.maintenances: false
+    app.maintenances: false
 # Valeurs possibles pour "app.maintenances": false/true/array  
-    app.maintenances: 
-        - { start: "15/01/2013 18:00", stop: "16/01/2013 08:00", pre: "12/01/2013 8:00", message_pre: "Attention: le [start] l'application sera placé en mode maintenance jusqu'au [stop]...", message: "maintenance pour mise à jour de la base de données..." }
-        - { start: "01/01/2013 18:00", stop: "04/01/2013 08:00", pre: "31/12/2012 8:00", message_pre: "Attention: le [start] l'application sera placé en mode maintenance jusqu'au [stop]...", message: "maintenance pour mise à jour du référentiel nationnal..." }
+#    app.maintenances: 
+#        - { start: "15/01/2013 18:00", stop: "16/01/2013 08:00", pre: "12/01/2013 8:00", message_pre: "Attention: le [start] l'application sera placé en mode maintenance jusqu'au [stop]...", message: "maintenance pour mise à jour de la base de données..." }
+#        - { start: "01/01/2013 18:00", stop: "04/01/2013 08:00", pre: "31/12/2012 8:00", message_pre: "Attention: le [start] l'application sera placé en mode maintenance jusqu'au [stop]...", message: "maintenance pour mise à jour du référentiel nationnal..." }
 #        
     app.maintenances_users: ["10.193.1.1", "127.0.0.1", "mubeda", "login_betatesteur_1", "login_betatesteur_2"]
 #    app.campagnes: false
 #   Valeurs possibles pour "app.campagnes": false/array      
-    app.campagnes: true
+    app.campagnes: false
 #        - { name: "Campagne de test 1", start: "01/12/2012 8:00", stop: "31/12/2012 23:59", pre : "01/09/2012 8:00", message_pre: "La campagne 1 '[name]' n'a pas encore commencé : <br> Elle sera active à partir '[start]' jusqu'au '[stop]'...", message_on: "La campagne applicative 1 '[name]' est en cours...", message_off: "La campagne applicative 1 '[name]' est terminée.", pass_through_roles: ["ROLE_APP_MANAGER","ROLE_ADMIN"] }
 #        - { name: "Campagne de test 2", start: "05/03/2013 8:00", stop: "20/03/2013 23:59", pre : "02/01/2013 8:00", post : "25/03/2013 23:59", message_pre: "La campagne 2 '[name]' n'a pas encore commencé : <br> Elle  sera active à partir '[start]' jusqu'au '[stop]'.", message_on: "La campagne applicative 2 '[name]' est en cours.", message_off: "La campagne applicative 2 '[name]' est terminée.", pass_through_roles: ["ROLE_APP_MANAGER","ROLE_ADMIN"] }
     app.no_campagnes_users: [ "127.0.0.1", "mubeda", "ROLE_ADMIN"]

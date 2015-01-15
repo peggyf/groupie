@@ -34,7 +34,7 @@
               {% if opt=='search' %}
                 <a href="{{ path('voir_groupe', { 'cn': group.cn }) }}"><img src="{{ asset('bundles/app/images/voir.png') }}" alt="Voir" /> </a>
                 <a href="{{ path('group_update', { 'cn': group.cn }) }}"><img src="{{ asset('bundles/app/images/modifier.png') }}" alt="Modifier" /></a>
-                <a href="{{ path('user_search', { 'opt': opt, 'cn': group.cn }) }}"><img src="{{ asset('bundles/app/images/ajouter.png') }}" alt="Ajouter" /></a>
+                <a href="{{ path('user_search', { 'opt': opt, 'cn': group.cn }) }}"><img src="{{ asset('bundles/app/images/ico/16/add-1.png') }}" alt="Ajouter" /></a>
               {% endif %}
               {% if opt=='del' %}
                 <a href="{{ path('group_delete', { 'cn': group.cn }) }}"><img src="{{ asset('bundles/app/images/supprimer.png') }}" alt="Supprimer" /></a>
