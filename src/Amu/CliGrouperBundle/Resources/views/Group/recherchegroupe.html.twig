@@ -4,6 +4,35 @@
 
 {% block body %}
 
+{% if app.session.has('_saved') and app.session.get('_saved', 0) == 1 %}
+{{ app.session.remove('_saved') }}
+
+
+{% else %}
+
+{% if app.session.flashbag.has('flash-notice') %}
+<center>
+    <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+    {% for flashMessage in app.session.flashbag.get('flash-notice') %}
+        <p>{{ flashMessage }}</p>
+    {% endfor %}
+    </div>
+</center>
+{% endif %}
+
+{% if app.session.flashbag.has('flash-error') %}
+<center>
+    <div class="ui-state-error ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;margin:auto;">
+    {% for flashMessage in app.session.flashbag.get('flash-error') %}
+        <p>{{ flashMessage }}</p>
+    {% endfor %}
+    </div>
+</center>
+{% endif %}
+
+{#  {% if opt='add' %}
+  <form class="amuForms" id="_ajxFromModifier"> 
+{% endif %}#}
 <table class="ui-widget-content dataTable TabInfos" filter="25">
     <thead>
         <tr>
@@ -30,23 +59,36 @@
 	  <td style="vertical-align: middle;">{{group.cn}}</td>
           <td style="vertical-align: middle;">{{group.description}}</td>
           <td style="vertical-align: middle;">{{group.amugroupfilter}}</td>
-          <td style="vertical-align: middle;">
-              {% if opt=='search' %}
-                <a href="{{ path('voir_groupe', { 'cn': group.cn }) }}"><img src="{{ asset('bundles/app/images/voir.png') }}" alt="Voir" /> </a>
-                <a href="{{ path('group_update', { 'cn': group.cn }) }}"><img src="{{ asset('bundles/app/images/modifier.png') }}" alt="Modifier" /></a>
-                <a href="{{ path('user_search', { 'opt': opt, 'cn': group.cn }) }}"><img src="{{ asset('bundles/app/images/ico/16/add-1.png') }}" alt="Ajouter" /></a>
-              {% endif %}
-              {% if opt=='del' %}
-                <a href="{{ path('group_delete', { 'cn': group.cn }) }}"><img src="{{ asset('bundles/app/images/supprimer.png') }}" alt="Supprimer" /></a>
-              {% endif %}
-              {% if opt=='add' %}
-                <a href="{{ path('user_add', { 'uid': uid, 'cn': group.cn }) }}">Ajouter droits</a>
-              {% endif %}
-          </td>
+          {% if opt=='search' %}
+              <td style="vertical-align: middle;">
+                  <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/view-page.png") }}" title="<small>Voir les membres</small>" class="ui-button" onclick='loadPage("{{ path('voir_groupe', { 'cn': group.cn }) }}");' />
+              </td>
+              <td style="vertical-align: middle;">
+                  <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/modif.png") }}" title="<small>Modifier les membres</small>" class="ui-button" onclick='loadPage("{{ path('group_update', { 'cn': group.cn }) }}");' />
+              </td>
+              <td style="vertical-align: middle;">
+                  <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/add-1.png") }}" title="<small>Ajouter un membre</small>" class="ui-button" onclick='loadPage("{{ path('user_search', { 'opt': 'add', 'cn': group.cn }) }}");' />
+              </td>
+          {% endif %}
+          {% if opt=='del' %}
+              <td style="vertical-align: middle;">
+                  <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/delete-1.png") }}" title="<small>Supprimer un groupe</small>" class="ui-button" onclick='loadPage("{{ path('group_delete', { 'cn': group.cn }) }}");' />
+              </td>
+          {% endif %}
+          {% if opt=='add' %}
+              <td style="vertical-align: middle;">
+                 {#   <td style="vertical-align: middle;"> {{ form_widget(m.memberof) }} </td> #}
+                  <img class="jqtip ui-button" align="absmiddle" src="{{ asset('bundles/app/images/ico/16/user-add.png') }}" title="<small>Ajouter des droits</small>" class="ui-button" onclick='loadPage("{{ path('user_add', { 'uid': uid, 'cn': group.cn }) }}");' /> 
+              </td>
+          {% endif %}
+          
         </tr>
    {% endfor %}
     </tbody>
       
        
 </table>
+   
+{% endif %}
+
 {% endblock %}

@@ -49,9 +49,10 @@ $(function() {
 #}
 
 <h2> Groupe : {{group.cn}} </h2>
-
-    <form action="{{ path('group_update', { 'cn': group.cn })}}" method="POST" {{ form_enctype(form) }}>
-    <h3>Members</h3>
+<br>
+    <h3>Nombre de membres du groupe : {{ nb_membres }}</h3>
+    <br>
+    <form class="amuForms" id="_ajxFromModifier">
     <table class="ui-widget-content dataTable TabInfos" filter="25">
         <thead>
             <tr>
@@ -77,14 +78,22 @@ $(function() {
         {% endfor %}
         </tbody>
     </table>
-    <input type="submit" value="Modifier les membres du groupe"/>
+        <br>
+    <p>
+     <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+	onclick="loadPage('{{ path('group_update', { 'cn': group.cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/save-2.png')}}" />&nbsp;Enregistrer les modifications&nbsp;</button>
+     <span class="record_actions"></span>
+    </p>
     {{ form_rest(form) }}
-    {# ... #}
     </form>
+
+    {# ... #}
 
 {% else %}
 <h2> Groupe : {{group.cn}} </h2>
-    <h3>Members</h3>
+    <br>
+    <h3>Nombre de membres du groupe : {{ nb_membres }}</h3>
+    <br>
     <table class="ui-widget-content dataTable TabInfos" filter="25">
         <thead>
             <tr>

@@ -4,9 +4,9 @@
 
 {% block body %}
 {% if success %}        
-    L'appartenance au groupe {{cn}} a été ajoutée.
+    <h3> L'appartenance au groupe {{cn}} a été ajoutée pour l'utilisateur uid={{uid}}. </h3>
 {% else %}
-    Erreur lors de l'ajout au groupe {{cn}}.
+    <h3> Erreur lors de l'ajout au groupe {{cn}}. </h3>
 {% endif %}
 
 {% endblock %}
