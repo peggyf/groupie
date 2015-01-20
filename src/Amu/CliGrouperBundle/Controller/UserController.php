@@ -159,10 +159,16 @@ class UserController extends Controller {
         $user->setMail($arData[0]['mail'][0]);
         $user->setSn($arData[0]['sn'][0]);
         $user->setTel($arData[0]['telephonenumber'][0]);
-        $arGroups = array_splice($arData[0]['memberof'], 1);
-        $user->setMemberof($arGroups);
+        $tab = array_splice($arData[0]['memberof'], 1);
+        $tab_cn = array();
+        foreach($tab as $dn)
+        {
+            $tab_cn[] = preg_replace("/(cn=)(([a-z0-9:-_]{1,}))(,ou=.*)/", "$3", $dn);
+        }
+        $user->setMemberof($tab_cn); 
+        
         $memberships = new ArrayCollection();
-        foreach($arGroups as $groupname)
+        foreach($tab_cn as $groupname)
         {
             $membership = new Membership();
             $membership->setGroupname($groupname);
@@ -171,9 +177,10 @@ class UserController extends Controller {
             $memberships[] = $membership;
         }
         $user->setMemberships($memberships);
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Tab groupes</B>=><FONT color =green><PRE>" . print_r($user, true) . "</PRE></FONT></FONT>";
                                 
         $editForm = $this->createForm(new UserEditType(), $user, array(
-            'action' => $this->generateUrl('user_update', array('uid' => $user->getUid())),
+            'action' => $this->generateUrl('user_update', array('uid' => $uid)),
             'method' => 'POST',
         ));
         $editForm->handleRequest($request);
@@ -195,7 +202,8 @@ class UserController extends Controller {
                 }
                 else
                 {
-                    $this->getLdap()->delMemberGroup($memb->getGroupname(), array($uid));
+                    $dn_group = "cn=" . $memb->getGroupname() . ", ou=groups, dc=univ-amu, dc=fr";
+                    $this->getLdap()->delMemberGroup($dn_group, array($user->getUid()));
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupes</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
             }
