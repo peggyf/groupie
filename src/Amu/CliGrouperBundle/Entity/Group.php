@@ -14,7 +14,12 @@ class Group {
   protected $members;
   protected $amugroupadmin;
   protected $amugroupfilter;
+  protected $droits;
   
+public function __construct()
+  {
+      $this->droits = new ArrayCollection();
+  }  
 
  /**
   * Set cn
@@ -63,6 +68,10 @@ class Group {
     $this->amugroupadmin = $amugroupadmin;
  } 
 
+ public function setDroits($droits)
+ {
+    $this->droits = $droits;
+ } 
  /**
   * Set cn
   *
@@ -94,6 +103,11 @@ class Group {
  public function getMembers()
  {
     return($this->members);
+ }
+ 
+ public function getDroits()
+ {
+    return($this->droits);
  }
  /**
  * @return  \Amu\AppBundle\Service\Ldap

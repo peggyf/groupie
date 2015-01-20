@@ -10,7 +10,7 @@ parameters:
         - { key: 12, name: "Voir tous les groupes", roles: ["ROLE_DOSI"], route: "tous_les_groupes", fils: false, description: "" }
         - { key: 2, name: "Recherche", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI"], route: "", fils: [21, 22], description: "" }
         - { key: 21, name: "Rechercher un groupe", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI"], route: "group_search", fils: false, description: "" }
-        - { key: 22, name: "Rechercher une personne", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI"], route: "user", fils: false, description: "" }
+        - { key: 22, name: "Rechercher une personne", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI"], route: "user_search", fils: false, description: "" }
         - { key: 3, name: "Gestion des groupes", roles: ["ROLE_SUPER_ADMIN"], route: "", fils: [31, 32], description: "" }
         - { key: 31, name: "Cr&eacute;er un groupe", roles: ["ROLE_SUPER_ADMIN"], route: "group_create", fils: false, description: "" }
         - { key: 32, name: "Supprimer un groupe", roles: ["ROLE_SUPER_ADMIN"], route: "group_search", fils: false, description: "" }

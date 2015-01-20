@@ -181,31 +181,30 @@ class GroupController extends Controller {
         }
         $group ->setMembers($members);
         
-        $editForm = $this->createForm(new GroupEditType(), $group, array(
-            'action' => $this->generateUrl('group_update', array('cn' => $cn)),
-            'method' => 'POST',
-        ));
+        $editForm = $this->createForm(new GroupEditType(), $group);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
             $groupupdate = new Group();
             $groupupdate = $editForm->getData();
             
-            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos user</B>=><FONT color =green><PRE>" . print_r($userupdate, true) . "</PRE></FONT></FONT>";
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Form valid</B>=><FONT color =green><PRE>" . print_r($groupupdate, true) . "</PRE></FONT></FONT>";
             
             $m_update = new ArrayCollection();      
             $m_update = $groupupdate->getMembers();
             foreach($m_update as $memb)
             {
+                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Form valid</B>=><FONT color =green><PRE>" . print_r($m_update, true) . "</PRE></FONT></FONT>";
                 if ($memb->getMember())
                 {
                     //$this->getLdap()->addMemberGroup($memb->getGroupname(), array($uid));
-                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupes</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
+                    echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
                 else
                 {
-                    $this->getLdap()->delMemberGroup($cn, array($memb->getUid()));
-                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupes</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
+                    $dn_group = "cn=" . $cn . ", ou=groups, dc=univ-amu, dc=fr";
+                    $this->getLdap()->delMemberGroup($dn_group, array($memb->getUid()));
+                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
             }
             
@@ -218,6 +217,7 @@ class GroupController extends Controller {
 
         return array(
             'group'      => $group,
+            'nb_membres' => $arUsers["count"],
             'form'   => $editForm->createView(),
         );
         

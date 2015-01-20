@@ -225,7 +225,7 @@ class UserController extends Controller {
         $dn_group = "cn=" . $cn . ", ou=groups, dc=univ-amu, dc=fr";
         $b = $this->getLdap()->addMemberGroup($dn_group, array($uid));
                 
-        return $this->render('AmuCliGrouperBundle:User:useradd.html.twig',array('cn' => $cn, 'success' => $b));
+        return $this->render('AmuCliGrouperBundle:User:useradd.html.twig',array('cn' => $cn, 'uid' => $uid, 'success' => $b));
         
     }
     
@@ -236,7 +236,7 @@ class UserController extends Controller {
     * @Route("/search/{opt}/{cn}",name="user_search")
     * @Template()
     */
-    public function searchAction(Request $request, $opt='search', $cn) {
+    public function searchAction(Request $request, $opt='search', $cn='') {
         $usersearch = new User();
         $users = array();
         
@@ -255,15 +255,22 @@ class UserController extends Controller {
             $user->setMail($arData[0]['mail'][0]);
             $user->setSn($arData[0]['sn'][0]);
             $user->setTel($arData[0]['telephonenumber'][0]);
-            $user->setMemberof(array_splice($arData[0]['memberof'], 1));
-            
-            $users[] = $user;
-            $this->getRequest()->getSession()->set('_saved',1);
+            // Récupération du cn des groupes (memberof)
+            $tab = array_splice($arData[0]['memberof'], 1);
+            $tab_cn = array();
+            foreach($tab as $dn)
+            {
+                $tab_cn[] = preg_replace("/(cn=)(([a-z0-9:-_]{1,}))(,ou=.*)/", "$3", $dn);
+            }
+            $user->setMemberof($tab_cn); 
+                        
+            $users[] = $user; 
+            //$this->getRequest()->getSession()->set('_saved',1);
             //return array('users' => $users);
             return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'cn' => $cn));
                        
         }
-        $this->getRequest()->getSession()->set('_saved',0);
+        //$this->getRequest()->getSession()->set('_saved',0);
         //return array('form' => $form->createView());
         
         return $this->render('AmuCliGrouperBundle:User:usersearch.html.twig', array('form' => $form->createView(), 'opt' => $opt, 'cn' => $cn));
