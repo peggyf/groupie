@@ -1,0 +1,109 @@
+{% extends 'AppBundle::page.html.twig' %}
+{% block titre %}Modification des droits d'un utilisateur{% endblock %}
+{% block body %}
+    
+{% if app.session.flashbag.has('flash-notice') %}
+<center>
+    <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+    {% for flashMessage in app.session.flashbag.get('flash-notice') %}
+        <p>{{ flashMessage }}</p>
+    {% endfor %}
+    </div>
+</center>
+{% endif %}
+
+{% if app.session.flashbag.has('flash-error') %}
+<center>
+    <div class="ui-state-error ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;margin:auto;">
+    {% for flashMessage in app.session.flashbag.get('flash-error') %}
+        <p>{{ flashMessage }}</p>
+    {% endfor %}
+    </div>
+</center>
+{% endif %}
+
+{% set hilightColor='#C7FE74' %}
+
+{% if app.session.get('_saved', 1) != 1 %}    
+{#
+{% if app.session.has('_saved') and app.session.get('_saved',0)==1 %}
+{{ app.session.remove('_saved') }}
+<script language="JavaScript" type="text/javascript">
+$(function() {
+  loadPage('{{ path('user') }}');
+});
+</script>
+{% else %}
+#}
+{#    
+<form class="amuForms" id="_ajxFromModifier" >
+  {{ form_widget(edit_form) }}
+  <br>
+  <p>
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('user') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
+    &nbsp;&nbsp;<button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('user_update', { 'uid': user.uid }) }}',$('#_ajxFromModifier').serializeArray());" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/valid.png')}}" />&nbsp;Valider&nbsp;</button>
+            <span class="record_actions">
+</span>
+  </p>
+</form>
+#}
+    <form class="amuForms" id="_ajxFromModifier">
+    <br>    
+    <h3>Modifications pour l'utilisateur : {{user.displayname}}, uid = {{user.uid}}</h3>
+    <br>
+    <table class="ui-widget-content dataTable TabInfos" filter="25">
+        <thead>
+            <tr>
+            <th>Nom du groupe</th>
+	    <th>Membre</th>
+            <th>Administrateur</th>
+            </tr>
+        </thead>
+        <tbody>
+        {# itère sur chaque membership existant et affiche les champs : name, memberof et adminof #}
+        {% for m in form.memberships  %}
+            <tr> 
+                <td style="vertical-align: middle;"> {{ user.memberships[loop.index0].groupname }} </td>
+                <td style="vertical-align: middle;"> {{ form_widget(m.memberof) }} </td>
+                <td style="vertical-align: middle;"> {{ form_widget(m.adminof) }} </td>
+            </tr>  
+        {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <p>
+     <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+	onclick="loadPage('{{ path('group_add', { 'cn_search': cn_search, 'uid': user.uid }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/search-3.png')}}" />&nbsp;Enregistrer les modifications&nbsp;</button>
+     <span class="record_actions"></span>
+    </p>
+    {{ form_rest(form) }}
+    {# ... #}
+    </form>
+{% else %}
+    <br>    
+    <h3> Modifications pour l'utilisateur : {{user.displayname}}, uid = {{user.uid}} </h3>
+    <br>
+    <table class="ui-widget-content dataTable TabInfos" filter="25">
+        <thead>
+            <tr>
+            <th>Nom du groupe</th>
+	    <th>Membre</th>
+            <th>Administrateur</th>
+            </tr>
+        </thead>
+        <tbody>
+        {# itère sur chaque membership existant et affiche les champs : name, memberof et adminof #}
+        {% for m in user.memberships  %}
+            <tr> 
+                <td style="vertical-align: middle;"> {{ m.groupname }}  </td>
+                <td style="vertical-align: middle;"> <input type = 'checkbox' disabled="disabled" {% if m.memberof == 1 %} checked='checked' {% endif %} /> </td>
+                <td style="vertical-align: middle;"> <input type = 'checkbox' disabled="disabled" {% if m.adminof ==1 %} checked='checked' {% endif %} /> </td>
+            </tr>  
+        {% endfor %}
+        </tbody>
+    </table>
+  
+{% endif %}
+{% endblock %}
+
+
