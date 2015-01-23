@@ -10,7 +10,7 @@
             <th>cn</th>
 	    <th>Description</th>
             <th>amuGroupFilter</th>
-	    
+	    <th>Ajouter</th>
         </tr>
     </thead>
     <tbody>
@@ -19,6 +19,9 @@
 	  <td style="vertical-align: middle;">{{group.cn }}</td>
           <td style="vertical-align: middle;">{{group.description }}</td>
           <td style="vertical-align: middle;">{{group.amugroupfilter }}</td>
+          <td style="vertical-align: middle;">
+            <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/add-1.png") }}" title="<small>Ajouter un membre</small>" class="ui-button" onclick='loadPage("{{ path('user_search', { 'opt': 'add', 'cn': group.cn }) }}");' />
+          </td>
         </tr>
    {% endfor %}
     </tbody>

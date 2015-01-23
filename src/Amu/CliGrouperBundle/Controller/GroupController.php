@@ -17,6 +17,8 @@ use Amu\CliGrouperBundle\Entity\User;
 use Amu\CliGrouperBundle\Entity\Member;
 use Amu\CliGrouperBundle\Form\MemberType;
 use Amu\CliGrouperBundle\Form\GroupEditType;
+use Amu\CliGrouperBundle\Form\UserEditType;
+use Amu\CliGrouperBundle\Entity\Membership;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -102,26 +104,141 @@ class GroupController extends Controller {
         if ($form->isValid()) {
             $groupsearch = $form->getData(); 
             
-            // Recherche des groupes dans le LDAP
-            $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=*" . $groupsearch->getCn() . "*))",array("cn","description","amuGroupFilter"));
+            if ($opt=='search')
+            {
+                // Recherche des groupes dans le LDAP
+                $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=*" . $groupsearch->getCn() . "*))",array("cn","description","amuGroupFilter"));
                
-            for ($i=0; $i<$arData["count"]; $i++) {
+                for ($i=0; $i<$arData["count"]; $i++) {
                 //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>cn=</B>=><FONT color =green><PRE>" . $arData[$i]["cn"][0] . "</PRE></FONT></FONT>";
-                $groups[$i] = new Group();
-                $groups[$i]->setCn($arData[$i]["cn"][0]);
-                $groups[$i]->setDescription($arData[$i]["description"][0]);
-                $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
-                $groups[$i]->setAmugroupadmin("");
-            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
-            }
+                    $groups[$i] = new Group();
+                    $groups[$i]->setCn($arData[$i]["cn"][0]);
+                    $groups[$i]->setDescription($arData[$i]["description"][0]);
+                    $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
+                    $groups[$i]->setAmugroupadmin("");                   
+                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
+                }
             
-           return $this->render('AmuCliGrouperBundle:Group:recherchegroupe.html.twig',array('groups' => $groups, 'opt' => $opt, 'uid' => $uid));
+                return $this->render('AmuCliGrouperBundle:Group:recherchegroupe.html.twig',array('groups' => $groups, 'opt' => $opt, 'uid' => $uid));
+            }
+            else {
+                if ($opt=='add')
+                {
+                    return $this->redirect($this->generateUrl('group_add', array('cn_search'=>$groupsearch->getCn(), 'uid'=>$uid)));
+                }
+            }
                        
         }
         return $this->render('AmuCliGrouperBundle:Group:groupesearch.html.twig', array('form' => $form->createView(), 'opt' => $opt, 'uid' => $uid));
         
     }
     
+    /**
+     * Recherche de groupes
+     *
+     * @Route("/add/{cn_search}/{uid}",name="group_add")
+     * @Template("AmuCliGrouperBundle:Group:recherchegroupeadd.html.twig")
+     */
+    public function addAction(Request $request, $cn_search='', $uid='') {
+        // Récupération utilisateur
+        $user = new User();
+        $user->setUid($uid);
+        $arDataUser=$this->getLdap()->arDatasFilter("uid=".$uid, array('displayname', 'memberof'));
+        $user->setDisplayname($arDataUser[0]['displayname'][0]);
+        $tab = array_splice($arDataUser[0]['memberof'], 1);
+        $tab_cn = array();
+        foreach($tab as $dn)
+        {
+            $tab_cn[] = preg_replace("/(cn=)(([a-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
+        }
+        
+        // Recherche des groupes dans le LDAP
+        $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=*" . $cn_search . "*))",array("cn","description","amuGroupFilter"));             
+        for ($i=0; $i<$arData["count"]; $i++) {
+            $tab_cn_search[$i] = $arData[$i]["cn"][0];
+        }
+                   
+        // on garde les données du LDAP dans le tableau tab_memb
+        $tab_memb = array();
+        // on remplit l'objet user avec les groupes retournés par la recherche LDAP
+        $memberships = new ArrayCollection();
+        foreach($tab_cn_search as $groupname)
+        {
+            $membership = new Membership();
+            $membership->setGroupname($groupname);
+            foreach($tab_cn as $cn)
+            {
+                if ($cn==$groupname)
+                {
+                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>tab_cn_search=</B>=><FONT color =green><PRE>" . $groupname . "</PRE></FONT></FONT>"; 
+                    $membership->setMemberof(TRUE);
+                    $flag = TRUE;
+                    break;
+                }
+                else 
+                {
+                    $membership->setMemberof(FALSE);
+                    $flag = FALSE;
+                 }
+            }
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>membership=</B>=><FONT color =green><PRE>" . print_r($flag, true) . "</PRE></FONT></FONT>";    
+            $membership->setAdminof(FALSE);
+            $memberships[] = $membership;
+            $tab_memb[] = $flag;
+        }
+        $user->setMemberships($memberships);       
+        
+        $editForm = $this->createForm(new UserEditType(), $user, array(
+            'action' => $this->generateUrl('group_add', array('cn_search'=> $cn_search, 'uid' => $uid)),
+            'method' => 'POST',
+        ));
+        $editForm->handleRequest($request);
+
+        if ($editForm->isValid()) {
+            $userupdate = new User();
+            $userupdate = $editForm->getData();
+            
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos user</B>=><FONT color =green><PRE>" . print_r($userupdate, true) . "</PRE></FONT></FONT>";
+            
+            $m_update = new ArrayCollection();      
+            $m_update = $userupdate->getMemberships();
+            
+            //foreach($m_update as $memb)
+            for ($i=0; $i<sizeof($m_update); $i++)
+            {
+                $memb = $m_update[$i];
+                // Si changement sur les droits de l'utilisateur
+                if ($memb->getMemberof() != $tab_memb[$i])
+                {
+                    $dn_group = "cn=" . $memb->getGroupname() . ", ou=groups, dc=univ-amu, dc=fr";
+                    if ($memb->getMemberof())
+                    {
+                        // Ajout utilisateur dans groupe
+                        $this->getLdap()->addMemberGroup($dn_group, array($uid));
+                        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupes</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
+                    }
+                    else
+                    {
+                        // Suppression utilisateur du groupe
+                        $this->getLdap()->delMemberGroup($dn_group, array($uid));
+                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupes</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
+                    }
+                }
+            }
+            $this->get('session')->getFlashBag()->add('flash-notice', 'Les modifications ont bien été enregistrées');
+            $this->getRequest()->getSession()->set('_saved',1);
+        }
+        else { 
+            $this->getRequest()->getSession()->set('_saved',0);
+            
+        }
+        
+        return array(
+            'user'      => $user,
+            'cn_search' => $cn_search,
+            'form'   => $editForm->createView(),
+        );
+    }
     /**
      * Voir les membres et administrateurs d'un groupe.
      *
@@ -207,7 +324,7 @@ class GroupController extends Controller {
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
             }
-            
+            $this->get('session')->getFlashBag()->add('flash-notice', 'Les modifications ont bien été enregistrées');
             
             $this->getRequest()->getSession()->set('_saved',1);
         }
@@ -250,6 +367,7 @@ class GroupController extends Controller {
             
                  // affichage groupe créé
                 $groups[0] = $group;
+                $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été créé');
                 return $this->render('AmuCliGrouperBundle:Group:creationgroupe.html.twig',array('groups' => $groups));
             }
             else 

@@ -69,7 +69,14 @@ class UserController extends Controller {
             $user->setMail($arData[0]['mail'][0]);
             $user->setSn($arData[0]['sn'][0]);
             $user->setTel($arData[0]['telephonenumber'][0]);
-            $user->setMemberof(array_splice($arData[0]['memberof'], 1));
+            // Récupération du cn des groupes (memberof)
+            $tab = array_splice($arData[0]['memberof'], 1);
+            $tab_cn = array();
+            foreach($tab as $dn)
+            {
+                $tab_cn[] = preg_replace("/(cn=)(([a-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
+            }
+            $user->setMemberof($tab_cn); 
         
             $users[] = $user;
             
@@ -163,9 +170,9 @@ class UserController extends Controller {
         $tab_cn = array();
         foreach($tab as $dn)
         {
-            $tab_cn[] = preg_replace("/(cn=)(([a-z0-9:-_]{1,}))(,ou=.*)/", "$3", $dn);
+            $tab_cn[] = preg_replace("/(cn=)(([a-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
         }
-        $user->setMemberof($tab_cn); 
+        $user->setMemberof($tab_cn);  
         
         $memberships = new ArrayCollection();
         foreach($tab_cn as $groupname)
@@ -207,7 +214,7 @@ class UserController extends Controller {
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupes</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
             }
-            
+            $this->get('session')->getFlashBag()->add('flash-notice', 'Les modifications ont bien été enregistrées');
             
             $this->getRequest()->getSession()->set('_saved',1);
         }
@@ -268,7 +275,7 @@ class UserController extends Controller {
             $tab_cn = array();
             foreach($tab as $dn)
             {
-                $tab_cn[] = preg_replace("/(cn=)(([a-z0-9:-_]{1,}))(,ou=.*)/", "$3", $dn);
+                $tab_cn[] = preg_replace("/(cn=)(([a-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
             }
             $user->setMemberof($tab_cn); 
                         
