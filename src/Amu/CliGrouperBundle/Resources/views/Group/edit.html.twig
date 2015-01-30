@@ -2,55 +2,54 @@
 {% block titre %}Modification des membres d'un groupe{% endblock %}
 {% block body %}
     
-{% if app.session.flashbag.has('flash-notice') %}
-<center>
-    <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+{% set hilightColor='#C7FE74' %}
+
+{% if app.session.has('_saved') and app.session.get('_saved', 0) == 1 %}
+ {{ app.session.remove('_saved') }} 
+ 
+  {% if app.session.flashbag.has('flash-notice') %}
+  <center>
+  <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
     {% for flashMessage in app.session.flashbag.get('flash-notice') %}
         <p>{{ flashMessage }}</p>
     {% endfor %}
-    </div>
-</center>
-{% endif %}
+  </div>
+  </center>
+  {% endif %}
 
-{% if app.session.flashbag.has('flash-error') %}
-<center>
-    <div class="ui-state-error ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;margin:auto;">
-    {% for flashMessage in app.session.flashbag.get('flash-error') %}
-        <p>{{ flashMessage }}</p>
-    {% endfor %}
-    </div>
-</center>
-{% endif %}
-
-{% set hilightColor='#C7FE74' %}
-
-{% if app.session.get('_saved', 1) != 1 %}    
-{#
-{% if app.session.has('_saved') and app.session.get('_saved',0)==1 %}
-{{ app.session.remove('_saved') }}
-<script language="JavaScript" type="text/javascript">
-$(function() {
-  loadPage('{{ path('user') }}');
-});
-</script>
+    <br>
+    <h3>Nombre de membres du groupe {{ group.cn }} : {{ nb_membres }}</h3>
+    <br>
+    <table class="ui-widget-content dataTable TabInfos" filter="25">
+        <thead>
+            <tr>
+            <th>uid</th>
+            <th>DisplayName</th>
+            <th>Mail</th>
+            <th>Tel</th>
+	    <th>Membre</th>
+            <th>Administrateur</th>
+            </tr>
+        </thead>
+        <tbody>
+        {# itère sur chaque membership existant et affiche les champs : name, memberof et adminof #}
+        {% for m in group.members  %}
+            <tr> 
+                <td style="vertical-align: middle;"> {{ m.uid }}  </td>
+                <td style="vertical-align: middle;"> {{ m.displayname }}  </td>
+                <td style="vertical-align: middle;"> {{ m.mail }}  </td>
+                <td style="vertical-align: middle;"> {{ m.tel }}  </td>
+                <td style="vertical-align: middle;"> <input type = 'checkbox' disabled="disabled" {% if m.member == 1 %} checked='checked' {% endif %} /> </td>
+                <td style="vertical-align: middle;"> <input type = 'checkbox' disabled="disabled" {% if m.admin ==1 %} checked='checked' {% endif %} /> </td>
+            </tr>  
+        {% endfor %}
+        </tbody>
+    </table>
+   
 {% else %}
-#}
-{#    
-<form class="amuForms" id="_ajxFromModifier" >
-  {{ form_widget(edit_form) }}
-  <br>
-  <p>
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('user') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
-    &nbsp;&nbsp;<button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('user_update', { 'uid': user.uid }) }}',$('#_ajxFromModifier').serializeArray());" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/valid.png')}}" />&nbsp;Valider&nbsp;</button>
-            <span class="record_actions">
-</span>
-  </p>
-</form>
-#}
-
-<h2> Groupe : {{group.cn}} </h2>
-<br>
-    <h3>Nombre de membres du groupe : {{ nb_membres }}</h3>
+    
+    <br>
+    <h3>Nombre de membres du groupe {{ group.cn }} : {{ nb_membres }}</h3>
     <br>
     <form class="amuForms" id="_ajxFromModifier">
     <table class="ui-widget-content dataTable TabInfos" filter="25">
@@ -83,42 +82,13 @@ $(function() {
      <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
 	onclick="loadPage('{{ path('group_update', { 'cn': group.cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/save-2.png')}}" />&nbsp;Enregistrer les modifications&nbsp;</button>
      <span class="record_actions"></span>
+     <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
     </p>
     {{ form_rest(form) }}
     </form>
 
     {# ... #}
-
-{% else %}
-<h2> Groupe : {{group.cn}} </h2>
-    <br>
-    <h3>Nombre de membres du groupe : {{ nb_membres }}</h3>
-    <br>
-    <table class="ui-widget-content dataTable TabInfos" filter="25">
-        <thead>
-            <tr>
-            <th>uid</th>
-            <th>DisplayName</th>
-            <th>Mail</th>
-            <th>Tel</th>
-	    <th>Membre</th>
-            <th>Administrateur</th>
-            </tr>
-        </thead>
-        <tbody>
-        {# itère sur chaque membership existant et affiche les champs : name, memberof et adminof #}
-        {% for m in group.members  %}
-            <tr> 
-                <td style="vertical-align: middle;"> {{ m.uid }}  </td>
-                <td style="vertical-align: middle;"> {{ m.displayname }}  </td>
-                <td style="vertical-align: middle;"> {{ m.mail }}  </td>
-                <td style="vertical-align: middle;"> {{ m.tel }}  </td>
-                <td style="vertical-align: middle;"> <input type = 'checkbox' disabled="disabled" {% if m.member == 1 %} checked='checked' {% endif %} /> </td>
-                <td style="vertical-align: middle;"> <input type = 'checkbox' disabled="disabled" {% if m.admin ==1 %} checked='checked' {% endif %} /> </td>
-            </tr>  
-        {% endfor %}
-        </tbody>
-    </table>
+  
   
 {% endif %}
 {% endblock %}

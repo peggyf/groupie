@@ -72,16 +72,17 @@ class GroupController extends Controller {
      */
     public function mesgroupesAction(Request $request) {
         
-        $arData=$this->getLdap()->arDatasFilter("member=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+        //$arData=$this->getLdap()->arDatasFilter("member=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+        $arData=$this->getLdap()->arDatasFilter("amuGroupAdmin=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>memberof=</B>=><FONT color =green><PRE>" . print_r($arData). "</PRE></FONT></FONT>";
-        $groups = array();
+        $groups = new ArrayCollection();
         
         for ($i=0; $i<$arData["count"]; $i++) {
             $groups[$i] = new Group();
             $groups[$i]->setCn($arData[$i]["cn"][0]);
             $groups[$i]->setDescription($arData[$i]["description"][0]);
             $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
-            $groups[$i]->setAmugroupadmin("");
+            $groups[$i]->setAmugroupadmin($uid);
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
         }
         
@@ -104,7 +105,7 @@ class GroupController extends Controller {
         if ($form->isValid()) {
             $groupsearch = $form->getData(); 
             
-            if ($opt=='search')
+            if (($opt=='search')||($opt=='del'))
             {
                 // Recherche des groupes dans le LDAP
                 $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=*" . $groupsearch->getCn() . "*))",array("cn","description","amuGroupFilter"));
@@ -134,6 +135,16 @@ class GroupController extends Controller {
     }
     
     /**
+     * Recherche de groupes pour la suppression
+     *
+     * @Route("/searchdel",name="group_search_del")
+     * @Template()
+     */
+    public function searchdelAction(Request $request) {
+        return $this->redirect($this->generateUrl('group_search', array('opt' => 'del', 'uid'=>'')));
+    }
+    
+    /**
      * Recherche de groupes
      *
      * @Route("/add/{cn_search}/{uid}",name="group_add")
@@ -149,7 +160,14 @@ class GroupController extends Controller {
         $tab_cn = array();
         foreach($tab as $dn)
         {
-            $tab_cn[] = preg_replace("/(cn=)(([a-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
+            $tab_cn[] = preg_replace("/(cn=)(([a-z0-9:._-]{1,}))(,ou=.*)/", "$3", $dn);
+        }
+        // Récupération des groupes dont l'utilisateur est admin
+        $arDataAdmin=$this->getLdap()->arDatasFilter("amuGroupAdmin=uid=".$uid.",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+        $tab_cn_admin = array();
+        for($i=0;$i<$arDataAdmin["count"];$i++)
+        {
+            $tab_cn_admin[$i] = $arDataAdmin[$i]["cn"][0];
         }
         
         // Recherche des groupes dans le LDAP
@@ -157,9 +175,7 @@ class GroupController extends Controller {
         for ($i=0; $i<$arData["count"]; $i++) {
             $tab_cn_search[$i] = $arData[$i]["cn"][0];
         }
-                   
-        // on garde les données du LDAP dans le tableau tab_memb
-        $tab_memb = array();
+                           
         // on remplit l'objet user avec les groupes retournés par la recherche LDAP
         $memberships = new ArrayCollection();
         foreach($tab_cn_search as $groupname)
@@ -172,19 +188,29 @@ class GroupController extends Controller {
                 {
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>tab_cn_search=</B>=><FONT color =green><PRE>" . $groupname . "</PRE></FONT></FONT>"; 
                     $membership->setMemberof(TRUE);
-                    $flag = TRUE;
                     break;
                 }
                 else 
                 {
                     $membership->setMemberof(FALSE);
-                    $flag = FALSE;
                  }
             }
-            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>membership=</B>=><FONT color =green><PRE>" . print_r($flag, true) . "</PRE></FONT></FONT>";    
-            $membership->setAdminof(FALSE);
+            foreach($tab_cn_admin as $cn)
+            {
+                if ($cn==$groupname)
+                {
+                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>tab_cn_search=</B>=><FONT color =green><PRE>" . $groupname . "</PRE></FONT></FONT>"; 
+                    $membership->setAdminof(TRUE);
+                    break;
+                }
+                else 
+                {
+                    $membership->setAdminof(FALSE);
+                 }
+            }
+            
             $memberships[] = $membership;
-            $tab_memb[] = $flag;
+            
         }
         $user->setMemberships($memberships);       
         
@@ -207,22 +233,18 @@ class GroupController extends Controller {
             for ($i=0; $i<sizeof($m_update); $i++)
             {
                 $memb = $m_update[$i];
-                // Si changement sur les droits de l'utilisateur
-                if ($memb->getMemberof() != $tab_memb[$i])
+                $dn_group = "cn=" . $memb->getGroupname() . ", ou=groups, dc=univ-amu, dc=fr";
+                if ($memb->getMemberof())
                 {
-                    $dn_group = "cn=" . $memb->getGroupname() . ", ou=groups, dc=univ-amu, dc=fr";
-                    if ($memb->getMemberof())
-                    {
-                        // Ajout utilisateur dans groupe
-                        $this->getLdap()->addMemberGroup($dn_group, array($uid));
+                    // Ajout utilisateur dans groupe
+                    $this->getLdap()->addMemberGroup($dn_group, array($uid));
                         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupes</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
-                    }
-                    else
-                    {
-                        // Suppression utilisateur du groupe
-                        $this->getLdap()->delMemberGroup($dn_group, array($uid));
+                }
+                else
+                {
+                    // Suppression utilisateur du groupe
+                    $this->getLdap()->delMemberGroup($dn_group, array($uid));
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupes</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
-                    }
                 }
             }
             $this->get('session')->getFlashBag()->add('flash-notice', 'Les modifications ont bien été enregistrées');
@@ -249,11 +271,12 @@ class GroupController extends Controller {
     public function voirAction(Request $request, $cn)
     {
         $users = array();
+        $admins = array();
         
         // Recherche des membres dans le LDAP
         $arUsers = $this->getLdap()->getMembersGroup($cn);
         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos users</B>=><FONT color =green><PRE>" . print_r($arUsers, true) . "</PRE></FONT></FONT>";
-          
+                 
         for ($i=0; $i<$arUsers["count"]; $i++) {                     
             $users[$i] = new User();
             $users[$i]->setUid($arUsers[$i]["uid"][0]);
@@ -264,9 +287,27 @@ class GroupController extends Controller {
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
         }
         
+        // Recherche des administrateurs du groupe
+        $arAdmins = $this->getLdap()->getAdminsGroup($cn);
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos admins</B>=><FONT color =green><PRE>" . print_r($arAdmins, true) . "</PRE></FONT></FONT>";
+        
+        for ($i=0; $i<$arAdmins[0]["amugroupadmin"]["count"]; $i++) {  
+            $uid = preg_replace("/(uid=)(([a-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$i]);
+            $result = $this->getLdap()->arUserInfos($uid, array("uid", "sn", "displayname", "mail", "telephonenumber"));
+            $admins[$i] = new User();
+            $admins[$i]->setUid($result["uid"]);
+            $admins[$i]->setSn($result["sn"]);
+            $admins[$i]->setDisplayname($result["displayname"]);
+            $admins[$i]->setMail($result["mail"]);
+            $admins[$i]->setTel($result["telephonenumber"]);
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Admins</B>=><FONT color =green><PRE>" . print_r($admins[$i], true) . "</PRE></FONT></FONT>";
+        }
+        
         return array('cn' => $cn,
                     'nb_membres' => $arUsers["count"], 
-                    'users' => $users);
+                    'users' => $users,
+                    'nb_admins' => $arAdmins[0]["amugroupadmin"]["count"],
+                    'admins' => $admins);
     }
     
     /**
@@ -285,7 +326,16 @@ class GroupController extends Controller {
         // Recherche des membres dans le LDAP
         $arUsers = $this->getLdap()->getMembersGroup($cn);
         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos users</B>=><FONT color =green><PRE>" . print_r($arUsers, true) . "</PRE></FONT></FONT>";
-          
+        // Recherche des admins dans le LDAP
+        $arAdmins = $this->getLdap()->getAdminsGroup($cn);
+        $flagMembers = array();
+        for($i=0;$i<$arAdmins[0]["amugroupadmin"]["count"];$i++)
+        {
+            $flagMembers[] = FALSE;
+        }
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos users</B>=><FONT color =green><PRE>" . print_r($arUsers, true) . "</PRE></FONT></FONT>";
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos admins</B>=><FONT color =green><PRE>" . print_r($arAdmins, true) . "</PRE></FONT></FONT>";
+        // Affichage des membres  
         for ($i=0; $i<$arUsers["count"]; $i++) {                     
             $members[$i] = new Member();
             $members[$i]->setUid($arUsers[$i]["uid"][0]);
@@ -294,8 +344,41 @@ class GroupController extends Controller {
             $members[$i]->setTel($arUsers[$i]["telephonenumber"][0]);
             $members[$i]->setMember(TRUE);
             $members[$i]->setAdmin(FALSE);
+           
+            // on teste si le membre est aussi admin
+            for ($j=0; $j<$arAdmins[0]["amugroupadmin"]["count"]; $j++)
+            {
+                $uid = preg_replace("/(uid=)(([a-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$j]);
+                if ($uid==$arUsers[$i]["uid"][0])
+                {
+                    $members[$i]->setAdmin(TRUE);
+                    $flagMembers[$j] = TRUE;
+                    break;
+                }
+            }
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
         }
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos membres</B>=><FONT color =green><PRE>" . print_r($members, true) . "</PRE></FONT></FONT>";
+        
+        // Affichage des admins qui ne sont pas membres
+        for ($j=0; $j<$arAdmins[0]["amugroupadmin"]["count"]; $j++) {       
+            if ($flagMembers[$j]==FALSE)
+            {
+                // si l'admin n'est pas membre du groupe, il faut aller récupérer ses infos dans le LDAP
+                $uid = preg_replace("/(uid=)(([a-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$j]);
+                $result = $this->getLdap()->arUserInfos($uid, array("uid", "sn", "displayname", "mail", "telephonenumber"));
+                
+                $memb = new Member();
+                $memb->setUid($result["uid"]);
+                $memb->setDisplayname($result["displayname"]);
+                $memb->setMail($result["mail"]);
+                $memb->setTel($result["telephonenumber"]);
+                $memb->setMember(FALSE);
+                $memb->setAdmin(TRUE);
+                $members[] = $memb;
+            }
+        }
+        
         $group ->setMembers($members);
         
         $editForm = $this->createForm(new GroupEditType(), $group);
@@ -311,17 +394,31 @@ class GroupController extends Controller {
             $m_update = $groupupdate->getMembers();
             foreach($m_update as $memb)
             {
+                $dn_group = "cn=" . $cn . ", ou=groups, dc=univ-amu, dc=fr";
                 //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Form valid</B>=><FONT color =green><PRE>" . print_r($m_update, true) . "</PRE></FONT></FONT>";
+                // Traitement des membres
                 if ($memb->getMember())
                 {
-                    //$this->getLdap()->addMemberGroup($memb->getGroupname(), array($uid));
-                    echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
+                    $this->getLdap()->addMemberGroup($dn_group, array($memb->getUid()));
+                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
                 else
                 {
-                    $dn_group = "cn=" . $cn . ", ou=groups, dc=univ-amu, dc=fr";
+                    
                     $this->getLdap()->delMemberGroup($dn_group, array($memb->getUid()));
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
+                }
+                
+                // Traitement des admins
+                if ($memb->getAdmin())
+                {
+                    $this->getLdap()->addAdminGroup($dn_group, array($memb->getUid()));
+                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
+                }
+                else
+                {
+                    $this->getLdap()->delAdminGroup($dn_group, array($memb->getUid()));
+                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
             }
             $this->get('session')->getFlashBag()->add('flash-notice', 'Les modifications ont bien été enregistrées');
@@ -366,8 +463,8 @@ class GroupController extends Controller {
                 //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>retour create groupe ldap</B>=><FONT color =green><PRE>" . $b . "</PRE></FONT></FONT>";
             
                  // affichage groupe créé
-                $groups[0] = $group;
                 $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été créé');
+                $groups[0] = $group;
                 return $this->render('AmuCliGrouperBundle:Group:creationgroupe.html.twig',array('groups' => $groups));
             }
             else 
@@ -398,7 +495,7 @@ class GroupController extends Controller {
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>retour create groupe ldap</B>=><FONT color =green><PRE>" . $b . "</PRE></FONT></FONT>";
             
             // affichage groupe supprimé
-            
+            $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été supprimé');
             return $this->render('AmuCliGrouperBundle:Group:suppressiongroupe.html.twig',array('cn' => $cn));
         }
         else 
