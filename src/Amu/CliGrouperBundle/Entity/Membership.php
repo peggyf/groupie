@@ -17,6 +17,7 @@ class Membership {
   protected $groupname;
   protected $memberof;
   protected $adminof;
+  protected $droits;
   
 
   /**
@@ -48,7 +49,11 @@ class Membership {
  {
     $this->adminof = $adminof;
  }
-  
+
+ public function setDroits($droits)
+ {
+    $this->droits = $droits;
+ }
  /**
   * Get group name
   *
@@ -75,5 +80,8 @@ class Membership {
  {
     return ($this->adminof);
  } 
-  
+  public function getDroits()
+ {
+    return ($this->droits);
+ } 
 }

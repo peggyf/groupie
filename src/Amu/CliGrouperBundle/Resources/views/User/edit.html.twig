@@ -58,9 +58,15 @@
         {# itère sur chaque membership existant et affiche les champs : name, memberof et adminof #}
         {% for m in form.memberships  %}
             <tr> 
-                <td style="vertical-align: middle;"> {{ user.memberships[loop.index0].groupname }} </td>
-                <td style="vertical-align: middle;"> {{ form_widget(m.memberof) }} </td>
-                <td style="vertical-align: middle;"> {{ form_widget(m.adminof) }} </td>
+                {% if user.memberships[loop.index0].droits == 'Modifier' %}
+                    <td style="vertical-align: middle;"> {{ user.memberships[loop.index0].groupname }} </td>
+                    <td style="vertical-align: middle;"> {{ form_widget(m.memberof) }} </td>
+                    <td style="vertical-align: middle;"> {{ form_widget(m.adminof) }} </td>
+                {% else %}
+                    <td style="vertical-align: middle;"> {{ user.memberships[loop.index0].groupname }} </td>
+                    <td style="vertical-align: middle;"> {{ form_widget(m.memberof, { 'disabled':'disabled' } ) }} </td>
+                    <td style="vertical-align: middle;"> {{ form_widget(m.adminof, { 'disabled':'disabled' } ) }} </td>
+                {% endif %}
             </tr>  
         {% endfor %}
         </tbody>
@@ -68,7 +74,7 @@
     <br>
     <p>
      <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-	onclick="loadPage('{{ path('user_update', { 'uid': user.uid }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/search-3.png')}}" />&nbsp;Enregistrer les modifications&nbsp;</button>
+	onclick="loadPage('{{ path('user_update', { 'uid': user.uid }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/save-2.png')}}" />&nbsp;Enregistrer les modifications&nbsp;</button>
      <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
      <span class="record_actions"></span>
     </p>

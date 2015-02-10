@@ -60,9 +60,15 @@
         {# itère sur chaque membership existant et affiche les champs : name, memberof et adminof #}
         {% for m in form.memberships  %}
             <tr> 
+                {% if user.memberships[loop.index0].droits == 'Modifier' %}
                 <td style="vertical-align: middle;"> {{ user.memberships[loop.index0].groupname }} </td>
                 <td style="vertical-align: middle;"> {{ form_widget(m.memberof) }} </td>
                 <td style="vertical-align: middle;"> {{ form_widget(m.adminof) }} </td>
+                {% else %}
+                    <td style="vertical-align: middle;"> {{ user.memberships[loop.index0].groupname }} </td>
+                    <td style="vertical-align: middle;"> {{ form_widget(m.memberof, { 'attr': { 'disabled': 'true', } } ) }} </td>
+                    <td style="vertical-align: middle;"> {{ form_widget(m.adminof, { 'attr': { 'disabled': 'true', } } ) }} </td>
+                {% endif %}
             </tr>  
         {% endfor %}
         </tbody>

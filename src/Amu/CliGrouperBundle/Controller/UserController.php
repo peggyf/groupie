@@ -74,7 +74,7 @@ class UserController extends Controller {
             $tab_cn = array();
             foreach($tab as $dn)
             {
-                $tab_cn[] = preg_replace("/(cn=)(([a-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
+                $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
             }
             $user->setMemberof($tab_cn); 
         
@@ -156,6 +156,16 @@ class UserController extends Controller {
      */
     public function updateAction(Request $request, $uid)
     {
+        // Dans le cas d'un gestionnaire
+        if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
+            // Recup des groupes dont l'utilisateur est admin
+            $arDataAdminLogin = $this->getLdap()->arDatasFilter("amuGroupAdmin=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+            for($i=0;$i<$arDataAdminLogin["count"];$i++)
+            {
+                $tab_cn_admin_login[$i] = $arDataAdminLogin[$i]["cn"][0];
+            }
+        }
+        
         // Recherche des utilisateurs dans le LDAP
         $arData=$this->getLdap()->arDatasFilter("uid=".$uid, array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'memberof'));
             
@@ -170,7 +180,7 @@ class UserController extends Controller {
         $tab_cn = array();
         foreach($tab as $dn)
         {
-            $tab_cn[] = preg_replace("/(cn=)(([a-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
+            $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
         }
         $user->setMemberof($tab_cn); 
         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>memberof=</B>=><FONT color =green><PRE>" . print_r($tab_cn). "</PRE></FONT></FONT>";
@@ -193,6 +203,7 @@ class UserController extends Controller {
             $membership = new Membership();
             $membership->setGroupname($tab_cn[$i]);
             $membership->setMemberof(TRUE);
+            $membership->setDroits('Aucun');
             // on teste si l'utilisateur est aussi admin du groupe
             for ($j=0; $j<$arDataAdmin["count"];$j++)
             {
@@ -207,6 +218,26 @@ class UserController extends Controller {
                     $membership->setAdminof(FALSE);
                 }
             }
+            
+            // Gestion droits pour un gestionnaire
+            if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
+                foreach($tab_cn_admin_login as $cn)
+                {
+                    if ($cn==$tab_cn[$i])
+                    {
+                        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>tab_cn_search=</B>=><FONT color =green><PRE>" . $groupname . "</PRE></FONT></FONT>"; 
+                        $membership->setDroits('Modifier');
+                        break;
+                    }
+                }
+            }
+            
+            // Gestion droits pour un admin de l'appli
+            if (true === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+                $membership->setDroits('Modifier');
+                  
+            }
+            
             $memberships[$i] = $membership;
         }
         
@@ -221,6 +252,24 @@ class UserController extends Controller {
                 $membership->setGroupname($arDataAdmin[$i]["cn"][0]);
                 $membership->setMemberof(FALSE);
                 $membership->setAdminof(TRUE);
+                $membership->setDroits('Aucun');
+                
+                // Gestion droits pour un gestionnaire
+                if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
+                    foreach($tab_cn_admin_login as $cn)
+                    {
+                        if ($cn==$arDataAdmin[$i]["cn"][0])
+                        {
+                            $membership->setDroits('Modifier');
+                            break;
+                        }
+                    }
+                }
+                // Gestion droits pour un admin de l'appli
+                if (true === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+                    $membership->setDroits('Modifier');
+                }
+            
                 $memberships[] = $membership;
             }
             
@@ -246,6 +295,7 @@ class UserController extends Controller {
             foreach($m_update as $memb)
             {
                 $dn_group = "cn=" . $memb->getGroupname() . ", ou=groups, dc=univ-amu, dc=fr";
+                if ($memb->getDroits()=='Modifier') {
                 if ($memb->getMemberof())
                 {
                     $this->getLdap()->addMemberGroup($dn_group, array($uid));
@@ -266,6 +316,7 @@ class UserController extends Controller {
                 {
                     $this->getLdap()->delAdminGroup($dn_group, array($uid));
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
+                }
                 }
             }
             $this->get('session')->getFlashBag()->add('flash-notice', 'Les modifications ont bien été enregistrées');
@@ -300,7 +351,7 @@ class UserController extends Controller {
         $tab_cn = array();
         foreach($tab as $dn)
         {
-            $tab_cn[] = preg_replace("/(cn=)(([a-z0-9:._-]{1,}))(,ou=.*)/", "$3", $dn);
+            $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $dn);
         }
         // Recherche des admins du groupe dans le LDAP
         $arAdmins = $this->getLdap()->getAdminsGroup($cn);
@@ -326,7 +377,7 @@ class UserController extends Controller {
         for ($j=0; $j<$arAdmins[0]["amugroupadmin"]["count"]; $j++) 
         {       
             // récupération des uid des admin du groupe
-            $uid_admins = preg_replace("/(uid=)(([a-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$j]);
+            $uid_admins = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$j]);
             if ($uid == $uid_admins)
             {
                 $membership->setAdminof(TRUE);
@@ -404,6 +455,48 @@ class UserController extends Controller {
     }
      
     /**
+     * Voir les appartenances et droits d'un utilisateur.
+     *
+     * @Route("/voir/{uid}", name="voir_user")
+     * @Template()
+     * // AMU Modif's
+     */
+    public function voirAction(Request $request, $uid)
+    {
+        $membersof = array();
+        $adminsof = array();
+        
+        // Recherche des groupes dont l'utilisateur est membre 
+        $arData=$this->getLdap()->arDatasFilter("member=uid=".$uid.",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+        for ($i=0; $i<$arData["count"]; $i++)         
+        {
+            $gr = new Group();
+            $gr->setCn($arData[$i]["cn"][0]);
+            $gr->setDescription($arData[$i]["description"][0]);
+            $gr->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
+            $membersof[] = $gr;
+        }
+                
+        // Récupération des groupes dont l'utilisateur est admin
+        $arDataAdmin=$this->getLdap()->arDatasFilter("amuGroupAdmin=uid=".$uid.",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+        for ($i=0; $i<$arDataAdmin["count"]; $i++)         
+        {
+            $gr_adm = new Group();
+            $gr_adm->setCn($arDataAdmin[$i]["cn"][0]);
+            $gr_adm->setDescription($arDataAdmin[$i]["description"][0]);
+            $gr_adm->setAmugroupfilter($arDataAdmin[$i]["amugroupfilter"][0]);
+            $adminsof[] = $gr_adm;
+        }
+        
+        
+        return array('uid' => $uid,
+                    'nb_grp_membres' => $arData["count"], 
+                    'grp_membres' => $membersof,
+                    'nb_grp_admins' => $arDataAdmin["count"],
+                    'grp_admins' => $adminsof);
+    }
+    
+    /**
     * Recherche de personnes
     *
     * @Route("/search/{opt}/{cn}",name="user_search")
@@ -440,15 +533,25 @@ class UserController extends Controller {
                 $tab_cn = array();
                  foreach($tab as $dn)
                 {
-                    $tab_cn[] = preg_replace("/(cn=)(([a-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
+                    $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
                 }
                 $user->setMemberof($tab_cn); 
              
                 $users[] = $user; 
                 //$this->getRequest()->getSession()->set('_saved',1);
                 //return array('users' => $users);
+                
+                // Gestion des droits
+                $droits = 'Aucun';
+                // Droits DOSI seulement en visu
+                if (true === $this->get('security.context')->isGranted('ROLE_DOSI')) {
+                    $droits = 'Voir';
+                }
+                if ((true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) || (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))) {
+                    $droits = 'Modifier';
+                }
             
-                return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'cn' => $cn));
+                return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn));
             }
                        
         }

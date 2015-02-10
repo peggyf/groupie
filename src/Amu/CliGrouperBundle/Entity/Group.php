@@ -18,7 +18,7 @@ class Group {
   
 public function __construct()
   {
-      $this->droits = new ArrayCollection();
+      $this->members = new ArrayCollection();
   }  
 
  /**

@@ -109,6 +109,17 @@ class GroupController extends Controller {
             {
                 // Recherche des groupes dans le LDAP
                 $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=*" . $groupsearch->getCn() . "*))",array("cn","description","amuGroupFilter"));
+                
+                // si c'est un gestionnaire, on ne renvoie que les groupes dont il est admin
+                $tab_cn_admin = array();
+                if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
+                    // Recup des groupes dont l'utilisateur est admin
+                    $arDataAdmin = $this->getLdap()->arDatasFilter("amuGroupAdmin=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+                    for($i=0;$i<$arDataAdmin["count"];$i++)
+                    {
+                        $tab_cn_admin[$i] = $arDataAdmin[$i]["cn"][0];
+                    }
+                }
                
                 for ($i=0; $i<$arData["count"]; $i++) {
                 //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>cn=</B>=><FONT color =green><PRE>" . $arData[$i]["cn"][0] . "</PRE></FONT></FONT>";
@@ -116,7 +127,30 @@ class GroupController extends Controller {
                     $groups[$i]->setCn($arData[$i]["cn"][0]);
                     $groups[$i]->setDescription($arData[$i]["description"][0]);
                     $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
-                    $groups[$i]->setAmugroupadmin("");                   
+                    $groups[$i]->setAmugroupadmin("");
+                    $groups[$i]->setDroits('Aucun');
+                    
+                    // Droits DOSI seulement en visu
+                    if (true === $this->get('security.context')->isGranted('ROLE_DOSI')) {
+                        $groups[$i]->setDroits('Voir');
+                    }
+                    
+                    // Droits gestionnaire seulement sur les groupes dont il est admin
+                    if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
+                        foreach ($tab_cn_admin as $cn_admin)
+                        {    
+                            if ($cn_admin==$arData[$i]["cn"][0])
+                            {
+                                $groups[$i]->setDroits('Modifier');
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Droits Admin
+                    if (true === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+                        $groups[$i]->setDroits('Modifier');
+                    }
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
                 }
             
@@ -151,6 +185,15 @@ class GroupController extends Controller {
      * @Template("AmuCliGrouperBundle:Group:recherchegroupeadd.html.twig")
      */
     public function addAction(Request $request, $cn_search='', $uid='') {
+        // Dans le cas d'un gestionnaire
+        if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
+            // Recup des groupes dont l'utilisateur est admin
+            $arDataAdminLogin = $this->getLdap()->arDatasFilter("amuGroupAdmin=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+            for($i=0;$i<$arDataAdminLogin["count"];$i++)
+            {
+                $tab_cn_admin_login[$i] = $arDataAdminLogin[$i]["cn"][0];
+            }
+        }
         // Récupération utilisateur
         $user = new User();
         $user->setUid($uid);
@@ -160,7 +203,7 @@ class GroupController extends Controller {
         $tab_cn = array();
         foreach($tab as $dn)
         {
-            $tab_cn[] = preg_replace("/(cn=)(([a-z0-9:._-]{1,}))(,ou=.*)/", "$3", $dn);
+            $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $dn);
         }
         // Récupération des groupes dont l'utilisateur est admin
         $arDataAdmin=$this->getLdap()->arDatasFilter("amuGroupAdmin=uid=".$uid.",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
@@ -182,6 +225,7 @@ class GroupController extends Controller {
         {
             $membership = new Membership();
             $membership->setGroupname($groupname);
+            $membership->setDroits('Aucun');
             foreach($tab_cn as $cn)
             {
                 if ($cn==$groupname)
@@ -207,6 +251,25 @@ class GroupController extends Controller {
                 {
                     $membership->setAdminof(FALSE);
                  }
+            }
+                        
+            // Gestion droits pour un gestionnaire
+            if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
+                foreach($tab_cn_admin_login as $cn)
+                {
+                    if ($cn==$groupname)
+                    {
+                        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>tab_cn_search=</B>=><FONT color =green><PRE>" . $groupname . "</PRE></FONT></FONT>"; 
+                        $membership->setDroits('Modifier');
+                        break;
+                    }
+                }
+            }
+            
+            // Gestion droits pour un admin de l'appli
+            if (true === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+                $membership->setDroits('Modifier');
+                  
             }
             
             $memberships[] = $membership;
@@ -292,7 +355,7 @@ class GroupController extends Controller {
         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos admins</B>=><FONT color =green><PRE>" . print_r($arAdmins, true) . "</PRE></FONT></FONT>";
         
         for ($i=0; $i<$arAdmins[0]["amugroupadmin"]["count"]; $i++) {  
-            $uid = preg_replace("/(uid=)(([a-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$i]);
+            $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$i]);
             $result = $this->getLdap()->arUserInfos($uid, array("uid", "sn", "displayname", "mail", "telephonenumber"));
             $admins[$i] = new User();
             $admins[$i]->setUid($result["uid"]);
@@ -348,7 +411,7 @@ class GroupController extends Controller {
             // on teste si le membre est aussi admin
             for ($j=0; $j<$arAdmins[0]["amugroupadmin"]["count"]; $j++)
             {
-                $uid = preg_replace("/(uid=)(([a-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$j]);
+                $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$j]);
                 if ($uid==$arUsers[$i]["uid"][0])
                 {
                     $members[$i]->setAdmin(TRUE);
@@ -357,6 +420,8 @@ class GroupController extends Controller {
                 }
             }
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
+            
+            
         }
         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos membres</B>=><FONT color =green><PRE>" . print_r($members, true) . "</PRE></FONT></FONT>";
         
@@ -365,7 +430,7 @@ class GroupController extends Controller {
             if ($flagMembers[$j]==FALSE)
             {
                 // si l'admin n'est pas membre du groupe, il faut aller récupérer ses infos dans le LDAP
-                $uid = preg_replace("/(uid=)(([a-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$j]);
+                $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$j]);
                 $result = $this->getLdap()->arUserInfos($uid, array("uid", "sn", "displayname", "mail", "telephonenumber"));
                 
                 $memb = new Member();
