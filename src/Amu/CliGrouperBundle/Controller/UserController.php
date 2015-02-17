@@ -28,7 +28,7 @@ class UserController extends Controller {
    * @return  \Amu\AppBundle\Service\Ldap
    */
   private function getLdap() {
-    return $this->get('amu.ldap');
+    return $this->get('CliGrouper.ldap');
   }
   
   /**

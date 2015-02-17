@@ -1,0 +1,65 @@
+{% extends 'AppBundle::page.html.twig' %}
+
+{% block titre %}Liste des groupes de l'utilisateur {{ uid }} {% endblock %}
+
+{% block body %}
+    
+ {% if nb_grp_admins == 0 %}
+     <h3>   L'utilisateur n'est administrateur d'aucun groupe. </h3>
+    <br>
+ {% else %}
+    
+    <h3>   Nombre de groupes dont l'utilisateur est administrateur : {{ nb_grp_admins }} </h3>
+    <br>
+
+<table class="ui-widget-content dataTable TabInfos" filter="25">
+    <thead>
+        <tr>
+            <th>cn</th>
+	    <th>Description</th>
+            <th>amuGroupFilter</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for grp in grp_admins %}
+	<tr > 
+	  <td style="vertical-align: middle;">{{grp.cn }}</td>
+          <td style="vertical-align: middle;">{{grp.description }}</td>
+          <td style="vertical-align: middle;">{{grp.amugroupfilter }}</td>
+        </tr>
+   {% endfor %}
+    </tbody>
+{% endif %}      
+{% if nb_grp_membres == 0 %}       
+    <h3>   L'utilisateur n'est membre d'aucun groupe. </h3>
+    <br>
+{% else %}    
+</table>
+    <br>
+    <br>
+    
+    <h3>   Nombre de groupes dont l'utilisateur est membre : {{ nb_grp_membres }} </h3>
+    <br>
+
+<table class="ui-widget-content dataTable TabInfos" filter="25">
+    <thead>
+        <tr>
+            <th>cn</th>
+	    <th>Description</th>
+            <th>amuGroupFilter</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for grp in grp_membres %}
+	<tr > 
+	  <td style="vertical-align: middle;">{{grp.cn }}</td>
+          <td style="vertical-align: middle;">{{grp.description }}</td>
+          <td style="vertical-align: middle;">{{grp.amugroupfilter }}</td>
+        </tr>
+   {% endfor %}
+    </tbody>
+      
+</table>
+{% endif %}   
+  
+{% endblock %}

@@ -37,7 +37,7 @@
             <tr> 
                 <td style="vertical-align: middle;"> {{ m.uid }}  </td>
                 <td style="vertical-align: middle;"> {{ m.displayname }}  </td>
-                <td style="vertical-align: middle;"> {{ m.mail }}  </td>
+                <td style="vertical-align: middle;"> <a href="mailto:{{m.mail}}"> {{ m.mail }}  </td>
                 <td style="vertical-align: middle;"> {{ m.tel }}  </td>
                 <td style="vertical-align: middle;"> <input type = 'checkbox' disabled="disabled" {% if m.member == 1 %} checked='checked' {% endif %} /> </td>
                 <td style="vertical-align: middle;"> <input type = 'checkbox' disabled="disabled" {% if m.admin ==1 %} checked='checked' {% endif %} /> </td>
@@ -69,7 +69,7 @@
             <tr> 
                 <td style="vertical-align: middle;"> {{ group.members[loop.index0].uid }} </td>
                 <td style="vertical-align: middle;"> {{ group.members[loop.index0].displayname }} </td>
-                <td style="vertical-align: middle;"> {{ group.members[loop.index0].mail }} </td>
+                <td style="vertical-align: middle;"> <a href="mailto:{{group.members[loop.index0].mail}}"> {{ group.members[loop.index0].mail }} </td>
                 <td style="vertical-align: middle;"> {{ group.members[loop.index0].tel }} </td>
                 <td style="vertical-align: middle;"> {{ form_widget(m.member) }} </td>
                 <td style="vertical-align: middle;"> {{ form_widget(m.admin) }} </td>

@@ -25,8 +25,8 @@
     {% for admin in admins %}
 	<tr > 
 	  <td style="vertical-align: middle;">{{admin.uid }}</td>
-          <td style="vertical-align: middle;">{{admin.displayname }}</td>
-          <td style="vertical-align: middle;">{{admin.mail }}</td>
+          <td style="vertical-align: middle;">{{admin.displayname }}</td> 
+          <td style="vertical-align: middle;"><a href="mailto:{{admin.mail}}">{{admin.mail }}</td>
           <td style="vertical-align: middle;">{{admin.tel }}</td>
         </tr>
    {% endfor %}
@@ -57,7 +57,7 @@
 	<tr > 
 	  <td style="vertical-align: middle;">{{user.uid }}</td>
           <td style="vertical-align: middle;">{{user.displayname }}</td>
-          <td style="vertical-align: middle;">{{user.mail }}</td>
+          <td style="vertical-align: middle;"><a href="mailto:{{user.mail}}">{{user.mail }}</td>
           <td style="vertical-align: middle;">{{user.tel }}</td>
         </tr>
    {% endfor %}
