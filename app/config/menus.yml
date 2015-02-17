@@ -5,9 +5,10 @@ parameters:
     menus:
 
 #        - { key: 1, name: "Accueil", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI"], route: "accueil", fils: false, description: "", ico: "bundles/app/images/ico/16/home.png" }
-        - { key: 1, name: "Accueil", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"], route: "", fils: [11, 12], description: "", ico: "bundles/app/images/ico/16/home.png" }
-        - { key: 11, name: "Voir mes groupes", roles: ["ROLE_GESTIONNAIRE", "ROLE_ADMIN"], route: "mes_groupes", fils: false, description: "" }
-        - { key: 12, name: "Voir tous les groupes", roles: ["ROLE_DOSI", "ROLE_ADMIN"], route: "tous_les_groupes", fils: false, description: "" }
+        - { key: 1, name: "Accueil", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"], route: "", fils: [11, 12, 13], description: "", ico: "bundles/app/images/ico/16/home.png" }
+        - { key: 11, name: "Voir mes appartenances", roles: ["ROLE_MEMBRE", "ROLE_GESTIONNAIRE", "ROLE_ADMIN"], route: "mes_appartenances", fils: false, description: "" }
+        - { key: 12, name: "Voir mes groupes", roles: ["ROLE_GESTIONNAIRE", "ROLE_ADMIN"], route: "mes_groupes", fils: false, description: "" }
+        - { key: 13, name: "Voir tous les groupes", roles: ["ROLE_DOSI", "ROLE_ADMIN"], route: "tous_les_groupes", fils: false, description: "" }
         - { key: 2, name: "Recherche", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"], route: "", fils: [21, 22], description: "" }
         - { key: 21, name: "Rechercher un groupe", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"], route: "group_search", fils: false, description: "" }
         - { key: 22, name: "Rechercher une personne", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"], route: "user_search", fils: false, description: "" }

@@ -65,7 +65,7 @@ class GroupController extends Controller {
 
  
     /**
-     * Affiche tous les groupes
+     * Affiche tous les groupes dont l'utilisateur est administrateur
      *
      * @Route("/mes_groupes",name="mes_groupes")
      * @Template()
@@ -82,13 +82,35 @@ class GroupController extends Controller {
             $groups[$i]->setCn($arData[$i]["cn"][0]);
             $groups[$i]->setDescription($arData[$i]["description"][0]);
             $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
-            $groups[$i]->setAmugroupadmin($uid);
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
         }
         
         return array('groups' => $groups);
     }
     
+    /**
+     * Affiche tous les groupes dont l'utilisateur est membre
+     *
+     * @Route("/mes_appartenances",name="mes_appartenances")
+     * @Template()
+     */
+    public function mesappartenancesAction(Request $request) {
+        
+        $arData=$this->getLdap()->arDatasFilter("member=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+        
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>memberof=</B>=><FONT color =green><PRE>" . print_r($arData). "</PRE></FONT></FONT>";
+        $groups = new ArrayCollection();
+        
+        for ($i=0; $i<$arData["count"]; $i++) {
+            $groups[$i] = new Group();
+            $groups[$i]->setCn($arData[$i]["cn"][0]);
+            $groups[$i]->setDescription($arData[$i]["description"][0]);
+            $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
+        }
+        
+        return array('groups' => $groups);
+    }
         
     /**
      * Recherche de groupes
