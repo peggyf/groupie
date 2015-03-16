@@ -4,27 +4,64 @@
 
 {% block body %}
 
-<table class="ui-widget-content dataTable TabInfos" filter="25">
-    <thead>
-        <tr>
-            <th>cn</th>
-	    <th>Description</th>
-            <th>amuGroupFilter</th>
-            <th>Voir</th>
-	    
-        </tr>
-    </thead>
+<link href="{{ asset('bundles/amucligrouper/css/jolitree-group.css') }}" type="text/css" rel="stylesheet" /> 
+
+<script type="text/javascript" src="{{ asset('bundles/amucligrouper/js/jolitree.js') }}"></script>
+
+<style type="text/css">body {font-family: sans-serif;font-size: 12pt;text-align: center;} #myTree {margin: auto auto 2em;width: 20em;padding: 1em;text-align: left;}</style>
+
+<script type="text/javascript">
+    $(function init() {
+        var tree = new JoliTree(document.getElementById("myTree"));
+    });
+</script>
+
+<table>
     <tbody>
-    {% for group in groups %}
-	<tr > 
-	  <td style="vertical-align: middle;"> {{group.cn}} </td>
-          <td style="vertical-align: middle;"> {{group.description}} </td>
-          <td style="vertical-align: middle;"> {{group.amugroupfilter}} </td>
-          <td style="vertical-align: middle;"><img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/view-page.png") }}" title="<small>Voir les membres</small>" class="ui-button" onclick='loadPage("{{ path('voir_groupe', { 'cn': group.cn }) }}");' /></td>
+        <tr>
+            <td class="titre1"> cn </td>
+            <td class="titre2"> Description </td>
+            <td class="titre3"> Voir groupe </td>
         </tr>
-   {% endfor %}
-    </tbody>
-      
-       
-</table>
+        <tr>
+        <td>
+            <dl id="myTree" class="jolitree">
+            {% for group in groups %}    
+                {% if group.lastopen != 0 %}
+                    {% if group.lastopen <= (group.lastnbetages-2) %}
+                        {% for i in group.lastopen .. (group.lastnbetages-2) %}
+                            </dl>
+                            </dd>
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+                {% if group.lastopen <= (group.nbetages-2) %}
+                    {% for i in group.lastopen .. (group.nbetages-2) %}
+                        {% if i<3 %}
+                            <dd class="opened">
+                        {% else %}
+                            <dd class="last">
+                        {% endif %}
+                                    
+                        <p> {{ group.etages[i] }} </p>     
+                        <dl>
+                    {% endfor %}                    
+                {% endif %}
+                <dt>
+                    <div id="wrapper">
+                    <div id="cl1"> {{ group.etages[group.nbetages-1] }} </div>
+                    <div id="cl2"> {{ group.description }} </div>
+                    <div id="cl3"> <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/view-page.png") }}" title="<small>Voir les membres</small>" class="ui-button" onclick='loadPage("{{ path('voir_groupe', { 'cn': group.cn }) }}");' /></div>
+                    </div>
+                </dt>
+                
+            {% endfor %}
+            </td>
+            </tr>
+        </tbody>
+    </table>
+</dl>
+    
+
+
 {% endblock %}

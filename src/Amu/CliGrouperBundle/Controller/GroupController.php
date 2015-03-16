@@ -44,9 +44,15 @@ class GroupController extends Controller {
      * @Template()
      */
     public function touslesgroupesAction() {
+        
+        // Variables pour l'affichage "dossier" avec javascript 
+        $arEtages = array();
+        $NbEtages = 0;
+        $arEtagesPrec = array();
+        $NbEtagesPrec = 0;
           
         $arData=$this->getLdap()->arDatasFilter("(objectClass=groupofNames)",array("cn","description","amuGroupFilter"));
-               
+         
         $groups = array();
         for ($i=0; $i<$arData["count"]; $i++) {
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>cn=</B>=><FONT color =green><PRE>" . $arData[$i]["cn"][0] . "</PRE></FONT></FONT>";
@@ -56,6 +62,34 @@ class GroupController extends Controller {
             $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
             $groups[$i]->setAmugroupadmin("");
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
+            
+            // Mise en forme pour la présentation "dossier" avec javascript
+            $arEtages = preg_split('/[:]+/', $arData[$i]["cn"][0]);
+            $NbEtages = count($arEtages);
+            $groups[$i]->setEtages($arEtages);
+            $groups[$i]->setNbetages($NbEtages);
+            $groups[$i]->setLastnbetages($NbEtagesPrec);
+                        
+            // on marque la différence entre les dossiers d'affichage des groupes N et N-1
+            $lastopen = 0;
+            for ($j=0;$j<$NbEtagesPrec;$j++)
+            {
+                if ($arEtages[$j]!=$arEtagesPrec[$j])
+                {
+                    
+                    $lastopen = $j ;
+                    $groups[$i]->setLastopen($lastopen);
+                    break;
+                }
+            }
+            
+            if (($NbEtagesPrec>=1) && ($lastopen == 0))
+                $groups[$i]->setLastopen($NbEtagesPrec-1);
+            
+            // on garde le nom du groupe précédent dans la liste
+            $arEtagesPrec = $groups[$i]->getEtages();
+            $NbEtagesPrec = $groups[$i]->getNbetages();
+            
         }
 
         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos brut</B>=><FONT color =green><PRE>" . print_r($groups, true) . "</PRE></FONT></FONT>";
@@ -127,7 +161,7 @@ class GroupController extends Controller {
         if ($form->isValid()) {
             $groupsearch = $form->getData(); 
             
-            if (($opt=='search')||($opt=='del'))
+            if (($opt=='search')||($opt=='mod')||($opt=='del'))
             {
                 // Recherche des groupes dans le LDAP
                 $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=*" . $groupsearch->getCn() . "*))",array("cn","description","amuGroupFilter"));
@@ -198,6 +232,16 @@ class GroupController extends Controller {
      */
     public function searchdelAction(Request $request) {
         return $this->redirect($this->generateUrl('group_search', array('opt' => 'del', 'uid'=>'')));
+    }
+    
+    /**
+     * Recherche de groupes pour la modification
+     *
+     * @Route("/searchmod",name="group_search_modify")
+     * @Template()
+     */
+    public function searchmodAction(Request $request) {
+        return $this->redirect($this->generateUrl('group_search', array('opt' => 'mod', 'uid'=>'')));
     }
     
     /**

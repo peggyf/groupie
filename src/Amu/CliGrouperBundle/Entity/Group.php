@@ -10,6 +10,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Group {
 
   protected $cn;
+  protected $etages;
+  protected $nbetages;
+  protected $lastopen;
+  protected $lastnbetages;
   protected $description;
   protected $members;
   protected $amugroupadmin;
@@ -72,6 +76,26 @@ public function __construct()
  {
     $this->droits = $droits;
  } 
+ 
+ public function setEtages($etages)
+ {
+    $this->etages = $etages;
+ } 
+ 
+ public function setNbetages($nbetages)
+ {
+    $this->nbetages = $nbetages;
+ }
+ 
+ public function setLastopen($lastopen)
+ {
+    $this->lastopen = $lastopen;
+ }
+ 
+ public function setLastnbetages($lastnbetages)
+ {
+    $this->lastnbetages = $lastnbetages;
+ }
  /**
   * Set cn
   *
@@ -108,6 +132,26 @@ public function __construct()
  public function getDroits()
  {
     return($this->droits);
+ }
+ 
+ public function getEtages()
+ {
+    return($this->etages);
+ }
+ 
+ public function getNbetages()
+ {
+    return($this->nbetages);
+ }
+ 
+ public function getLastopen()
+ {
+    return($this->lastopen);
+ }
+ 
+ public function getLastnbetages()
+ {
+    return($this->lastnbetages);
  }
  /**
  * @return  \Amu\AppBundle\Service\Ldap
