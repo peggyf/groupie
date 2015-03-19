@@ -1,0 +1,4 @@
+services:
+    CliGrouper.ldap: 
+        class:         Amu\CliGrouperBundle\Service\Ldap
+        arguments:    [@service_container, @logger]
