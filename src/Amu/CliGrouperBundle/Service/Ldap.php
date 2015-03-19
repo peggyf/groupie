@@ -721,7 +721,9 @@ class Ldap extends WSTools {
         $this->connect();
         if ($this->r) {
           $sr = ldap_search($this->ds, $this->LDAP_racine, $filtre, $restriction, 0);
-          $result = ldap_get_entries($this->ds, $sr);
+          ldap_sort($this->ds, $sr, "cn");
+          $resultb = ldap_get_entries($this->ds, $sr);
+          $result = $this->ldap_multi_sort($resultb, array("cn"));
         }
       }
       
@@ -1517,6 +1519,27 @@ class Ldap extends WSTools {
     
  }
  
+ /**
+ * Modification d'un groupe dans le LDAP
+ * @return  \Amu\AppBundle\Service\Ldap
+ */
+ public function modifyGroupeLdap($dn, $groupeinfo) 
+ {
+   
+    $this->connect();
+    if ($this->r) {
+
+        ldap_modify($this->ds,$dn,$groupeinfo);
+    
+        if(ldap_error($this->ds) == "Success")
+            return true;
+        else
+            return false;
+    }
+    
+    return(false);
+    
+ }
  /**
  * RÃ©cupÃ©ration des membres d'un groupe + infos des membres
  * @return  \Amu\AppBundle\Service\Ldap

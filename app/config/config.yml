@@ -97,6 +97,6 @@ swiftmailer:
 #        tags: [{ name: 'twig.extension' }]
 
 services:
-    CliGrouper.ldap:
+    CliGrouper.ldap: 
         class:         Amu\CliGrouperBundle\Service\Ldap
         arguments:    [@service_container, @logger]

@@ -633,6 +633,48 @@ class GroupController extends Controller {
             return $this->render('AmuCliGrouperBundle:Group:groupesearch.html.twig', array('form' => $form->createView()));
     }
     
-   
+    /**
+     * Modifier un groupe.
+     *
+     * @Route("/modify/{cn}/{desc}/{filt}", name="group_modify")
+     * @Template()
+     * // AMU Modif's
+     */
+    public function modifyAction(Request $request, $cn, $desc, $filt)
+    {
+        $group = new Group();
+        $groups = array();
+        
+        // Pré-remplir le formulaire avec les valeurs actuelles du groupe
+        $group->setCn($cn);
+        $group->setDescription($desc);
+        $group->setAmugroupfilter("");
+        
+        $form = $this->createForm(new GroupCreateType(), $group);
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $groupmod = new Group();
+            $groupmod = $form->getData();
+            
+            // Création du groupe dans le LDAP
+            $infogroup = $groupmod->infosGroupeLdap();
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($infogroupe, true) . "</PRE></FONT></FONT>";
+            $b = $this->getLdap()->modifyGroupeLdap($infogroup['dn'], $infogroup['infos']);
+            if ($b==true)
+            {
+                //Le groupe a bien été créé
+                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>retour create groupe ldap</B>=><FONT color =green><PRE>" . $b . "</PRE></FONT></FONT>";
+            
+                 // affichage groupe créé
+                $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été modifié');
+                $groups[0] = $group;
+                return $this->render('AmuCliGrouperBundle:Group:modifgroupe.html.twig',array('groups' => $groups));
+            }
+            else 
+                return $this->render('AmuCliGrouperBundle:Group:groupem.html.twig', array('form' => $form->createView(), 'group' => $group));
+            
+        }
+        return $this->render('AmuCliGrouperBundle:Group:groupem.html.twig', array('form' => $form->createView(), 'group' => $group));
+    }
       
 }

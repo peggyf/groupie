@@ -9,7 +9,7 @@ parameters:
     ldap.server: "ldaps://ldapmaitre.univ-amu.fr"
     ldap.root: "dc=univ-amu,dc=fr"
     ldap.user_root: "ou=people,dc=univ-amu,dc=fr"
-    #ldap.dn: "cn=annuaire,ou=system,dc=univ-amu,dc=fr"
+    #ldap.dn: "cn=annuaire,ou=system,dc=univ-amu,dc=fr" 
     #ldap.pw: '$annuaire-2011!'
     ldap.dn: "cn=grouper,ou=system,dc=univ-amu,dc=fr"
     ldap.pw: "Grouper2011Amu!"

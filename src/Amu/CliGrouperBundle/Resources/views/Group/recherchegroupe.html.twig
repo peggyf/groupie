@@ -18,6 +18,9 @@
             {% if opt=='del' %}
                 <th>Supprimer</th>
             {% endif %}
+            {% if opt=='mod' %}
+                <th>Modifier</th>
+            {% endif %}
             {% if opt=='add' %}
                 <th>Ajouter</th>
             {% endif %}
@@ -68,6 +71,11 @@
           {% if opt=='del' %}
               <td style="vertical-align: middle;">
                   <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/delete-1.png") }}" title="<small>Supprimer un groupe</small>" class="ui-button" onclick='loadPage("{{ path('group_delete', { 'cn': group.cn }) }}");' />
+              </td>
+          {% endif %}
+          {% if opt=='mod' %}
+              <td style="vertical-align: middle;">
+                  <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/modif.png") }}" title="<small>Modifier un groupe</small>" class="ui-button" onclick='loadPage("{{ path('group_modify', { 'cn': group.cn, 'desc': group.description, 'filt': "test" }) }}");' />
               </td>
           {% endif %}
           {% if opt=='add' %}
