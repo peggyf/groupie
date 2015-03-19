@@ -1,0 +1,136 @@
+## YAML Template.
+parameters:
+    amu_user_provider.class: Amu\AppBundle\Security\User\AmuUserProvider
+    arguments: ["", %kernel.cache_dir%/security/nonces]
+
+services:
+
+    twig.extension.text:
+       class: Twig_Extensions_Extension_Text
+       tags:
+           - { name: twig.extension }
+ 
+    twig.extension.intl:
+       class: Twig_Extensions_Extension_Intl
+       tags:
+           - { name: twig.extension }
+ 
+    debug.twig.extension:
+        class: Twig_Extensions_Extension_Debug
+        tags: [{ name: 'twig.extension' }]
+        
+# Permet de resourde les problemes sur les champs de type \DateTime()
+#    ora.init.listener:
+#        class: Doctrine\DBAL\Event\Listeners\OracleSessionInit 
+#        tags:
+#            - { name: doctrine.event_listener, event: postConnect }
+  
+    kernel.listener.amu_config:
+        class: Amu\AppBundle\Listener\ConfigListener
+        arguments: [@security.context,@service_container, @logger]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 2 }
+#        scope: container
+        
+    kernel.listener.amu_app:
+        class: Amu\AppBundle\Listener\AppListener
+        arguments: [@security.context, @service_container, @logger]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 3 }
+        
+    kernel.listener.amu_auth:
+        class: Amu\AppBundle\Listener\AuthListener
+        arguments: [@security.context, @service_container, @logger]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 4 }
+
+#    amu_formatter: 
+#        class: Amu\AppBundle\Formatter\AmuFormatter
+#      
+#    monolog:
+#        class: Amu\AppBundle\Formatter\AmuFormatter
+#        handlers:
+#            file:
+#                type: stream
+#                level: debug
+#                formatter: amu_formatter
+
+#    kernel.listener.amu_listener
+#        class: Amu\AppBundle\Listener\AmuExceptionListener
+#        tags:
+#            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+            
+    amu.bv:
+        class: Amu\AppBundle\Service\BV
+        arguments: [@service_container,@logger]
+        tags:
+            - { name: monolog.logger, handler: amu  }   
+
+    app.choices:
+        class: Amu\AppBundle\Service\DataChoices
+        arguments: [@service_container, @logger]
+
+    amu.config:
+        class: Amu\AppBundle\Service\Config
+        arguments: [@service_container, @session, @logger]
+
+    amu.ldap:
+        class: Amu\AppBundle\Service\Ldap
+        arguments:  [@service_container, @logger]
+        
+        
+    amu.string:
+        class: Amu\AppBundle\Service\String
+        
+    amu.network:
+        class: Amu\AppBundle\Service\Network
+        arguments:  [@service_container]
+
+    amu.ws.apogee:
+        class: Amu\AppBundle\Service\Apogee
+        arguments:  [@service_container, @logger]
+        tags:
+            - { name: monolog.logger, handler: amu  }   
+
+#        arguments:    [@session, @doctrine]
+#        tags:
+#            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+#            
+
+    amu.ws.harpege:
+        class: Amu\AppBundle\Service\Harpege
+        arguments:  [@service_container, @logger]
+        tags:
+            - { name: monolog.logger, handler: amu  }   
+            
+    amu.pdf:
+        class: Amu\AppBundle\Service\Pdf
+
+    amu.cas:
+        class: Amu\AppBundle\Service\CAS
+        arguments:  [@service_container, @logger]
+        tags:
+            - { name: monolog.logger, channel: cas  }   
+
+    security.authentication.factory.user:
+        class:  Amu\AppBundle\DependencyInjection\Security\Factory\AmuFactory
+        tags:
+            - { name: security.listener.factory }
+
+    amu_user_provider:
+        class: "%amu_user_provider.class%"
+        arguments: [ @service_container, @session ]
+  
+    user.security.authentication.provider:
+      class:  Amu\AppBundle\Security\Authentication\Provider\AmuProvider
+      arguments: ['', %kernel.cache_dir%/security/nonces]
+
+    user.security.authentication.listener:
+      class:  Amu\AppBundle\Security\Authentication\Firewall\AmuListener
+      arguments: [@security.context, @security.authentication.manager, @session, @logger]
+
+#    user.security.authentication.listener:
+#      class:  Amu\AppBundle\Security\Firewall\AmuSessionListener
+#      arguments: [@security.context, @security.authentication.manager, @security.authentication.session_strategy, @security.http_utils, "amu" , @logger, @event_dispatcher]
+#      tags:
+#        - { name: monolog.logger, channel: security  }   

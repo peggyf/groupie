@@ -5,13 +5,10 @@ imports:
     - { resource: menus.yml }
     - { resource: roles.yml }
     - { resource: ckeditor.yml }
-    - { resource: ldap.yml }
-    - { resource: developpers.yml }
+#    - { resource: "@AppBundle/Resources/config/amu.yml" }
     - { resource: betatesteurs.yml }
-    - { resource: intranet.yml }
-    - { resource: services.yml }
     - { resource: security.yml }
-    - { resource: "@AmuCliGrouperBundle/Resources/config/services.yml" }
+
     
 framework:
 #    esi:
@@ -99,21 +96,7 @@ swiftmailer:
 #        class: Twig_Extensions_Extension_Debug
 #        tags: [{ name: 'twig.extension' }]
 
-monolog:
-    handlers:
-        main:
-            type:  stream
-            path:  "%kernel.logs_dir%/%kernel.environment%.log"
-            level: debug
-            channels: !cas
-        firephp:
-            type:  firephp
-            level: info
-        chromephp:
-            type:  chromephp
-            level: info
-        cas:
-            type: stream
-            path: "%kernel.logs_dir%/%kernel.environment%_cas.log"
-            level: debug
-            channels: cas
+services:
+    CliGrouper.ldap: 
+        class:         Amu\CliGrouperBundle\Service\Ldap
+        arguments:    [@service_container, @logger]

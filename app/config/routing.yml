@@ -2,23 +2,26 @@ amu_cli_grouper:
     resource: "@AmuCliGrouperBundle/Controller/"
     type:     annotation
     prefix:   /CliGrouper/
-
-#hello:
-#    path:   /hello/
-#    defaults:  { _controller: AmuCliGrouperBundle:Default:index }
-
-# importe les routes d'une classe Contrôleur
-
-    
+   
+# Internal routing configuration to handle ESI
+# ****** WARNING ******
+# This route should be enabled with caution as it can open a security vulnerability
+# see http://symfony.com/blog/security-release-symfony-2-0-20-and-2-1-5-released for more information
+# ****** WARNING ******
+#_internal:
+#    resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
+#    prefix:   /_internal
+   
 ################################################
-#   AJAX, CAS, GROUPER, DEBUG, LDAP, APOGEE...
+#   AJAX, CAS, DEBUG, LDAP, APOGEE...
 ################################################
 #amu_ajax_services:
 #    resource: "@AmuServicesBundle/Controller/"
 #    type:       annotation
 #    prefix:    /_amu/services/
+
 app:
-  resource: "@AppBundle/Controller/"
+  resource: "@AppBundle/Controller/AppController.php"
   type:     annotation
   prefix:   /_amu/app/
 
@@ -26,11 +29,78 @@ loader:
   resource: "@AppBundle/Controller/LoaderController.php"
   type:     annotation
   prefix:   /
-
+  
 rss:
   resource: "@AppBundle/Controller/RssController.php"
   type:     annotation
   prefix:   /rss
+  
+cas:
+  resource: "@AppBundle/Controller/CasController.php"
+  type:     annotation
+  prefix:   /_amu/app/
+    
+config:
+  resource: "@AppBundle/Controller/ConfigController.php"
+  type:     annotation
+  prefix:   /_amu/app/   
+  
+campagnes:
+  resource: "@AppBundle/Controller/CampagnesController.php"
+  type:     annotation
+  prefix:   /_amu/app/    
+  
+admin:
+  resource: "@AppBundle/Controller/AdminController.php"
+  type:     annotation
+  prefix:   /_amu/app/
+  
+debug:
+  resource: "@AppBundle/Controller/DebugController.php"
+  type:     annotation
+  prefix:   /_amu/app/    
+    
+messages:
+  resource: "@AppBundle/Controller/MessagesController.php"
+  type:     annotation
+  prefix:   /_amu/app/  
+  
+maintenances:
+  resource: "@AppBundle/Controller/MaintenancesController.php"
+  type:     annotation
+  prefix:   /_amu/app/    
+  
+apogee:
+  resource: "@AppBundle/Controller/ApogeeController.php"
+  type:     annotation
+  prefix:   /_amu/app/     
+    
+ldap:
+  resource: "@AppBundle/Controller/LdapController.php"
+  type:     annotation
+  prefix:   /_amu/app/   
+       
+network:
+  resource: "@AppBundle/Controller/NetworkController.php"
+  type:     annotation
+  prefix:   /_amu/app/   
+  
+task:
+  resource: "@AppBundle/Controller/TasksController.php"
+  type:     annotation
+  prefix:   /_amu/app/    
+
+       
+pdf:
+  resource: "@AppBundle/Controller/PdfController.php"
+  type:     annotation
+  prefix:   /app/     
+    
+ext:
+  resource: "@AppBundle/Controller/ExternalAccountsController.php"
+  type:     annotation
+  prefix:   /ext
+
 
 homepage:
   pattern: /

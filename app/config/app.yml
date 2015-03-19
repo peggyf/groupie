@@ -2,94 +2,125 @@
 #  CONFIG GENERAL APP  #
 ########################
 parameters:
+    # GRAPHIQUE
     app.width: 980 #Tablet 660, 1200,... min = 655   
     app.page_color: "#F5F5F5"
     app.charte: 1
     app.version: 2.52
-    app.type: "r" # [ 'a/A'=>alpha , 'b/B'=> beta , 'r/R'=>release candidate ] => influt sur l'icone à coté du titre    
-    # active les traces sur AppListener & ConfigListener
-    app.active_trace: false
-#    app.url: "http://localhost/symfony211/web/app_dev.php/"
-    app.tools_links: ['site', 'intramu', 'ent', 'annuaire', 'cas_logout']
-    app.help_url: "http://dud.univ-amu.fr/content/dud-documentation-utilisateur-dynamique"
-    app.front_end: true
-    app.back_end: true
-    app.show_yml_configs: true
-    app.messages: true
-    app.awstats: "application.univ-amu.fr"
-    app.use_workflow: false
-    app.use_ext_accounts: false
+    app.type: "r" 
+    # app.type une des valeurs suivantes [ 'a/A'=>alpha , 'b/B'=> beta , 'r/R'=>release candidate ] => influt sur l'icone à coté du titre    
     app.reload_menus_all_page: false
     app.reload_contacts_all_page: false
     app.forceAuthentification: true
     app.need_authentificate_message: "<center><div style='padding:50px;'><div class='ui-state-active ui-corner-all' style='padding:25px;text-align:left;'><center>Pour accéder à cette application, vous devez être authentifié...</center></br><p class='TabInfos' style='color:black;font-weight:normal;'><u><b>Procédure à suivre :</b></u><br>Veuillez cliquer sur le cadenas dans la barre supérieure de la page,</br>puis saisir votre couple identifiant/mot de passe dans la fenêtre centrale...<p></div></div></center>"
     app.no_access_message: "<center><div style='padding:50px;'><div class='ui-state-error ui-corner-all' style='padding:50px;text-align:left;'><center><h1>L'accès à cette page vous a été refusé.</h1></center></br><p class='TabInfos' style='color:black;'><br><b>Code:</b> #err_code#</br><b>Message:</b> #err_msg#</br><p></div></div></center>"
-    #app.maintenance.message: "<hr>Bonjour, l'application est actuellement en cours de maintenance.</br> merci de votre compréhension."
-    #app.maintenance.icon: "bundles/app/images/maintenance.gif"
-    app.maintenance.message: "<hr>Bonjour, l'application est actuellement en cours de paramétrage.</br> merci de votre compréhension."
-    app.maintenance.icon: "bundles/app/images/ico/128/app-params.png"
-    app.maintenances: false
-# Valeurs possibles pour "app.maintenances": false/true/array  
-#    app.maintenances: 
-#        - { start: "15/01/2013 18:00", stop: "16/01/2013 08:00", pre: "12/01/2013 8:00", message_pre: "Attention: le [start] l'application sera placé en mode maintenance jusqu'au [stop]...", message: "maintenance pour mise à jour de la base de données..." }
-#        - { start: "01/01/2013 18:00", stop: "04/01/2013 08:00", pre: "31/12/2012 8:00", message_pre: "Attention: le [start] l'application sera placé en mode maintenance jusqu'au [stop]...", message: "maintenance pour mise à jour du référentiel nationnal..." }
-#        
-    app.maintenances_users: ["10.193.1.1", "127.0.0.1", "mubeda", "login_betatesteur_1", "login_betatesteur_2"]
-#    app.campagnes: false
-#   Valeurs possibles pour "app.campagnes": false/array      
-    app.campagnes: false
-#        - { name: "Campagne de test 1", start: "01/12/2012 8:00", stop: "31/12/2012 23:59", pre : "01/09/2012 8:00", message_pre: "La campagne 1 '[name]' n'a pas encore commencé : <br> Elle sera active à partir '[start]' jusqu'au '[stop]'...", message_on: "La campagne applicative 1 '[name]' est en cours...", message_off: "La campagne applicative 1 '[name]' est terminée.", pass_through_roles: ["ROLE_APP_MANAGER","ROLE_ADMIN"] }
-#        - { name: "Campagne de test 2", start: "05/03/2013 8:00", stop: "20/03/2013 23:59", pre : "02/01/2013 8:00", post : "25/03/2013 23:59", message_pre: "La campagne 2 '[name]' n'a pas encore commencé : <br> Elle  sera active à partir '[start]' jusqu'au '[stop]'.", message_on: "La campagne applicative 2 '[name]' est en cours.", message_off: "La campagne applicative 2 '[name]' est terminée.", pass_through_roles: ["ROLE_APP_MANAGER","ROLE_ADMIN"] }
-    app.no_campagnes_users: [ "127.0.0.1", "mubeda", "ROLE_ADMIN"]
+    
+     # CAS 
+    app.cas.server: "ident.univ-amu.fr"
+    app.cas.port: 443
+    app.cas.root: "/cas"
+    app.cas.version: "2.0"
+    # app.cas.version: '1.0' , '2.0' ou '3.0';
+    app.cas.trace: false
+    # app.cas.trace: false(défaut)/true/array ['mon_login',127.0.0.1] => active les traces sur l'autentification CAS.
+    app.cas.logger: monolog.logger.cas
+    # app.cas.logger => personnalisation de la classe du logger, valeurs possibles :
+    #  - "monolog.logger.cas" (par défaut) => sépare/inscrit les infos de debug CAS dans un fichier spécifique (%env%_cas.log = personalisable dans config.yml)
+    #  - "logger", false ou ""    =>  les fichiers logs standards seront utilisés (dev.log / prod.log) 
 
-# Variables app.accessXXX OBSOLETES
-#    app.accesGroups: ["amu:....","amu:...2"]
-#    app.accesLogins: ["mubeda","login_betatesteur_1", "login_betatesteur_2", ...]
-#    app.accesIPs: ["127.0.0.1","195.xx.xx.xx", "193.xx.xx.xx", ...]
-    app.grouper.group: "amu:app:grp:siamu:users"
-    app.grouper.user: "siamu"
-    app.grouper.pass: "$siamu-2011!"
+    # EXTERNAL APPS/TOOLS LINKS
+    app.awstats: "http://dev-web.univ-amu.fr/cgi-bin/awstats.pl?config=application.univ-amu.fr"
+    app.help_url: "http://dud.univ-amu.fr/content/dud-documentation-utilisateur-dynamique"
+    app.groups_manager: "https://grouper.univ-amu.fr/ESCOGrouper/stylesheets/welcome.jsf"
+    app.wiki_dev_docs: "http://projets-dev.univ-amu.fr/projects/symfony211/wiki/Index"
+    app.phpMyAdmin: "http://dev-web.univ-amu.fr/~phpmyadmin/phpMyAd/"
+    app.phpLDAPadmin: "http://dev-web.univ-amu.fr/~phpldapadmin/phpldapadmin/"
+    
+    # WEB SERVICES : Apogee, Harpege, BV
+    ws.apogee.url: "http://apo-ws.univ-amu.fr:8888/apo-webservices/services/"
+    ws.harpege.url: "http://195.221.209.65:8082/HarpegeWebService/services/"
+    xmlrpc.bv.server: "bv.unr-paca.fr"
+    xmlrpc.bv.port: 443
+    xmlrpc.bv.user: "u3.u3admin"
+    xmlrpc.bv.pass: "bv-ie1xdlo!" 
+    
+    # DEBUG
+    app.active_trace: false
+    # active les traces sur AppListener & ConfigListener
+    
+    # DIVERS
+    # app.ldap_group_access: permet de limité l'accès à l'application 
+    # (positionne app.isUserMember à "1" si l'utilisateur authentifié fait partie du groupe
+    app.ldap_group_access: "amu:glob:ldap:personnel"
     app.cron.user: "www-data"
     app.rss: true
+    app.show_yml_configs: true
+    app.use_ext_accounts: false
+
+    # MAINTENANCES
+    app.maintenance: false
+    # Pour forcer l'application en mode maintenance forcé 'app.maintenance:true' par defaut=false
+    app.maintenances: false
+    # Valeurs possibles pour "app.maintenances": false/true (true = activer les fonctionnalités de Maintenance via BDD APP_MAINTENANCES)
+    app.maintenances_users: ["ROLE_DEVELOPPER", "127.0.0.1", "mubeda", "login_betatesteur_1", "login_betatesteur_2"]
+    app.maintenance.message: "<hr>Bonjour, l'application est actuellement en cours de maintenance.</br> merci de votre compréhension."
+    app.maintenance.icon: "bundles/app/images/maintenance.gif"
+    
+    # CAMPAGNES
+    app.campagnes: false
+    # Valeurs possibles pour "app.campagnes": false/true       
+    app.no_campagnes_users: [ "127.0.0.1", "mubeda", "ROLE_ADMIN"]
 
 
+    # MESSAGES & NOTIFICATIONS
+    app.messages: false    
+    # app.messages active/désactive la gestion des Messages applicatifs par le Manager (MENU+BDD)
+    app.flash: true
+    app.flash.opacity: 99 #97
+    app.notifications: "symfony"
+    # ATTENTION : Si app.notifications: "jgrowl" => n'oubliez pas de d'activer cdn.yml les librairies nécessaires ["jgrowl"]
+    # app.notifications : "symfony", "" , "jgrowl" ou false
+    app.notifications_timeout: 5000
+    ## notifications_timeout = si autoclose valeur en ms
+    app.crud_notify: true
+    
 ##############
 #   HEADER   #
 ##############
+    app.tools_links: ['site', 'intramu', 'ent', 'annuaire', 'cas_logout']
     app.titleLogo: "bundles/app/images/ico/48/terre.png"
-    # 48x48
-    app.background: ~ 
-    # "bundles/app/images/amu/fond_dosi_social.png"
-    # "bundles/app/images/amu/fond_standard.png"
+    # 48x48 ou 64x64 max
+    app.background: "bundles/app/images/amu/fond_standard.png"
+    # Autres valeurs possibles :
+      # "bundles/app/images/amu/fond_dosi_social.png"
+      # "bundles/app/images/amu/fond_standard.png"
     app.title: "CliGrouper"
     app.name: "CliGrouper"
     app.slogan: "Application de gestion des groupes LDAP"
     app.sm_iconizeTitleSlogan: false #Mettre (en mode sm 'SMartphone'), le nom et le slogan de l'application dans une icone/tips
     app.logo: "web/picture/logo.png"
-    app.menu_min_width: false # 250
-    app.menu_force_upper: false # true
+    app.menu_min_width: false 
+    # charte AMU => app.menu_min_width: 250
+    app.menu_force_upper: false
+    # charte AMU => app.menu_force_upper: true
+    app.front_end: true
+    app.back_end: true
     app.welcome: "Bienvenue sur l'application."
     app.logon_tip: "<font color=red><center><b><u>Attention</u></b></center>Vous n'êtes <i>pas encore authentifiés...</i></font><br><br>Veuillez cliquer ici, pour saisir vos identifiants de connection."
     app.logout_tip: "Vous êtes actuellement <font color=green><b>authentifiés</b></font>.<br>en tant que '<b>%s</b>'.</br></br> Si vous désirez vous déconnecter : cliquez sur le cadenas."
     app.ent: false
-    app.effects: true
     # si =true => on MASQUE l entete... (cas des application "embedded"
-    app.flags:
-       #- { into: "app_name", value: "<font color=green><i>DÉMO</i></font>", routes: ["/demo/*"], roles:[] }
-       #- { into: "app_name", value: "<font color=red>[Admin]</font>", routes: [], roles:["ROLE_ADMIN","ROLE_SUPER_ADMIN"] }
-       #- { into: "app_slogan", value: "<font color=orange><b>Accès STUDENT</b></font>", routes: ["/demo/student*"], roles:[] }
-       #- { into: "app_slogan", value: "<font color=blue><b>Accès PERSONAL</b></font>", routes: ["/demo/personal*"], roles:[] }
-       - { into: "app_name", value: "<font color=green>[Gestionnaire]</font>", routes: [], roles:["ROLE_GESTIONNAIRE"] }
-       - { into: "app_name", value: "<font color=orange>[DOSI]</font>", routes: [], roles:["ROLE_DOSI"] }
-       - { into: "app_name", value: "<font color=red>[Admin]</font>", routes: [], roles:["ROLE_SUPER_ADMIN"] }
-    app.flash.opacity: 99 #97
-    app.flash: 
-        - { message: "<b><font color=red>[from 'app.yml' => app.flash]</font></b><br> Voici un petit message d'INFORMATION STATIQUE (affichage en continu), GLOBAL à toute l'application à partir du 1/12/2012 jusqu'au 31/12/2012.", type : "info", show_roles: ["ROLE_USER_BASIC", "ROLE_USER_ADVANCED"], start: "12/01/2012 01:23", stop: "31/12/2012 16:11" }
-        - { message: "<b><font color=red>[from 'app.yml' => app.flash]</font></b><br> Voici un autre message d'ALERTE.<br> Il ne sera disponible que pour les routes _demo_student  et _demo_personal de l'application.", type : "alert", show_roles: ["ROLE_USER_BASIC", "ROLE_USER_ADVANCED"], start: false, stop: false, only_routes:["_demo_student","_demo_personal"] }
-        - { message: "<b><font color=red>[from 'app.yml' => app.flash]</font></b><br> Voici un petit message d'INFOS GLOBAL STATIQUE à affichage programmé</br> (visible uniquement pour un intervalle de temps défini start et stop ).", type : "info", show_roles: ["ROLE_USER_BASIC", "ROLE_USER_ADVANCED"], start: "01/01/2013 12:00", stop: "31/01/2013 12:00"}
-        - { message: "<b><font color=red>[from 'app.yml' => app.flash]</font></b><br> Voici un message d'ERREUR GLOBAL STATIQUE à affichage programmé</br> (visible uniquement pour un intervalle de temps défini start et stop ).", type : "error", show_roles: ["ROLE_USER_BASIC", "ROLE_USER_ADVANCED"], start: "01/01/2013 12:00", stop: "31/01/2013 12:00"}
-        - { message: "<b><font color=red>[from 'app.yml' => app.flash]</font></b><br> Voici un message d'INFORMATION GLOBAL à affichage programmé</br> (visible uniquement à partir d'une date start définie ).", type : "info", show_roles: ["ROLE_USER", "ROLE_USER_ADVANCED"], start: "29/11/2011 12:00", stop: false }
-       
+    app.effects: true
+    app.flags: 
+#       - { into: "app_name", value: "<font color=green><i>DÉMO</i></font>", routes: ["/demo/*"], roles:[] }
+#       - { into: "app_name", value: "<font color=red>[Admin]</font>", routes: [], roles:["ROLE_ADMIN","ROLE_SUPER_ADMIN"] }
+#       - { into: "app_slogan", value: "<font color=orange><b>Accès STUDENT</b></font>", routes: ["/demo/student*"], roles:[] }
+#       - { into: "app_slogan", value: "<font color=blue><b>Accès PERSONAL</b></font>", routes: ["/demo/personal*"], roles:[] }
+        - { into: "app_name", value: "<font color=green>[Gestionnaire]</font>", routes: [], roles:["ROLE_GESTIONNAIRE"] }
+        - { into: "app_name", value: "<font color=orange>[DOSI]</font>", routes: [], roles:["ROLE_DOSI"] }
+        - { into: "app_name", value: "<font color=red>[Admin]</font>", routes: [], roles:["ROLE_SUPER_ADMIN"] }
+
+      
 ##############
 #   FOOTER   #
 ##############
@@ -123,7 +154,6 @@ twig:
          app_awstats: %app.awstats%
          app_use_cdn: %app.use_cdn%
          app_cdn_links: %app.cdn%
-         app_use_workflow: %app.use_workflow%
          app_use_ext_accounts: %app.use_ext_accounts%
          app_title: %app.title%
          app_titleLogo: %app.titleLogo%
@@ -143,6 +173,7 @@ twig:
          app_flash: %app.flash%
          app_campagnes: %app.campagnes%  
          app_flags: %app.flags%
+         app_messages: %app.messages%
          app_need_authentificate_message: %app.need_authentificate_message%
          app_effects: %app.effects%
          app_welcome: %app.welcome%
@@ -157,4 +188,10 @@ twig:
          app_menu_force_upper: %app.menu_force_upper%
          app_menu_min_width: %app.menu_min_width%
          app_sm_iconizeTitleSlogan: %app.sm_iconizeTitleSlogan%
-         app_cdn_links: %app.cdn%
+         app_notifications: %app.notifications%   
+         app_notifications_timeout: %app.notifications_timeout%
+         app_crud_notify: %app.crud_notify%
+         app_groups_manager: %app.groups_manager%
+         app_wiki_dev_docs: %app.wiki_dev_docs%
+         app_phpMyAdmin: %app.phpMyAdmin%
+         app_phpLDAPadmin: %app.phpLDAPadmin%
