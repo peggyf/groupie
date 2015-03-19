@@ -1,0 +1,63 @@
+
+@import "jolitree-tango.css";
+
+
+#wrapper {
+        width: 1000px;
+}
+#cl1,#cl2,#cl3 {
+        float:left;
+}
+#cl1 {
+        background-color:transparent;
+        height:inherit !important;
+        width: 300px;
+}
+#cl2 {
+        background-color:transparent;
+        height:inherit !important;
+        width: 500px;
+        position: absolute;
+        left : 850px;
+
+}
+#cl3 {
+        background-color:transparent;
+        height:inherit !important;
+        width: 100px;
+        position: absolute;
+        left : 1390px;
+
+}
+
+
+
+td.titre1{
+        background-color:#E1EAEF;
+        color: #666666;
+        font-weight: bold;
+        font-family: Verdana, Arial;
+        font-size: 11px;
+        text-align: center;
+        width: 300px;
+}
+td.titre2{
+        background-color:#E1EAEF;
+        color: #666666;
+        font-weight: bold;
+        font-family: Verdana, Arial;
+        font-size: 11px;
+        text-align: center;
+        width: 600px;
+}
+
+td.titre3{
+        background-color:#E1EAEF;
+        color: #666666;
+        font-weight: bold;
+        font-family: Verdana, Arial;
+        font-size: 11px;
+        text-align: center;
+        width: 100px;
+}
+
