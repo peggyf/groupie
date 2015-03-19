@@ -153,29 +153,5 @@ public function __construct()
  {
     return($this->lastnbetages);
  }
- /**
- * @return  \Amu\AppBundle\Service\Ldap
- */
- public function infosGroupeLdap() 
- {
-   $infogroupe = array();
-    
-   $addgroup['cn'] = $this->cn;
-   $addgroup['description'] = $this->description;
-   if ($this->amugroupfilter!="")
-   {
-       $addgroup['amugroupfilter'] = $this->amugroupfilter;
-   }
-      
-   $addgroup['objectClass'][0] = "top";
-   $addgroup['objectClass'][1] = "groupOfNames";
-   $addgroup['objectClass'][2] = "AMUGroup";
-   
-   $infogroupe['dn'] = "cn=".$this->cn.", ou=groups, dc=univ-amu, dc=fr";
-   $infogroupe['infos'] = $addgroup;
-   
-    return($infogroupe);
-    
- }
-  
-}
+ 
+};
