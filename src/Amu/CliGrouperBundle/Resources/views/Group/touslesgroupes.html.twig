@@ -5,15 +5,13 @@
 {% block body %}
 
 <link href="{{ asset('bundles/amucligrouper/css/jolitree-group.css') }}" type="text/css" rel="stylesheet" /> 
-
 <script type="text/javascript" src="{{ asset('bundles/amucligrouper/js/jolitree.js') }}"></script>
-
 <style type="text/css">body {font-family: sans-serif;font-size: 12pt;text-align: center;} #myTree {margin: auto auto 2em;width: 20em;padding: 1em;text-align: left;}</style>
-
 <script type="text/javascript">
-    $(function init() {
+    function init() {
         var tree = new JoliTree(document.getElementById("myTree"));
-    });
+    };
+    window.load = init;
 </script>
 
 <table>
