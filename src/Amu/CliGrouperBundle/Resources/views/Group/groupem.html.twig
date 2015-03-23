@@ -9,8 +9,13 @@
     {{ form_widget(form) }}
     <br>
     <p>
-     <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-	onclick="loadPage('{{ path('group_modify', { 'cn': group.cn, 'desc': group.description, 'filt': "test" }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/save.png')}}" />&nbsp;Enregistrer les modifications&nbsp;</button>
+     {% if group.amugroupfilter == "" %}   
+        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+	onclick="loadPage('{{ path('group_modify', { 'cn': group.cn, 'desc': group.description, 'filt': "no" }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/save.png')}}" />&nbsp;Enregistrer les modifications&nbsp;</button>
+     {% else %}   
+         <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+	onclick="loadPage('{{ path('group_modify', { 'cn': group.cn, 'desc': group.description, 'filt': group.amugroupfilter }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/save.png')}}" />&nbsp;Enregistrer les modifications&nbsp;</button>
+     {% endif %}
      <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
      <span class="record_actions"></span>
     </p>

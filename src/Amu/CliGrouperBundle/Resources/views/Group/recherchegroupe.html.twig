@@ -75,7 +75,11 @@
           {% endif %}
           {% if opt=='mod' %}
               <td style="vertical-align: middle;">
-                  <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/modif.png") }}" title="<small>Modifier un groupe</small>" class="ui-button" onclick='loadPage("{{ path('group_modify', { 'cn': group.cn, 'desc': group.description, 'filt': "test" }) }}");' />
+                  {% if group.amugroupfilter == "" %}
+                      <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/modif.png") }}" title="<small>Modifier un groupe</small>" class="ui-button" onclick='loadPage("{{ path('group_modify', { 'cn': group.cn, 'desc': group.description, 'filt': "no" }) }}");' />
+                  {% else %}
+                      <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/modif.png") }}" title="<small>Modifier un groupe</small>" class="ui-button" onclick='loadPage("{{ path('group_modify', { 'cn': group.cn, 'desc': group.description, 'filt': group.amugroupfilter }) }}");' />
+                  {% endif %}
               </td>
           {% endif %}
           {% if opt=='add' %}

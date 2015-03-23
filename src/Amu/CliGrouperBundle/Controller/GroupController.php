@@ -156,7 +156,8 @@ class GroupController extends Controller {
         $groupsearch = new Group();
         $groups = array();
         
-        $form = $this->createForm(new GroupSearchType(), new Group());
+        $form = $this->createForm(new GroupSearchType(), new Group(), array('attr' => array('novalidate' => 'novalidate')));
+        
         $form->handleRequest($request);
         if ($form->isValid()) {
             $groupsearch = $form->getData(); 
@@ -183,7 +184,6 @@ class GroupController extends Controller {
                     $groups[$i]->setCn($arData[$i]["cn"][0]);
                     $groups[$i]->setDescription($arData[$i]["description"][0]);
                     $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
-                    $groups[$i]->setAmugroupadmin("");
                     $groups[$i]->setDroits('Aucun');
                     
                     // Droits DOSI seulement en visu
@@ -358,24 +358,51 @@ class GroupController extends Controller {
             $m_update = new ArrayCollection();      
             $m_update = $userupdate->getMemberships();
             
+            // Log Mise à jour des membres du groupe
+            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+            $adm = $request->getSession()->get('login');
+            
             //foreach($m_update as $memb)
             for ($i=0; $i<sizeof($m_update); $i++)
             {
                 $memb = $m_update[$i];
                 $dn_group = "cn=" . $memb->getGroupname() . ", ou=groups, dc=univ-amu, dc=fr";
+                $gr = $memb->getGroupname();
+                    
                 if ($memb->getMemberof())
                 {
                     // Ajout utilisateur dans groupe
                     $this->getLdap()->addMemberGroup($dn_group, array($uid));
-                        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupes</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
+                    // Log modif
+                    syslog(LOG_INFO, "add_member by $adm : group : $gr, member : $uid ");
+                        echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
                 else
                 {
                     // Suppression utilisateur du groupe
                     $this->getLdap()->delMemberGroup($dn_group, array($uid));
+                    syslog(LOG_INFO, "del_member by $adm : group : $gr, member : $uid ");
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupes</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
+                // Traitement des admins
+                if ($memb->getAdminof())
+                {
+                    $this->getLdap()->addAdminGroup($dn_group, array($uid));
+                    // Log modif
+                    syslog(LOG_INFO, "add_admin by $adm : group : $gr, member : $uid ");
+                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
+                }
+                else
+                {
+                    $this->getLdap()->delAdminGroup($dn_group, array($memb->getUid()));
+                    // Log modif
+                    syslog(LOG_INFO, "del_admin by $adm : group : $gr, member : $uid ");
+                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
+                }
             }
+            // Ferme fichier de log
+            closelog();
+            
             $this->get('session')->getFlashBag()->add('flash-notice', 'Les modifications ont bien été enregistrées');
             $this->getRequest()->getSession()->set('_saved',1);
         }
@@ -513,30 +540,40 @@ class GroupController extends Controller {
         $group ->setMembers($members);
         
         $editForm = $this->createForm(new GroupEditType(), $group);
+        
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
             $groupupdate = new Group();
             $groupupdate = $editForm->getData();
-            
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Form valid</B>=><FONT color =green><PRE>" . print_r($groupupdate, true) . "</PRE></FONT></FONT>";
+            
+            // Log Mise à jour des membres du groupe
+            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+            $adm = $request->getSession()->get('login');
             
             $m_update = new ArrayCollection();      
             $m_update = $groupupdate->getMembers();
             foreach($m_update as $memb)
             {
                 $dn_group = "cn=" . $cn . ", ou=groups, dc=univ-amu, dc=fr";
+                
+                $u = $memb->getUid();
                 //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Form valid</B>=><FONT color =green><PRE>" . print_r($m_update, true) . "</PRE></FONT></FONT>";
                 // Traitement des membres
                 if ($memb->getMember())
                 {
                     $this->getLdap()->addMemberGroup($dn_group, array($memb->getUid()));
+                    // Log modif
+                    syslog(LOG_INFO, "add_member by $adm : group : $cn, member : $u ");
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
                 else
                 {
                     
                     $this->getLdap()->delMemberGroup($dn_group, array($memb->getUid()));
+                    // Log modif
+                    syslog(LOG_INFO, "del_member by $adm : group : $cn, member : $u ");
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
                 
@@ -544,14 +581,21 @@ class GroupController extends Controller {
                 if ($memb->getAdmin())
                 {
                     $this->getLdap()->addAdminGroup($dn_group, array($memb->getUid()));
+                    // Log modif
+                    syslog(LOG_INFO, "add_admin by $adm : group : $cn, member : $u ");
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
                 else
                 {
                     $this->getLdap()->delAdminGroup($dn_group, array($memb->getUid()));
+                    // Log modif
+                    syslog(LOG_INFO, "del_admin by $adm : group : $cn, member : $u ");
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
             }
+            // Ferme fichier de log
+            closelog();
+            
             $this->get('session')->getFlashBag()->add('flash-notice', 'Les modifications ont bien été enregistrées');
             
             $this->getRequest()->getSession()->set('_saved',1);
@@ -596,11 +640,17 @@ class GroupController extends Controller {
                  // affichage groupe créé
                 $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été créé');
                 $groups[0] = $group;
+                $cn = $group->getCn();
+                // Log création de groupe
+                openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+                $adm = $request->getSession()->get('login');
+                syslog(LOG_INFO, "create_group by $adm : group : $cn");
+                closelog();
                 return $this->render('AmuCliGrouperBundle:Group:creationgroupe.html.twig',array('groups' => $groups));
             }
             else 
                 return $this->render('AmuCliGrouperBundle:Group:groupe.html.twig', array('form' => $form->createView()));
-            
+             
         }
         return $this->render('AmuCliGrouperBundle:Group:groupe.html.twig', array('form' => $form->createView()));
 
@@ -627,6 +677,12 @@ class GroupController extends Controller {
             
             // affichage groupe supprimé
             $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été supprimé');
+            // Log suppression de groupe
+            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+            $adm = $request->getSession()->get('login');
+            syslog(LOG_INFO, "delete_group by $adm : group : $cn");
+            closelog();
+                
             return $this->render('AmuCliGrouperBundle:Group:suppressiongroupe.html.twig',array('cn' => $cn));
         }
         else 
@@ -648,7 +704,10 @@ class GroupController extends Controller {
         // Pré-remplir le formulaire avec les valeurs actuelles du groupe
         $group->setCn($cn);
         $group->setDescription($desc);
-        $group->setAmugroupfilter("");
+        if ($filt=="no")
+            $group->setAmugroupfilter("");
+        else
+            $group->setAmugroupfilter($filt);
         
         $form = $this->createForm(new GroupCreateType(), $group);
         $form->handleRequest($request);
@@ -658,13 +717,19 @@ class GroupController extends Controller {
             
             // Création du groupe dans le LDAP
             $infogroup = $groupmod->infosGroupeLdap();
-            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($infogroupe, true) . "</PRE></FONT></FONT>";
+            // echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($infogroup, true) . "</PRE></FONT></FONT>";
             $b = $this->getLdap()->modifyGroupeLdap($infogroup['dn'], $infogroup['infos']);
+            // echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>filt</B>=><FONT color =green><PRE>" . print_r($groupmod) . "</PRE></FONT></FONT>";
             if ($b==true)
             {
-                //Le groupe a bien été créé
+                //Le groupe a bien été modifié
                 //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>retour create groupe ldap</B>=><FONT color =green><PRE>" . $b . "</PRE></FONT></FONT>";
-            
+                // Log modif de groupe
+                openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+                $adm = $request->getSession()->get('login');
+                syslog(LOG_INFO, "modif_group by $adm : group : $cn");
+                closelog();
+                
                  // affichage groupe créé
                 $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été modifié');
                 $groups[0] = $group;

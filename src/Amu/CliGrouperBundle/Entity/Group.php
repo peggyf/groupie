@@ -129,6 +129,11 @@ public function __construct()
     return($this->members);
  }
  
+ public function getAmugroupadmin()
+ {
+    return($this->amugroupadmin);
+ }
+ 
  public function getDroits()
  {
     return($this->droits);
@@ -167,12 +172,8 @@ public function __construct()
 
    $addgroup['cn'] = $this->cn;
    $addgroup['description'] = $this->description;
-
-   if ($this->amugroupfilter!="")
-   {
-    $addgroup['amugroupfilter'] = $this->amugroupfilter;
-   }  
-
+   $addgroup['amugroupfilter'] = $this->amugroupfilter;
+       
    $addgroup['objectClass'][0] = "top";
    $addgroup['objectClass'][1] = "groupOfNames";
    $addgroup['objectClass'][2] = "AMUGroup";

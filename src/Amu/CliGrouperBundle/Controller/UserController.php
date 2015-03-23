@@ -288,6 +288,10 @@ class UserController extends Controller {
             $userupdate = new User();
             $userupdate = $editForm->getData();
             
+            // Log modif de groupe
+            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+            $adm = $request->getSession()->get('login');
+                
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos user</B>=><FONT color =green><PRE>" . print_r($userupdate, true) . "</PRE></FONT></FONT>";
             
             $m_update = new ArrayCollection();      
@@ -295,30 +299,43 @@ class UserController extends Controller {
             foreach($m_update as $memb)
             {
                 $dn_group = "cn=" . $memb->getGroupname() . ", ou=groups, dc=univ-amu, dc=fr";
+                $c = $memb->getGroupname();
                 if ($memb->getDroits()=='Modifier') {
                 if ($memb->getMemberof())
                 {
                     $this->getLdap()->addMemberGroup($dn_group, array($uid));
+                    // Log modif
+                    syslog(LOG_INFO, "add_member by $adm : group : $c, member : $uid");
+                
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupes</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
                 else
                 {
                     $this->getLdap()->delMemberGroup($dn_group, array($uid));
+                    // Log modif
+                    syslog(LOG_INFO, "del_member by $adm : group : $c, member : $uid");
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupes</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
                 // Traitement des admins
                 if ($memb->getAdminof())
                 {
                     $this->getLdap()->addAdminGroup($dn_group, array($uid));
+                    // Log modif
+                    syslog(LOG_INFO, "add_admin by $adm : group : $c, admin : $uid");
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
                 else
                 {
                     $this->getLdap()->delAdminGroup($dn_group, array($uid));
+                    // Log modif
+                    syslog(LOG_INFO, "del_admin by $adm : group : $c, admin : $uid");
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
                 }
             }
+            // Ferme fichier log
+            closelog();
+            
             $this->get('session')->getFlashBag()->add('flash-notice', 'Les modifications ont bien été enregistrées');
             
             $this->getRequest()->getSession()->set('_saved',1);
@@ -402,7 +419,10 @@ class UserController extends Controller {
             $userupdate = $editForm->getData();
             
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos user</B>=><FONT color =green><PRE>" . print_r($userupdate, true) . "</PRE></FONT></FONT>";
-            
+            // Log modif de groupe
+            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+            $adm = $request->getSession()->get('login');
+             
             $m_update = new ArrayCollection();      
             $m_update = $userupdate->getMemberships();
             
@@ -412,17 +432,22 @@ class UserController extends Controller {
                 $memb = $m_update[$i];
                 
                 $dn_group = "cn=" . $cn . ", ou=groups, dc=univ-amu, dc=fr";
+                
                 //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Form valid</B>=><FONT color =green><PRE>" . print_r($m_update, true) . "</PRE></FONT></FONT>";
                 // Traitement des membres
                 if ($memb->getMemberof())
                 {
                     $this->getLdap()->addMemberGroup($dn_group, array($uid));
+                    // Log modif
+                    syslog(LOG_INFO, "add_member by $adm : group : $cn, member : $uid");
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
                 else
                 {
                     
                     $this->getLdap()->delMemberGroup($dn_group, array($uid));
+                    // Log modif
+                    syslog(LOG_INFO, "del_member by $adm : group : $cn, member : $uid");
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
                 
@@ -430,15 +455,22 @@ class UserController extends Controller {
                 if ($memb->getAdminof())
                 {
                     $this->getLdap()->addAdminGroup($dn_group, array($uid));
+                    // Log modif
+                    syslog(LOG_INFO, "add_admin by $adm : group : $cn, admin : $uid");
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
                 else
                 {
                     $this->getLdap()->delAdminGroup($dn_group, array($uid));
+                    // Log modif
+                    syslog(LOG_INFO, "del_admin by $adm : group : $cn, admin : $uid");
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                 }
                
             }
+            // Ferme fichier log
+            closelog();
+            
             $this->get('session')->getFlashBag()->add('flash-notice', 'Les droits ont bien été ajoutés');
             $this->getRequest()->getSession()->set('_saved',1);
         }
