@@ -3,13 +3,13 @@
 #######
 parameters:
 
-    ldap.server: "ldaps://ldap1.univ-amu.fr ldaps://ldap2.univ-amu.fr"
+    ldap.server: "ldaps://ldapmaitre.univ-amu.fr"
     #ldap.server2: "ldaps://ldap2.univ-amu.fr ldaps://ldap1.univ-amu.fr"
     #ldap.server3: "ldaps://ldap.univ-amu.fr"
     ldap.root: "dc=univ-amu,dc=fr"
     ldap.user_root: "ou=people,dc=univ-amu,dc=fr"
-    ldap.dn: "cn=annuaire,ou=system,dc=univ-amu,dc=fr"
-    ldap.pw: '$annuaire-2011!'
+    ldap.dn: "cn=grouper,ou=system,dc=univ-amu,dc=fr"
+    ldap.pw: "Grouper2011Amu!"
     ldap.external: false
     ldap.app_autoload_userinfos_profil: "full"
 

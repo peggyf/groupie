@@ -80,6 +80,7 @@ class Membership {
  {
     return ($this->adminof);
  } 
+ 
   public function getDroits()
  {
     return ($this->droits);
