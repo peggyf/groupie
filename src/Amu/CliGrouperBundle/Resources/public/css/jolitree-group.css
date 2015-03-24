@@ -18,7 +18,8 @@
         height:inherit !important;
         width: 500px;
         position: absolute;
-        left : 850px;
+        left : 50%;
+        margin-left: -150px;
 
 }
 #cl3 {
@@ -26,7 +27,8 @@
         height:inherit !important;
         width: 100px;
         position: absolute;
-        left : 1390px;
+        left : 50%;
+        margin-left: 400px;
 
 }
 
