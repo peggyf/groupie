@@ -401,16 +401,26 @@ class GroupController extends Controller {
                     if ($memb->getMemberof())
                     {
                         // Ajout utilisateur dans groupe
-                        $this->getLdap()->addMemberGroup($dn_group, array($uid));
-                        // Log modif
-                        syslog(LOG_INFO, "add_member by $adm : group : $gr, user : $uid ");
+                        $r = $this->getLdap()->addMemberGroup($dn_group, array($uid));
+                        if ($r==true)
+                        {
+                            // Log modif
+                            syslog(LOG_INFO, "add_member by $adm : group : $gr, user : $uid ");
+                        }
+                        else
+                        {
+                            syslog(LOG_ERR, "LDAP ERROR : add_member by $adm : group : $gr, user : $uid");
+                        }
                         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                     }
                     else
                     {
                         // Suppression utilisateur du groupe
-                        $this->getLdap()->delMemberGroup($dn_group, array($uid));
-                        syslog(LOG_INFO, "del_member by $adm : group : $gr, user : $uid ");
+                        $r = $this->getLdap()->delMemberGroup($dn_group, array($uid));
+                        if ($r)
+                            syslog(LOG_INFO, "del_member by $adm : group : $gr, user : $uid ");
+                        else 
+                            syslog(LOG_ERR, "LDAP ERROR : del_member by $adm : group : $gr, user : $uid");
                         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupes</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                     }
                 }
@@ -420,16 +430,30 @@ class GroupController extends Controller {
                 {
                     if ($memb->getAdminof())
                     {
-                        $this->getLdap()->addAdminGroup($dn_group, array($uid));
-                        // Log modif
-                        syslog(LOG_INFO, "add_admin by $adm : group : $gr, user : $uid ");
+                        $r = $this->getLdap()->addAdminGroup($dn_group, array($uid));
+                        if ($r)
+                        {
+                            // Log modif
+                            syslog(LOG_INFO, "add_admin by $adm : group : $gr, user : $uid ");
+                        }
+                        else 
+                        {
+                            syslog(LOG_ERR, "LDAP ERROR : add_admin by $adm : group : $gr, user : $uid ");
+                        }
                         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                     }
                     else
                     {
-                        $this->getLdap()->delAdminGroup($dn_group, array($uid));
-                        // Log modif
-                        syslog(LOG_INFO, "del_admin by $adm : group : $gr, user : $uid ");
+                        $r = $this->getLdap()->delAdminGroup($dn_group, array($uid)); 
+                        if ($r)
+                        {
+                            // Log modif
+                            syslog(LOG_INFO, "del_admin by $adm : group : $gr, user : $uid ");
+                        }
+                        else
+                        {
+                            syslog(LOG_ERR, "LDAP ERROR : del_admin by $adm : group : $gr, user : $uid ");
+                        }
                         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                     }
                 }
@@ -630,16 +654,30 @@ class GroupController extends Controller {
                 {
                     if ($memb->getMember())
                     {
-                        $this->getLdap()->addMemberGroup($dn_group, array($u));
-                        // Log modif
-                        syslog(LOG_INFO, "add_member by $adm : group : $cn, user : $u ");
+                        $r = $this->getLdap()->addMemberGroup($dn_group, array($u));
+                        if ($r)
+                        {
+                            // Log modif
+                            syslog(LOG_INFO, "add_member by $adm : group : $cn, user : $u ");
+                        }
+                        else
+                        {
+                            syslog(LOG_ERR, "LDAP ERROR : add_member by $adm : group : $cn, user : $u ");
+                        }
                         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                     }
                     else
                     {
-                        $this->getLdap()->delMemberGroup($dn_group, array($u));
-                        // Log modif
-                        syslog(LOG_INFO, "del_member by $adm : group : $cn, user : $u ");
+                        $r = $this->getLdap()->delMemberGroup($dn_group, array($u));
+                        if ($r)
+                        {
+                            // Log modif
+                            syslog(LOG_INFO, "del_member by $adm : group : $cn, user : $u ");
+                        }
+                        else
+                        {
+                            syslog(LOG_ERR, "LDAP ERROR : del_member by $adm : group : $cn, user : $u ");
+                        }
                         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                     }
                 }
@@ -650,16 +688,30 @@ class GroupController extends Controller {
                 {
                     if ($memb->getAdmin())
                     {
-                        $this->getLdap()->addAdminGroup($dn_group, array($u));
-                        // Log modif
-                        syslog(LOG_INFO, "add_admin by $adm : group : $cn, user : $u ");
+                        $r = $this->getLdap()->addAdminGroup($dn_group, array($u));
+                        if ($r)
+                        {
+                            // Log modif
+                            syslog(LOG_INFO, "add_admin by $adm : group : $cn, user : $u ");
+                        }
+                        else
+                        {
+                            syslog(LOG_ERR, "LDAP ERROR : add_admin by $adm : group : $cn, user : $u ");
+                        }
                         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                     }
                     else
                     {
-                        $this->getLdap()->delAdminGroup($dn_group, array($u));
-                        // Log modif
-                        syslog(LOG_INFO, "del_admin by $adm : group : $cn, user : $u ");
+                        $r = $this->getLdap()->delAdminGroup($dn_group, array($u));
+                        if ($r)
+                        {
+                            // Log modif
+                            syslog(LOG_INFO, "del_admin by $adm : group : $cn, user : $u ");
+                        }
+                        else
+                        {
+                            syslog(LOG_ERR, "LDAP ERROR : del_admin by $adm : group : $cn, user : $u ");
+                        }
                         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                     }
                 }
@@ -699,6 +751,10 @@ class GroupController extends Controller {
         if ($form->isValid()) {
             $group = $form->getData();
             
+            // Log création de groupe
+            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+            $adm = $request->getSession()->get('login');
+                
             // Création du groupe dans le LDAP
             $infogroup = $group->infosGroupeLdap();
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($infogroupe, true) . "</PRE></FONT></FONT>";
@@ -708,19 +764,32 @@ class GroupController extends Controller {
                 //Le groupe a bien été créé
                 //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>retour create groupe ldap</B>=><FONT color =green><PRE>" . $b . "</PRE></FONT></FONT>";
             
-                 // affichage groupe créé
+                // affichage groupe créé
                 $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été créé');
                 $groups[0] = $group;
                 $cn = $group->getCn();
-                // Log création de groupe
-                openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-                $adm = $request->getSession()->get('login');
+                
+                // Log création OK
                 syslog(LOG_INFO, "create_group by $adm : group : $cn");
-                closelog();
+               
                 return $this->render('AmuCliGrouperBundle:Group:creationgroupe.html.twig',array('groups' => $groups));
             }
             else 
+            {
+                // affichage erreur
+                $this->get('session')->getFlashBag()->add('flash-notice', 'Erreur LDAP lors de la création du groupe');
+                $groups[0] = $group;
+                $cn = $group->getCn();
+                
+                // Log erreur
+                syslog(LOG_ERR, "LDAP ERREUR : create_group by $adm : group : $cn");
+                
+                // Affichage page 
                 return $this->render('AmuCliGrouperBundle:Group:groupe.html.twig', array('form' => $form->createView()));
+            }
+            
+            // Ferme le fichier de log
+            closelog();
              
         }
         return $this->render('AmuCliGrouperBundle:Group:groupe.html.twig', array('form' => $form->createView()));
@@ -739,6 +808,10 @@ class GroupController extends Controller {
      */
     public function deleteAction(Request $request, $cn)
     {
+        // Log suppression de groupe
+        openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+        $adm = $request->getSession()->get('login');
+        
         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>delete groupe ldap </B>=><FONT color =green><PRE>" . $cn . "</PRE></FONT></FONT>";
         $b = $this->getLdap()->deleteGroupeLdap($cn);
         if ($b==true)
@@ -748,16 +821,24 @@ class GroupController extends Controller {
             
             // affichage groupe supprimé
             $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été supprimé');
-            // Log suppression de groupe
-            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-            $adm = $request->getSession()->get('login');
+            
+            // Log
             syslog(LOG_INFO, "delete_group by $adm : group : $cn");
-            closelog();
-                
+            
             return $this->render('AmuCliGrouperBundle:Group:suppressiongroupe.html.twig',array('cn' => $cn));
         }
         else 
+        {
+            // Log erreur
+            syslog(LOG_ERR, "LDAP ERROR : delete_group by $adm : group : $cn");
+            // affichage erreur
+            $this->get('session')->getFlashBag()->add('flash-notice', 'Erreur LDAP lors de la suppression du groupe');
+            // Retour page
             return $this->render('AmuCliGrouperBundle:Group:groupesearch.html.twig', array('form' => $form->createView()));
+        }
+        
+        // Ferme fichier de log
+        closelog();
     }
     
     /**
@@ -786,6 +867,10 @@ class GroupController extends Controller {
             $groupmod = new Group();
             $groupmod = $form->getData();
             
+            // Log modif de groupe
+            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+            $adm = $request->getSession()->get('login');
+                
             // Création du groupe dans le LDAP
             $infogroup = $groupmod->infosGroupeLdap();
             // echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($infogroup, true) . "</PRE></FONT></FONT>";
@@ -795,11 +880,8 @@ class GroupController extends Controller {
             {
                 //Le groupe a bien été modifié
                 //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>retour create groupe ldap</B>=><FONT color =green><PRE>" . $b . "</PRE></FONT></FONT>";
-                // Log modif de groupe
-                openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-                $adm = $request->getSession()->get('login');
+                // Log modif de groupe OK
                 syslog(LOG_INFO, "modif_group by $adm : group : $cn");
-                closelog();
                 
                  // affichage groupe créé
                 $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été modifié');
@@ -807,8 +889,15 @@ class GroupController extends Controller {
                 return $this->render('AmuCliGrouperBundle:Group:modifgroupe.html.twig',array('groups' => $groups));
             }
             else 
+            {
+                // Log Erreur LDAP
+                syslog(LOG_ERR, "LDAP ERROR : modif_group by $adm : group : $cn");
+                $this->get('session')->getFlashBag()->add('flash-notice', 'Erreur LDAP lors de la modification du groupe');
                 return $this->render('AmuCliGrouperBundle:Group:groupem.html.twig', array('form' => $form->createView(), 'group' => $group));
+            }
             
+            // Ferme fichier log
+            closelog();
         }
         return $this->render('AmuCliGrouperBundle:Group:groupem.html.twig', array('form' => $form->createView(), 'group' => $group));
     }

@@ -341,17 +341,31 @@ class UserController extends Controller {
                     {
                         if ($memb->getMemberof())
                         {
-                            $this->getLdap()->addMemberGroup($dn_group, array($uid));
-                            // Log modif
-                            syslog(LOG_INFO, "add_member by $adm : group : $c, user : $uid");
-                
+                            $r = $this->getLdap()->addMemberGroup($dn_group, array($uid));
+                            if ($r)
+                            {
+                                // Log modif
+                                syslog(LOG_INFO, "add_member by $adm : group : $c, user : $uid");
+                            }
+                            else
+                            {
+                                // Log erreur
+                                syslog(LOG_ERR, "LDAP ERROR : add_member by $adm : group : $c, user : $uid");
+                            }              
                             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupes</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                         }
                         else
                         {
-                            $this->getLdap()->delMemberGroup($dn_group, array($uid));
-                            // Log modif
-                            syslog(LOG_INFO, "del_member by $adm : group : $c, user : $uid");
+                            $r = $this->getLdap()->delMemberGroup($dn_group, array($uid));
+                            if ($r)
+                            {
+                                // Log modif
+                                syslog(LOG_INFO, "del_member by $adm : group : $c, user : $uid");
+                            }
+                            else 
+                            {
+                                syslog(LOG_ERR, "LDAP ERROR : del_member by $adm : group : $c, user : $uid");
+                            }
                             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupes</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                         }
                     }
@@ -361,16 +375,30 @@ class UserController extends Controller {
                     {
                         if ($memb->getAdminof())
                         {
-                            $this->getLdap()->addAdminGroup($dn_group, array($uid));
-                            // Log modif
-                            syslog(LOG_INFO, "add_admin by $adm : group : $c, user : $uid");
+                            $r = $this->getLdap()->addAdminGroup($dn_group, array($uid));
+                            if ($r)
+                            {
+                                // Log modif
+                                syslog(LOG_INFO, "add_admin by $adm : group : $c, user : $uid");
+                            }
+                            else
+                            {
+                                syslog(LOG_ERR, "LDAP ERROR : add_admin by $adm : group : $c, user : $uid");
+                            }
                             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                         }
                         else
                         {
-                            $this->getLdap()->delAdminGroup($dn_group, array($uid));
-                            // Log modif
-                            syslog(LOG_INFO, "del_admin by $adm : group : $c, user : $uid");
+                            $r = $this->getLdap()->delAdminGroup($dn_group, array($uid));
+                            if ($r)
+                            {
+                                // Log modif
+                                syslog(LOG_INFO, "del_admin by $adm : group : $c, user : $uid");
+                            }
+                            else
+                            {
+                                syslog(LOG_ERR, "LDAP ERROR : del_admin by $adm : group : $c, user : $uid");
+                            }
                             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                         }
                     }
@@ -502,16 +530,30 @@ class UserController extends Controller {
                 {
                     if ($memb->getMemberof())
                     {
-                        $this->getLdap()->addMemberGroup($dn_group, array($uid));
-                        // Log modif
-                        syslog(LOG_INFO, "add_member by $adm : group : $cn, user : $uid");
+                        $r = $this->getLdap()->addMemberGroup($dn_group, array($uid));
+                        if ($r)
+                        {
+                            // Log modif
+                            syslog(LOG_INFO, "add_member by $adm : group : $cn, user : $uid");
+                        }
+                        else
+                        {
+                            syslog(LOG_ERR, "LDAP ERROR : add_member by $adm : group : $cn, user : $uid");
+                        }
                         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                     }
                     else
                     {
-                        $this->getLdap()->delMemberGroup($dn_group, array($uid));
-                        // Log modif
-                        syslog(LOG_INFO, "del_member by $adm : group : $cn, user : $uid");
+                        $r = $this->getLdap()->delMemberGroup($dn_group, array($uid));
+                        if ($r)
+                        {
+                            // Log modif
+                            syslog(LOG_INFO, "del_member by $adm : group : $cn, user : $uid");
+                        }
+                        else
+                        {
+                            syslog(LOG_ERR, "LDAP ERROR : del_member by $adm : group : $cn, user : $uid");
+                        }
                         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                     }
                 }
@@ -522,16 +564,30 @@ class UserController extends Controller {
                 {
                     if ($memb->getAdminof())
                     {
-                        $this->getLdap()->addAdminGroup($dn_group, array($uid));
-                        // Log modif
-                        syslog(LOG_INFO, "add_admin by $adm : group : $cn, user : $uid");
+                        $r = $this->getLdap()->addAdminGroup($dn_group, array($uid));
+                        if ($r)
+                        {
+                            // Log modif
+                            syslog(LOG_INFO, "add_admin by $adm : group : $cn, user : $uid");
+                        }
+                        else 
+                        {
+                            syslog(LOG_ERR, "LDAP ERROR : add_admin by $adm : group : $cn, user : $uid");
+                        }
                         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                     }
                     else
                     {
-                        $this->getLdap()->delAdminGroup($dn_group, array($uid));
-                        // Log modif
-                        syslog(LOG_INFO, "del_admin by $adm : group : $cn, user : $uid");
+                        $r = $this->getLdap()->delAdminGroup($dn_group, array($uid));
+                        if ($r)
+                        {
+                            // Log modif
+                            syslog(LOG_INFO, "del_admin by $adm : group : $cn, user : $uid");
+                        }
+                        else
+                        {
+                            syslog(LOG_ERR, "LDAP ERROR : del_admin by $adm : group : $cn, user : $uid");
+                        }
                         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression admin</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
                     }
                 }
