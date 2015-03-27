@@ -3,7 +3,16 @@
 {% block titre %}Liste des membres du groupe {{ cn }} {% endblock %}
 
 {% block body %}
-    
+
+  {% if amugroupfilter != '' %}
+      
+      <h3>  amuGroupfilter  :  </h3>
+      <h4> {{ amugroupfilter }} </h4>
+      
+    <br>
+    <br>
+ {% endif %}
+     
  {% if nb_admins == 0 %}
      <h3>   Le groupe n'a pas d'administrateur. </h3>
     <br>

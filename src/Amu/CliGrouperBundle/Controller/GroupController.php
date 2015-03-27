@@ -105,6 +105,11 @@ class GroupController extends Controller {
      * @Template()
      */
     public function mesgroupesAction(Request $request) {
+        // Variables pour l'affichage "dossier" avec javascript 
+        $arEtages = array();
+        $NbEtages = 0;
+        $arEtagesPrec = array();
+        $NbEtagesPrec = 0;
         
         //$arData=$this->getLdap()->arDatasFilter("member=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
         $arData=$this->getLdap()->arDatasFilter("amuGroupAdmin=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
@@ -117,6 +122,32 @@ class GroupController extends Controller {
             $groups[$i]->setDescription($arData[$i]["description"][0]);
             $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
+            // Mise en forme pour la présentation "dossier" avec javascript
+            $arEtages = preg_split('/[:]+/', $arData[$i]["cn"][0]);
+            $NbEtages = count($arEtages);
+            $groups[$i]->setEtages($arEtages);
+            $groups[$i]->setNbetages($NbEtages);
+            $groups[$i]->setLastnbetages($NbEtagesPrec);
+                        
+            // on marque la différence entre les dossiers d'affichage des groupes N et N-1
+            $lastopen = 0;
+            for ($j=0;$j<$NbEtagesPrec;$j++)
+            {
+                if ($arEtages[$j]!=$arEtagesPrec[$j])
+                {
+                    
+                    $lastopen = $j ;
+                    $groups[$i]->setLastopen($lastopen);
+                    break;
+                }
+            }
+            
+            if (($NbEtagesPrec>=1) && ($lastopen == 0))
+                $groups[$i]->setLastopen($NbEtagesPrec-1);
+            
+            // on garde le nom du groupe précédent dans la liste
+            $arEtagesPrec = $groups[$i]->getEtages();
+            $NbEtagesPrec = $groups[$i]->getNbetages();
         }
         
         return array('groups' => $groups);
@@ -129,6 +160,11 @@ class GroupController extends Controller {
      * @Template()
      */
     public function mesappartenancesAction(Request $request) {
+        // Variables pour l'affichage "dossier" avec javascript 
+        $arEtages = array();
+        $NbEtages = 0;
+        $arEtagesPrec = array();
+        $NbEtagesPrec = 0;
         
         $arData=$this->getLdap()->arDatasFilter("member=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
         
@@ -141,6 +177,33 @@ class GroupController extends Controller {
             $groups[$i]->setDescription($arData[$i]["description"][0]);
             $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
+            
+            // Mise en forme pour la présentation "dossier" avec javascript
+            $arEtages = preg_split('/[:]+/', $arData[$i]["cn"][0]);
+            $NbEtages = count($arEtages);
+            $groups[$i]->setEtages($arEtages);
+            $groups[$i]->setNbetages($NbEtages);
+            $groups[$i]->setLastnbetages($NbEtagesPrec);
+                        
+            // on marque la différence entre les dossiers d'affichage des groupes N et N-1
+            $lastopen = 0;
+            for ($j=0;$j<$NbEtagesPrec;$j++)
+            {
+                if ($arEtages[$j]!=$arEtagesPrec[$j])
+                {
+                    
+                    $lastopen = $j ;
+                    $groups[$i]->setLastopen($lastopen);
+                    break;
+                }
+            }
+            
+            if (($NbEtagesPrec>=1) && ($lastopen == 0))
+                $groups[$i]->setLastopen($NbEtagesPrec-1);
+            
+            // on garde le nom du groupe précédent dans la liste
+            $arEtagesPrec = $groups[$i]->getEtages();
+            $NbEtagesPrec = $groups[$i]->getNbetages();
         }
         
         return array('groups' => $groups);
@@ -487,6 +550,10 @@ class GroupController extends Controller {
         $users = array();
         $admins = array();
         
+        // Récup du amugroupfilter 
+        $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=" . $cn . "))",array("cn","description","amuGroupFilter"));
+        $amugroupfilter = $arData[0]["amugroupfilter"][0];
+        
         // Recherche des membres dans le LDAP
         $arUsers = $this->getLdap()->getMembersGroup($cn);
         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos users</B>=><FONT color =green><PRE>" . print_r($arUsers, true) . "</PRE></FONT></FONT>";
@@ -518,6 +585,7 @@ class GroupController extends Controller {
         }
         
         return array('cn' => $cn,
+                    'amugroupfilter' => $amugroupfilter,
                     'nb_membres' => $arUsers["count"], 
                     'users' => $users,
                     'nb_admins' => $arAdmins[0]["amugroupadmin"]["count"],
