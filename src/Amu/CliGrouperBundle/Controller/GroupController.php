@@ -541,11 +541,11 @@ class GroupController extends Controller {
     /**
      * Voir les membres et administrateurs d'un groupe.
      *
-     * @Route("/voir/{cn}", name="voir_groupe")
+     * @Route("/voir/{cn}/{mail}", name="voir_groupe")
      * @Template()
      * // AMU Modif's
      */
-    public function voirAction(Request $request, $cn)
+    public function voirAction(Request $request, $cn, $mail)
     {
         $users = array();
         $admins = array();
@@ -563,7 +563,9 @@ class GroupController extends Controller {
             $users[$i]->setUid($arUsers[$i]["uid"][0]);
             $users[$i]->setSn($arUsers[$i]["sn"][0]);
             $users[$i]->setDisplayname($arUsers[$i]["displayname"][0]);
-            $users[$i]->setMail($arUsers[$i]["mail"][0]);
+            if ($mail=='true')
+                $users[$i]->setMail($arUsers[$i]["mail"][0]);
+            
             $users[$i]->setTel($arUsers[$i]["telephonenumber"][0]);
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
         }

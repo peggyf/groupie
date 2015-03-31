@@ -9,7 +9,6 @@
         <tr>
             <th>cn</th>
 	    <th>Description</th>
-            <th>amuGroupFilter</th>
             {% if opt=='search' %}
                 <th>Voir</th>
                 <th>Modifier</th>
@@ -32,7 +31,6 @@
 	<tr > 
 	  <td style="vertical-align: middle;">{{group.cn}}</td>
           <td style="vertical-align: middle;">{{group.description}}</td>
-          <td style="vertical-align: middle;">{{group.amugroupfilter}}</td>
           {% if opt=='search' %}
               {% if group.droits=='Aucun' %}
                   <td style="vertical-align: middle;">
@@ -47,7 +45,7 @@
               {% endif %}
               {% if group.droits=='Voir' %}
                   <td style="vertical-align: middle;">
-                    <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/view-page.png") }}" title="<small>Voir les membres</small>" class="ui-button" onclick='loadPage("{{ path('voir_groupe', { 'cn': group.cn }) }}");' />
+                    <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/view-page.png") }}" title="<small>Voir les membres</small>" class="ui-button" onclick='loadPage("{{ path('voir_groupe', { 'cn': group.cn, 'mail': 'false' }) }}");' />
                   </td>
                   <td style="vertical-align: middle;">
                     <img align="absmiddle" src="{{ asset("bundles/app/images/ico/16/modif.png") }}" title="Modifier les membres" style="filter: grayscale(100%);-webkit-filter: grayscale(100%);-moz-filter: grayscale(100%);" />
@@ -58,7 +56,7 @@
                {% endif %}
                {% if group.droits=='Modifier' %}
                   <td style="vertical-align: middle;">
-                    <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/view-page.png") }}"  title="<small>Voir les membres</small>"  class="ui-button" onclick='loadPage("{{ path('voir_groupe', { 'cn': group.cn }) }}");' />
+                    <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/view-page.png") }}"  title="<small>Voir les membres</small>"  class="ui-button" onclick='loadPage("{{ path('voir_groupe', { 'cn': group.cn, 'mail': 'true' }) }}");' />
                   </td>
                   <td style="vertical-align: middle;">
                     <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/modif.png") }}" title="<small>Modifier les membres</small>" class="ui-button" onclick='loadPage("{{ path('group_update', { 'cn': group.cn }) }}");' />
