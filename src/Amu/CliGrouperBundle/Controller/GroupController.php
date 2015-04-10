@@ -52,8 +52,9 @@ class GroupController extends Controller {
         $NbEtagesPrec = 0;
           
         $arData=$this->getLdap()->arDatasFilter("(objectClass=groupofNames)",array("cn","description","amuGroupFilter"));
+        // echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Tous les groupes : </B>=><FONT color =green><PRE>" . $arData["count"]. "</PRE></FONT></FONT>";
          
-        $groups = array();
+        $groups = new ArrayCollection();
         for ($i=0; $i<$arData["count"]; $i++) {
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>cn=</B>=><FONT color =green><PRE>" . $arData[$i]["cn"][0] . "</PRE></FONT></FONT>";
             $groups[$i] = new Group();
@@ -115,7 +116,7 @@ class GroupController extends Controller {
         $arData=$this->getLdap()->arDatasFilter("amuGroupAdmin=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
         //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>memberof=</B>=><FONT color =green><PRE>" . print_r($arData). "</PRE></FONT></FONT>";
         $groups = new ArrayCollection();
-        
+        // echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>nb groupes=</B>=><FONT color =green><PRE>" . $arData["count"] . "</PRE></FONT></FONT>";
         for ($i=0; $i<$arData["count"]; $i++) {
             $groups[$i] = new Group();
             $groups[$i]->setCn($arData[$i]["cn"][0]);
@@ -548,7 +549,7 @@ class GroupController extends Controller {
     public function voirAction(Request $request, $cn, $mail)
     {
         $users = array();
-        $admins = array();
+        $admins = array(); 
         
         // Récup du amugroupfilter 
         $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=" . $cn . "))",array("cn","description","amuGroupFilter"));
