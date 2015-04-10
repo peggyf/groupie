@@ -694,7 +694,7 @@ class UserController extends Controller {
         
         $form = $this->createForm(new UserSearchType(), new User());
         $form->handleRequest($request); 
-        
+                
         if ($form->isValid()) {
             $usersearch = $form->getData();
             
@@ -704,53 +704,96 @@ class UserController extends Controller {
             }
             else
             {
-                // Recherche des utilisateurs dans le LDAP
-                $arData=$this->getLdap()->arDatasFilter("uid=".$usersearch->getUid(), array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'memberof'));
-                
-                // Test de la validité de l'uid
-                if ($arData[0]['uid'][0] == '')
+                // On teste si on a qqchose dans le champ uid
+                if ($usersearch->getUid()=='')
                 {
-                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>opt</B>=><FONT color =green><PRE>" . $opt . "</PRE></FONT></FONT>";
-                    $this->get('session')->getFlashBag()->add('flash-notice', 'L\'uid n\'est pas valide');
-                    $this->getRequest()->getSession()->set('_saved', 0);
-                }
-                else
-                {
-                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos user</B>=><FONT color =green><PRE>" . print_r($arData, true) . "</PRE></FONT></FONT>";
-                    $user = new User();
-                    $user->setUid($usersearch->getUid());
-                    $user->setDisplayname($arData[0]['displayname'][0]);
-                    $user->setMail($arData[0]['mail'][0]);
-                    $user->setSn($arData[0]['sn'][0]);
-                    $user->setTel($arData[0]['telephonenumber'][0]);
-                    // Récupération du cn des groupes (memberof)
-                    $tab = array_splice($arData[0]['memberof'], 1);
-                    $tab_cn = array();
-                     foreach($tab as $dn)
+                    // si on a rien, on teste le nom
+                    $arData=$this->getLdap()->arDatasFilter("sn=*".$usersearch->getSn()."*", array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'memberof'));
+                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos user arData</B>=><FONT color =green><PRE>" . print_r($arData, true) . "</PRE></FONT></FONT>";
+                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos user count</B>=><FONT color =green><PRE>" . $arData['count'] . "</PRE></FONT></FONT>";
+                    for($i=0;$i<$arData['count'];$i++)
                     {
-                        $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
+                        $data = $arData[$i];
+                        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos user data</B>=><FONT color =green><PRE>" . print_r($data, true) . "</PRE></FONT></FONT>";
+                        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>uid</B>=><FONT color =green><PRE>" . $data['uid'][0] . "</PRE></FONT></FONT>";
+                        
+                        $user = new User();
+                        $user->setUid($data['uid'][0]);
+                        $user->setDisplayname($data['displayname'][0]);
+                        $user->setMail($data['mail'][0]);
+                        $user->setSn($data['sn'][0]);
+                        $user->setTel($data['telephonenumber'][0]);
+                       
+                        $users[] = $user; 
+                        
+                        //$this->getRequest()->getSession()->set('_saved',1);
+                        //return array('users' => $users);
+                        
                     }
-                    $user->setMemberof($tab_cn); 
-
-                    $users[] = $user; 
-                    //$this->getRequest()->getSession()->set('_saved',1);
-                    //return array('users' => $users);
-
                     // Gestion des droits
                     $droits = 'Aucun';
                     // Droits DOSI seulement en visu
-                    if (true === $this->get('security.context')->isGranted('ROLE_DOSI')) {
+                    if (true === $this->get('security.context')->isGranted('ROLE_DOSI')) 
+                    {
                         $droits = 'Voir';
                     }
-                    if ((true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) || (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))) {
+                    if ((true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) || (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))) 
+                    {
                         $droits = 'Modifier';
                     }
-
                     return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn));
                 }
-            }
-                       
+                else
+                {
+                    // Recherche des utilisateurs dans le LDAP
+                    $arData=$this->getLdap()->arDatasFilter("uid=".$usersearch->getUid(), array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'memberof'));
+                
+                    // Test de la validité de l'uid
+                    if ($arData[0]['uid'][0] == '')
+                    {
+                        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>opt</B>=><FONT color =green><PRE>" . $opt . "</PRE></FONT></FONT>";
+                        $this->get('session')->getFlashBag()->add('flash-notice', 'L\'uid n\'est pas valide');
+                        $this->getRequest()->getSession()->set('_saved', 0);
+                        
+                    }
+                    else
+                    {
+                        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos user</B>=><FONT color =green><PRE>" . print_r($arData, true) . "</PRE></FONT></FONT>";
+                        $user = new User();
+                        $user->setUid($usersearch->getUid());
+                        $user->setDisplayname($arData[0]['displayname'][0]);
+                        $user->setMail($arData[0]['mail'][0]);
+                        $user->setSn($arData[0]['sn'][0]);
+                        $user->setTel($arData[0]['telephonenumber'][0]);
+                        // Récupération du cn des groupes (memberof)
+                        $tab = array_splice($arData[0]['memberof'], 1);
+                        $tab_cn = array();
+                        foreach($tab as $dn)
+                        {
+                            $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
+                        }
+                        $user->setMemberof($tab_cn); 
+
+                        $users[] = $user; 
+                        //$this->getRequest()->getSession()->set('_saved',1);
+                        //return array('users' => $users);
+
+                        // Gestion des droits
+                        $droits = 'Aucun';
+                        // Droits DOSI seulement en visu
+                        if (true === $this->get('security.context')->isGranted('ROLE_DOSI')) {
+                            $droits = 'Voir';
+                        }
+                        if ((true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) || (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))) {
+                            $droits = 'Modifier';
+                        }
+
+                        return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn));
+                    }
+                }   
+            }       
         }
+        
         //$this->getRequest()->getSession()->set('_saved',0);
         //return array('form' => $form->createView());
         
