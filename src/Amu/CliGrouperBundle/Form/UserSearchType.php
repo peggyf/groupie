@@ -11,8 +11,9 @@ class UserSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-             ->add('uid', 'text', array('label' => 'Identifiant (uid)', 'required' => 'false'))
-             ->add('sn', 'text', array('label' => 'Nom', 'required' => 'false')); 
+             ->add('uid', 'text', array('label' => 'Identifiant (uid)', 'required' => false))
+             ->add('sn', 'text', array('label' => 'Nom', 'required' => false))
+             ->getForm(); 
 
     }
     public function setDefaultOptions(OptionsResolverInterface $resolver)
