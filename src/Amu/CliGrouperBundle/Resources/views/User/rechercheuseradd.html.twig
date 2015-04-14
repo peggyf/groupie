@@ -50,7 +50,7 @@
     
         <br>
         <br>
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('mes_appartenances') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/home.png')}}" />&nbsp;Retour à l'accueil&nbsp;</button>
+        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/home.png')}}" />&nbsp;Retour à l'accueil&nbsp;</button>
        
     {% else %}
         <form class="amuForms" id="_ajxFromModifier">
@@ -84,7 +84,7 @@
                 <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
                 onclick="loadPage('{{ path('user_add', { 'uid': user.uid, 'cn': cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/user-add.png')}}" />&nbsp;Ajouter les droits&nbsp;</button>
                 <span class="record_actions"></span>
-                <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('mes_appartenances') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
+                <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
             </p>
     
             {{ form_rest(form) }}

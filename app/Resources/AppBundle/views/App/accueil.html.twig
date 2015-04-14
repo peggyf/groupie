@@ -1,7 +1,7 @@
 {#% render "AppBundle:App:checkAuth" %#}
 {% extends 'AppBundle::page.html.twig' %}
 
-{% block titre %}Bienvenue sur {{app_name|raw}} {% endblock %}
+{% block titre %}Bienvenue sur {{app_name}} {% endblock %}
 {% block body %}
 {#{ app.session.flashbag.set('page_flash',[{ message: "MESSAGE STATIQUE issue de 'index.html.twig'...", type : "info" , start:false, stop:false}]) }#}
 

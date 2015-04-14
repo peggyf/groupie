@@ -77,7 +77,7 @@
             <p>
                 <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
                 onclick="loadPage('{{ path('user_update', { 'uid': user.uid }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/save-2.png')}}" />&nbsp;Enregistrer les modifications&nbsp;</button>
-                <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('mes_appartenances') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
+                <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
                 <span class="record_actions"></span>
             </p>
             {{ form_rest(form) }}
