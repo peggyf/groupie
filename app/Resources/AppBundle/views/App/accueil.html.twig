@@ -25,34 +25,50 @@
  
 <center>
   <div class="ui-corner-all ui-state-active TabInfos" style="padding: 10px;color: gray; max-width: 70%;">
-    {%if (app.security.token.authenticated==true) and  (app.security.token.user!="anon.")  %} 
-      </br><img src= "{{ asset('bundles/app/images/ico/32/'~((feminin==1)?"woman":"men")~'.png') }}" align="absmiddle" />&nbsp;{{ app.session.get('displayName') }} ({{app.session.get('amuMail')}})</br>
-      {%if is_granted("ROLE_AUTHENTIFIED") and  is_expr_granted("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")  %}
-        </br><img src= "{{ asset('bundles/app/images/ico/32/admin.png') }}" align="absmiddle" />&nbsp;Vous &ecirc;tes Administrateur de l'applications...
-      {%elseif is_granted("ROLE_AUTHENTIFIED") and  is_granted("ROLE_MANAGER")  %}
-        </br><img src= "{{ asset('bundles/app/images/ico/32/manager.png') }}" align="absmiddle" />&nbsp;Vous &ecirc;tes un "Manager" de l'applications...
-      {%elseif is_granted("ROLE_AUTHENTIFIED") and  is_granted("ROLE_VIEWER")  %}
-        </br><img src= "{{ asset('bundles/app/images/ico/32/users.png') }}" align="absmiddle" /><img src= "{{ asset('bundles/app/images/ico/32/view-page.png') }}" align="absmiddle" />&nbsp;Vous avez le droit de "Visualiser" certaines informations de l'applications...
-        {%if  is_granted("ROLE_MODIFIER") %}
-          </br><img src= "{{ asset('bundles/app/images/ico/32/users.png') }}" align="absmiddle" /><img src= "{{ asset('bundles/app/images/ico/32/modif.png') }}" align="absmiddle" />&nbsp;Vous avez aussi le droit de "Modifier" certaines informations de l'applications...
-        {%endif%}
-      {%elseif is_granted("ROLE_AUTHENTIFIED") and  is_granted("ROLE_MODIFIER")  %}
-        </br><img src= "{{ asset('bundles/app/images/ico/32/user.png') }}" align="absmiddle" /><img src= "{{ asset('bundles/app/images/ico/32/modif.png') }}" align="absmiddle" />&nbsp;Vous avez le droit de "Modifier" certaines informations de l'applications...
-      {#  
-      {%elseif (app.security.token.authenticated==true) and is_granted("ROLE_AUTHENTIFIED") and  is_granted("ROLE_APPUSER")  %}
-        </br>&nbsp;&nbsp;<img src= "{{ asset('bundles/app/images/ico/16/valid.png') }}" align="absmiddle" />&nbsp;Vous avez bien &eacute;t&eacute; reconnu{{ (feminin==1)?"e":""}} comme un{{ (feminin==1)?"e":""}} &eacute;tudiant{{ (feminin==1)?"e":""}} et donc...
-        </br><br>Informations pour ce ROLE_APPUSER...
-       #}
-      {%endif%}
-    {%else%}
-      </br><img src= "{{ asset('bundles/app/images/ico/32/lock.png') }}" align="absmiddle" />&nbsp;Accès anonyme </br>
-    {%endif%}
+    </br><img src= "{{ asset('bundles/app/images/ico/32/'~((feminin==1)?"woman":"men")~'.png') }}" align="absmiddle" />&nbsp;{{ app.session.get('displayName') }} ({{app.session.get('amuMail')}})</br>
+    {% if (app.security.token.authenticated==true) and is_granted("ROLE_AUTHENTIFIED") and  is_expr_granted("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")  %}
+
+      </br><img src= "{{ asset('bundles/app/images/ico/32/admin.png') }}" align="absmiddle" />&nbsp;Vous êtes administrateur de l'application.
+
+    {% elseif (app.security.token.authenticated==true) and is_granted("ROLE_AUTHENTIFIED") and  is_granted("ROLE_GESTIONNAIRE")  %}
+
+      </br><img src= "{{ asset('bundles/app/images/ico/32/manager.png') }}" align="absmiddle" />&nbsp;Vous êtes gestionnaire de l'application.
+
+    {% elseif (app.security.token.authenticated==true) and is_granted("ROLE_AUTHENTIFIED") and  is_granted("ROLE_DOSI")  %}
+
+      </br><img src= "{{ asset('bundles/app/images/ico/32/users.png') }}" align="absmiddle" /><img src= "{{ asset('bundles/app/images/ico/32/view-page.png') }}" align="absmiddle" />&nbsp;Vous avez les droits de visualisation sur l'application.
+      
+    {% elseif (app.security.token.authenticated==true) and is_granted("ROLE_AUTHENTIFIED") and  is_granted("ROLE_MEMBRE")  %}
+
+      </br><img src= "{{ asset('bundles/app/images/ico/32/users.png') }}" align="absmiddle" /><img src= "{{ asset('bundles/app/images/ico/32/view-page.png') }}" align="absmiddle" />&nbsp;Vous êtes membre d'un groupe.  
+
+      {% endif %}
   </div>
 </center>
-
-{%if (app.security.token.authenticated==true) and is_granted("ROLE_AUTHENTIFIED") and  is_expr_granted("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN','ROLE_MANAGER')")  %}
-<br><div class="ui-state-error ui-corner-all" style="padding:10px;"><b>Informations sp&eacute;ciales...</b><small><br>Elles ne seront affich&eacute;s que pour les 'ROLE_ADMIN','ROLE_SUPER_ADMIN','ROLE_MANAGER'</div>
-{%endif%}
 <br>
-<div class="ui-state-active ui-corner-all" style="padding:10px;"><b>Autres informations globales... (ind&eacute;pendantes des ROLES)</b><small><br><br><br></small></div>
+<br>
+<br>
+
+{% if (app.security.token.authenticated==true) and is_granted("ROLE_AUTHENTIFIED") and  is_expr_granted("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")  %}
+    
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; position:absolute; left:30%" onclick="loadPage('{{ path('mes_appartenances') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/usergroup.png')}}" />&nbsp;Voir mes appartenances &nbsp;</button>        
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; position:absolute; left:46%" onclick="loadPage('{{ path('mes_groupes') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/usergroup-edit.png')}}" />&nbsp;Voir mes groupes &nbsp;</button>        
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; position:absolute; left:61%" onclick="loadPage('{{ path('tous_les_groupes') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/usergroup-search.png')}}" />&nbsp;Voir tous les groupes &nbsp;</button>        
+    
+{% elseif (app.security.token.authenticated==true) and is_granted("ROLE_AUTHENTIFIED") and  is_granted("ROLE_GESTIONNAIRE")  %}
+
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; position:absolute; left:36%" onclick="loadPage('{{ path('mes_appartenances') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/usergroup.png')}}" />&nbsp;Voir mes appartenances &nbsp;</button>        
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; position:absolute; left:55%" onclick="loadPage('{{ path('mes_groupes') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/usergroup-edit.png')}}" />&nbsp;Voir mes groupes &nbsp;</button>        
+    
+{% elseif (app.security.token.authenticated==true) and is_granted("ROLE_AUTHENTIFIED") and  is_granted("ROLE_DOSI")  %}
+
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; position:absolute; left:36%" onclick="loadPage('{{ path('mes_appartenances') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/usergroup.png')}}" />&nbsp;Voir mes appartenances &nbsp;</button>        
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; position:absolute; left:55%" onclick="loadPage('{{ path('tous_les_groupes') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/usergroup-search.png')}}" />&nbsp;Voir tous les groupes &nbsp;</button>              
+    
+{% elseif (app.security.token.authenticated==true) and is_granted("ROLE_AUTHENTIFIED") and  is_granted("ROLE_MEMBRE")  %}
+    
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; position:absolute; left:45%" onclick="loadPage('{{ path('mes_appartenances') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/usergroup.png')}}" />&nbsp;Voir mes appartenances &nbsp;</button>        
+
+{% endif %}
+
 {% endblock %}
