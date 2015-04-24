@@ -94,8 +94,8 @@ parameters:
     # Autres valeurs possibles :
       # "bundles/app/images/amu/fond_dosi_social.png"
       # "bundles/app/images/amu/fond_standard.png"
-    app.title: "CliGrouper"
-    app.name: "CliGrouper"
+    app.title: "Groupie"
+    app.name: "Groupie"
     app.slogan: "Application de gestion des groupes LDAP"
     app.sm_iconizeTitleSlogan: false #Mettre (en mode sm 'SMartphone'), le nom et le slogan de l'application dans une icone/tips
     app.logo: "web/picture/logo.png"
