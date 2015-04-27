@@ -848,7 +848,7 @@ class GroupController extends Controller {
             else 
             {
                 // affichage erreur
-                $this->get('session')->getFlashBag()->add('flash-notice', 'Erreur LDAP lors de la création du groupe');
+                $this->get('session')->getFlashBag()->add('flash-error', 'Erreur LDAP lors de la création du groupe');
                 $groups[0] = $group;
                 $cn = $group->getCn();
                 
@@ -903,7 +903,7 @@ class GroupController extends Controller {
             // Log erreur
             syslog(LOG_ERR, "LDAP ERROR : delete_group by $adm : group : $cn");
             // affichage erreur
-            $this->get('session')->getFlashBag()->add('flash-notice', 'Erreur LDAP lors de la suppression du groupe');
+            $this->get('session')->getFlashBag()->add('flash-error', 'Erreur LDAP lors de la suppression du groupe');
             // Retour page
             return $this->render('AmuCliGrouperBundle:Group:groupesearch.html.twig', array('form' => $form->createView()));
         }
@@ -963,7 +963,7 @@ class GroupController extends Controller {
             {
                 // Log Erreur LDAP
                 syslog(LOG_ERR, "LDAP ERROR : modif_group by $adm : group : $cn");
-                $this->get('session')->getFlashBag()->add('flash-notice', 'Erreur LDAP lors de la modification du groupe');
+                $this->get('session')->getFlashBag()->add('flash-error', 'Erreur LDAP lors de la modification du groupe');
                 return $this->render('AmuCliGrouperBundle:Group:groupem.html.twig', array('form' => $form->createView(), 'group' => $group));
             }
             
