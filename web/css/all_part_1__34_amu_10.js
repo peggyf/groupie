@@ -93,8 +93,8 @@ var amu={
     } catch(ex){} 
     try { $(".tablesorterV2").tablesorter({ widgets: ['zebra'] }); } catch(ex){}     
     
-    $('<br>').insertBefore(".amuForms input[type='radio']");
-    $('<br>').insertBefore(".amuForms input[type='checkbox']");
+//    $('<br>').insertBefore(".amuForms input[type='radio']");
+//    $('<br>').insertBefore(".amuForms input[type='checkbox']");
   },
   
   initJQueryControls:function(){
