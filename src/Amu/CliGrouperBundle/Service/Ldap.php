@@ -1486,7 +1486,8 @@ class Ldap extends WSTools {
     if ($this->r) {
 
         ldap_add($this->ds,$dn,$groupeinfo);
-
+        $e = ldap_error($this->ds);
+        
         if(ldap_error($this->ds) == "Success")
             return true;
         else
@@ -1563,6 +1564,7 @@ class Ldap extends WSTools {
  public function getMembersGroup($groupName, $restriction = array("uid", "displayName", "mail", "telephoneNumber", "sn"), $debug = false) {
     $filtre = "(&(objectclass=*)(memberOf=cn=" . $groupName . ", ou=groups, dc=univ-amu, dc=fr))";
     $AllInfos = array();
+    $AllInfosBrutes = array();
     $this->connect();
     if ($this->r) {
       $sr = ldap_search($this->ds, $this->LDAP_racine, $filtre, $restriction); // ,25 pour limiter les rÃ©sultats Ã  25 items
@@ -1572,7 +1574,7 @@ class Ldap extends WSTools {
     }
        
     if ($debug)
-      echo "<hr>DEBUG " . __CLASS__ . "::" . __FUNCTION__ . " arUsers <PRE>" . print_r($arUsers, true) . "</PRE>";
+      echo "<hr>DEBUG " . __CLASS__ . "::" . __FUNCTION__ . " arUsers <PRE>" . print_r($AllInfos, true) . "</PRE>";
 
     return $AllInfos;
   }
