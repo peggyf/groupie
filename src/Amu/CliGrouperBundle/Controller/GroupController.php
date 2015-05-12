@@ -828,7 +828,6 @@ class GroupController extends Controller {
                 
             // Création du groupe dans le LDAP
             $infogroup = $group->infosGroupeLdap();
-            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($infogroupe, true) . "</PRE></FONT></FONT>";
             $b = $this->getLdap()->createGroupeLdap($infogroup['dn'], $infogroup['infos']);
             if ($b==true)
             {
@@ -924,6 +923,8 @@ class GroupController extends Controller {
         $group = new Group();
         $groups = array();
         
+        $dn = "cn=".$cn.", ou=groups, dc=univ-amu, dc=fr";
+        
         // Pré-remplir le formulaire avec les valeurs actuelles du groupe
         $group->setCn($cn);
         $group->setDescription($desc);
@@ -941,11 +942,21 @@ class GroupController extends Controller {
             // Log modif de groupe
             openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
             $adm = $request->getSession()->get('login');
+            
+            // Cas particulier de la suppression amugroupfilter
+            if (($filt != "no") && ($groupmod->getAmugroupfilter() == "")) {
+                // Suppression de l'attribut
+                $b = $this->getLdap()->delAmuGroupFilter($dn, $filt);
+                // Log Erreur LDAP
+                syslog(LOG_ERR, "LDAP ERROR : modif_group by $adm : group : $cn, delAmuGroupFilter");
+                $this->get('session')->getFlashBag()->add('flash-error', 'Erreur LDAP lors de la modification du groupe');
+                return $this->render('AmuCliGrouperBundle:Group:groupem.html.twig', array('form' => $form->createView(), 'group' => $group));
+            }
                 
-            // Création du groupe dans le LDAP
+            // Modification du groupe dans le LDAP
             $infogroup = $groupmod->infosGroupeLdap();
-            // echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($infogroup, true) . "</PRE></FONT></FONT>";
-            $b = $this->getLdap()->modifyGroupeLdap($infogroup['dn'], $infogroup['infos']);
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($infogroup, true) . "</PRE></FONT></FONT>";
+            $b = $this->getLdap()->modifyGroupeLdap($dn, $infogroup['infos']);
             // echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>filt</B>=><FONT color =green><PRE>" . print_r($groupmod) . "</PRE></FONT></FONT>";
             if ($b==true)
             {

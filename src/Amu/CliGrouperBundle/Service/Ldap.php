@@ -1486,7 +1486,7 @@ class Ldap extends WSTools {
     if ($this->r) {
 
         ldap_add($this->ds,$dn,$groupeinfo);
-    
+
         if(ldap_error($this->ds) == "Success")
             return true;
         else
@@ -1529,7 +1529,23 @@ class Ldap extends WSTools {
     $this->connect();
     if ($this->r) {
 
+        $cn = preg_replace("/(cn=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $dn);
+        if ($cn != $groupeinfo['cn'])
+        {
+            // Renommage de l'entrée LDAP
+            $newRdn = "cn=".$groupeinfo['cn'];
+        
+            // $newparent IS the full DN to the NEW parent DN that you want to move/rename to
+            $newParent = "ou=groups, dc=univ-amu, dc=fr";
+            
+            ldap_rename($this->ds, $dn, $newRdn, $newParent, true);
+            $dn = $newRdn . ", ou=groups, dc=univ-amu, dc=fr";
+        }
+        
+        
         ldap_modify($this->ds,$dn,$groupeinfo);
+     
+        $r = ldap_error($this->ds);
     
         if(ldap_error($this->ds) == "Success")
             return true;
@@ -1680,6 +1696,29 @@ class Ldap extends WSTools {
 
     return false;
   }
+  
+  /**
+ * Supprimer le amugroupfilter d'un groupe
+ * @return  \Amu\AppBundle\Service\Ldap
+ */
+ public function delAmuGroupFilter($dn_group, $filter) {
+       
+    $groupinfo['amuGroupFilter'] = $filter;
+   
+    $this->connect();
+    if ($this->r) {
+        $sr = ldap_mod_del($this->ds, $dn_group, $groupinfo);      
+         if(ldap_error($this->ds) == "Success")
+            return true;
+        else
+            return false;
+    }
+       
+    if ($debug)
+      echo "<hr>DEBUG " . __CLASS__ . "::" . __FUNCTION__ . " arUserUid <PRE>" . print_r($groupinfo, true) . "</PRE>";
+
+    return false;
+  }  
  
  }
 ?>

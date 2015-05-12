@@ -172,11 +172,13 @@ public function __construct()
 
    $addgroup['cn'] = $this->cn;
    $addgroup['description'] = $this->description;
-   $addgroup['amugroupfilter'] = $this->amugroupfilter;
-       
-   $addgroup['objectClass'][0] = "top";
-   $addgroup['objectClass'][1] = "groupOfNames";
-   $addgroup['objectClass'][2] = "AMUGroup";
+   if ($this->amugroupfilter != "") {
+        $addgroup['amuGroupFilter'] = $this->amugroupfilter;
+   }
+   
+   $addgroup['objectClass'][0] = "groupOfNames";
+   $addgroup['objectClass'][1] = "AMUGroup";
+   $addgroup['objectClass'][2] = "top";
    
    $infogroupe['dn'] = "cn=".$this->cn.", ou=groups, dc=univ-amu, dc=fr";
 
