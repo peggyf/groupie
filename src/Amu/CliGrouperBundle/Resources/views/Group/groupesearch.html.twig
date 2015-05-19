@@ -35,4 +35,29 @@
     </p>
 </form>
 
+
+
+<script type="text/javascript">       
+$('#groupsearch_cn').autocomplete({
+    source : function(requete, reponse){
+            var motcle = $('#groupsearch_cn').val();                       
+            var DATA = 'motcle=' + motcle;
+            
+            $.ajax({
+                    type:"POST",
+                    url : "{{ path('ajax_groupcompletlist') }}",
+                    dataType : 'json',
+                    data : DATA, 
+
+                    success : function(donnee){
+                        reponse($.map(donnee, function(object){ 
+                            return object;
+                        }));
+                    }            
+                });
+            }
+}); 
+    
+</script>
+
 {% endblock %}
