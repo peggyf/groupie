@@ -691,8 +691,9 @@ class UserController extends Controller {
     public function searchAction(Request $request, $opt='search', $cn='') {
         $usersearch = new User();
         $users = array();
-        
-        $form = $this->createForm(new UserSearchType(), new User());
+        $u = new User();
+        $u->setExacte(true);
+        $form = $this->createForm(new UserSearchType(), $u);
         $form->handleRequest($request); 
                 
         if ($form->isValid()) {
@@ -708,7 +709,13 @@ class UserController extends Controller {
                 if ($usersearch->getUid()=='')
                 {
                     // si on a rien, on teste le nom
-                    $arData=$this->getLdap()->arDatasFilter("sn=*".$usersearch->getSn()."*", array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'memberof'));
+                    // On teste si on fait une recherche exacte ou non
+                    if ($usersearch->getExacte()){
+                        $arData=$this->getLdap()->arDatasFilter("sn=".$usersearch->getSn(), array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'memberof'));
+                    }
+                    else {
+                        $arData=$this->getLdap()->arDatasFilter("sn=*".$usersearch->getSn()."*", array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'memberof'));
+                    }
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos user arData</B>=><FONT color =green><PRE>" . print_r($arData, true) . "</PRE></FONT></FONT>";
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos user count</B>=><FONT color =green><PRE>" . $arData['count'] . "</PRE></FONT></FONT>";
                     for($i=0;$i<$arData['count'];$i++)

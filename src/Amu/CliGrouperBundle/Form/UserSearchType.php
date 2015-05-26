@@ -12,7 +12,9 @@ class UserSearchType extends AbstractType
     {
         $builder
              ->add('uid', 'text', array('label' => 'Identifiant (uid)', 'required' => false))
-             ->add('sn', 'text', array('label' => 'Nom', 'required' => false))
+             ->add('sn', 'text', array('label' => 'Nom', 'required' => false)) 
+             ->add('exacte', 'checkbox', array('label' => 'Recherche exacte', 'required'  => false)
+                     )   
              ->getForm(); 
 
     }

@@ -17,6 +17,7 @@ class User {
   protected $memberof;
   protected $adminof;
   protected $memberships;
+  protected $exacte;
 
   public function __construct()
   {
@@ -93,6 +94,16 @@ class User {
  } 
  
  /**
+  * Set exacte
+  *
+  * @param bool $exacte
+ */
+ public function setExacte($exacte)
+ {
+    $this->exacte = $exacte;
+ } 
+ 
+ /**
   * Get uid
   *
  */
@@ -163,5 +174,10 @@ class User {
  public function setMemberships(ArrayCollection $memberships)
  {
      $this->memberships = $memberships;
+ }
+ 
+ public function getExacte()
+ {
+     return $this->exacte;
  }
 }

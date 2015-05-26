@@ -542,11 +542,11 @@ class GroupController extends Controller {
     /**
      * Voir les membres et administrateurs d'un groupe.
      *
-     * @Route("/voir/{cn}/{mail}", name="voir_groupe")
+     * @Route("/voir/{cn}/{mail}/{liste}", name="voir_groupe")
      * @Template()
      * // AMU Modif's
      */
-    public function voirAction(Request $request, $cn, $mail)
+    public function voirAction(Request $request, $cn, $mail, $liste)
     {
         $users = array();
         $admins = array(); 
@@ -592,7 +592,8 @@ class GroupController extends Controller {
                     'nb_membres' => $arUsers["count"], 
                     'users' => $users,
                     'nb_admins' => $arAdmins[0]["amugroupadmin"]["count"],
-                    'admins' => $admins);
+                    'admins' => $admins,
+                    'liste' => $liste);
     }
     
     /**

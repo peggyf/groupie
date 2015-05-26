@@ -17,16 +17,99 @@
 <br>
 
 <form class="amuForms" id="_ajxFromModifier">
-    {{ form_widget(form) }}
+    
     <br>
+    
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    <div>
+        {{ form_label(form.uid) }}
+        {{ form_errors(form.uid) }}
+        {{ form_widget(form.uid) }}
+    </div>
+    
+    <br>
+    
+    <div>
+        {{ form_label(form.sn) }}
+        {{ form_errors(form.sn) }}
+        {{ form_widget(form.sn) }}
+        
+        {{ form_label(form.exacte) }}
+        {{ form_errors(form.exacte) }}
+        {{ form_widget(form.exacte) }}
+    </div>
+
+    <br>
+    
     <p>
      <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
 	onclick="loadPage('{{ path('user_search', { 'opt': opt, 'cn' : cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/search-3.png')}}" />&nbsp;Rechercher&nbsp;</button>
      <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>   
      <span class="record_actions"></span>
     </p>
+    
+    {{ form_end(form) }}
+    
 </form>
 
-   
+<script type="text/javascript">       
+$('#usersearch_uid').autocomplete({
+    source : function(requete, reponse){
+            var motcle = $('#usersearch_uid').val();                       
+            var DATA = 'motcle=' + motcle;
+            
+            $.ajax({
+                    type:"POST",
+                    url : "{{ path('ajax_uidcompletlist') }}",
+                    dataType : 'json',
+                    data : DATA, 
+
+                    success : function(donnee){
+                        reponse($.map(donnee, function(object){ 
+                            return object;
+                        }));
+                    }            
+                });
+            }
+}); 
+
+$('#usersearch_sn').autocomplete({
+    source : function(requete, reponse){
+            var motcle = $('#usersearch_sn').val();                       
+            var DATA = 'motcle=' + motcle;
+            
+            $.ajax({
+                    type:"POST",
+                    url : "{{ path('ajax_sncompletlist') }}",
+                    dataType : 'json',
+                    data : DATA, 
+
+                    success : function(donnee){
+                         reponse($.map(donnee, function(object){ 
+                            return {
+                                label: object.label,
+                                value: function ()
+                                {
+                                    if ($(this).attr('id') == 'value')
+                                    {
+                                            $('#usersearch_sn').val(object.value);
+                                            return object.uid;
+                                    }
+                                    else
+                                    {
+                                            $('#usersearch_uid').val(object.uid);
+                                            return object.value;
+                                    }
+                                }
+                            }
+                        }));    
+                    }            
+                });
+            }
+}); 
+    
+</script>   
     
 {% endblock %}
