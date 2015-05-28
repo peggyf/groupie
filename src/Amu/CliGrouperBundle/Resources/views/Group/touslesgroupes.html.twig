@@ -92,7 +92,7 @@
 
                     <div id="cl2"> {{ group.description }} </div>
 
-                    <div id="cl3"> <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/view-page.png") }}" title="<small>Voir les membres de {{ group.cn }} </small>" class="ui-button" onclick='loadPage("{{ path('voir_groupe', { 'cn': group.cn, 'mail': 'true' }) }}");' /></div>
+                    <div id="cl3"> <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/view-page.png") }}" title="<small>Voir les membres de {{ group.cn }} </small>" class="ui-button" onclick='loadPage("{{ path('voir_groupe', { 'cn': group.cn, 'mail': 'true', 'liste': 'touslesgroupes' }) }}");' /></div>
 
                     </div>
 

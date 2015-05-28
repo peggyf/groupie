@@ -274,6 +274,9 @@ class GroupController extends Controller {
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
                 }
             
+                // Mise en session des résultats de la recherche
+                $this->container->get('request')->getSession()->set('groups', $groups);
+
                 return $this->render('AmuCliGrouperBundle:Group:recherchegroupe.html.twig',array('groups' => $groups, 'opt' => $opt, 'uid' => $uid));
             }
             else {
@@ -985,4 +988,22 @@ class GroupController extends Controller {
         return $this->render('AmuCliGrouperBundle:Group:groupem.html.twig', array('form' => $form->createView(), 'group' => $group));
     }
       
+
+
+    /**
+    * Affichage d'une liste de groupe en session
+    *
+    * @Route("/afficheliste/{opt}/{uid}",name="group_display")
+    */
+    public function displayAction(Request $request, $opt='search', $uid='') {
+    
+        // Récupération des groupes mis en session
+        $groups = $this->container->get('request')->getSession()->get('groups');
+
+        return $this->render('AmuCliGrouperBundle:Group:recherchegroupe.html.twig',array('groups' => $groups, 'opt' => $opt, 'uid' => $uid));
+            
+      
+        
+    }
+    
 }
