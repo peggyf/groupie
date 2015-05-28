@@ -82,7 +82,7 @@
             <br>
             <p>
                 <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-                onclick="loadPage('{{ path('group_update', { 'cn': group.cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/save-2.png')}}" />&nbsp;Enregistrer les modifications&nbsp;</button>
+                onclick="loadPage('{{ path('group_update', { 'cn': group.cn, 'liste': liste }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/save-2.png')}}" />&nbsp;Enregistrer les modifications&nbsp;</button>
                 <span class="record_actions"></span>
                 <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
             </p>
@@ -92,6 +92,22 @@
 
         {# ... #}
 
+    {% endif %}
+
+    {% if liste == 'mesgroupes' %}
+
+        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+            onclick="loadPage('{{ path('mes_groupes') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;
+        </button>
+    
+    {% endif %}
+    
+    {% if liste == 'recherchegroupe' %}
+
+        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+            onclick="loadPage('{{path('group_display') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;
+        </button>
+    
     {% endif %}
 
 {% endblock %}

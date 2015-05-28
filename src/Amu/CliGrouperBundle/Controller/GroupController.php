@@ -602,11 +602,11 @@ class GroupController extends Controller {
     /**
      * Voir les membres et administrateurs d'un groupe.
      *
-     * @Route("/update/{cn}", name="group_update")
+     * @Route("/update/{cn}/{liste}", name="group_update")
      * @Template("AmuCliGrouperBundle:Group:edit.html.twig")
      * // AMU Modif's
      */
-    public function updateAction(Request $request, $cn)
+    public function updateAction(Request $request, $cn, $liste)
     {
         $group = new Group();
         $group->setCn($cn);
@@ -806,6 +806,7 @@ class GroupController extends Controller {
             'group'      => $group,
             'nb_membres' => $arUsers["count"],
             'form'   => $editForm->createView(),
+            'liste' => $liste
         );
         
     }
