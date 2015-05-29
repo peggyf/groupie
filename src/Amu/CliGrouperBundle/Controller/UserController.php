@@ -685,10 +685,10 @@ class UserController extends Controller {
     /**
     * Recherche de personnes
     *
-    * @Route("/search/{opt}/{cn}",name="user_search")
+    * @Route("/search/{opt}/{cn}/{liste}",name="user_search")
     * @Template()
     */
-    public function searchAction(Request $request, $opt='search', $cn='') {
+    public function searchAction(Request $request, $opt='search', $cn='', $liste='') {
         $usersearch = new User();
         $users = array();
         $u = new User();
@@ -810,7 +810,7 @@ class UserController extends Controller {
         //$this->getRequest()->getSession()->set('_saved',0);
         //return array('form' => $form->createView());
         
-        return $this->render('AmuCliGrouperBundle:User:usersearch.html.twig', array('form' => $form->createView(), 'opt' => $opt, 'cn' => $cn));
+        return $this->render('AmuCliGrouperBundle:User:usersearch.html.twig', array('form' => $form->createView(), 'opt' => $opt, 'cn' => $cn, 'liste' => $liste));
         
     }
 
