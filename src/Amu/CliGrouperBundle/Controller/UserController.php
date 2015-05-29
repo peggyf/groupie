@@ -748,6 +748,10 @@ class UserController extends Controller {
                     {
                         $droits = 'Modifier';
                     }
+                    
+                    // Mise en session des résultats de la recherche
+                    $this->container->get('request')->getSession()->set('users', $users);
+                
                     return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn));
                 }
                 else
@@ -794,7 +798,9 @@ class UserController extends Controller {
                         if ((true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) || (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))) {
                             $droits = 'Modifier';
                         }
-
+                        // Mise en session des résultats de la recherche
+                        $this->container->get('request')->getSession()->set('users', $users); 
+                    
                         return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn));
                     }
                 }   
@@ -808,5 +814,30 @@ class UserController extends Controller {
         
     }
 
+    /**
+    * Affichage d'une liste d'utilisateurs en session
+    *
+    * @Route("/afficheliste/{opt}/{cn}",name="user_display")
+    */
+    public function displayAction(Request $request, $opt='search', $cn='') {
+    
+        // Récupération des utilisateurs mis en session
+        $users = $this->container->get('request')->getSession()->get('users');
+
+        // Gestion des droits
+        $droits = 'Aucun';
+        // Droits DOSI seulement en visu
+        if (true === $this->get('security.context')->isGranted('ROLE_DOSI')) {
+            $droits = 'Voir';
+        }
+        if ((true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) || (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))) {
+            $droits = 'Modifier';
+        }
+                        
+        return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn));
+            
+      
+        
+    }
   
 }
