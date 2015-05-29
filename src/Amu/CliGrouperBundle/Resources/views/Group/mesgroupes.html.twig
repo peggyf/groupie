@@ -50,9 +50,9 @@
                     <div id="wrapper">
                     <div id="cl1"> {{ group.etages[group.nbetages-1] }} </div>
                     <div id="c2"> {{ group.description }} </div>
-                    <div id="c3"> <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/view-page.png") }}" title="<small>Voir les membres de {{ group.cn }} </small>" class="ui-button" onclick='loadPage("{{ path('voir_groupe', { 'cn': group.cn, 'mail' : 'true', 'liste': 'mesgroupes' }) }}");' /></div>
-                    <div id="c4"> <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/modif.png") }}" title="<small>Modifier les membres de {{ group.cn }} </small>" class="ui-button" onclick='loadPage("{{ path('group_update', { 'cn': group.cn, 'liste': 'mesgroupes' }) }}");' /></div>
-                    <div id="c5"> <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/add-1.png") }}" title="<small>Ajouter un membre à {{ group.cn }} </small>" class="ui-button" onclick='loadPage("{{ path('user_search', { 'opt': 'add', 'cn': group.cn, 'liste': 'mesgroupes' }) }}");' /></div>
+                    <div id="c3"> <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/view-page.png") }}" title="Voir les membres de {{ group.cn }} " class="ui-button" onclick='loadPage("{{ path('voir_groupe', { 'cn': group.cn, 'mail' : 'true', 'liste': 'mesgroupes' }) }}");' /></div>
+                    <div id="c4"> <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/modif.png") }}" title="Modifier les membres de {{ group.cn }} " class="ui-button" onclick='loadPage("{{ path('group_update', { 'cn': group.cn, 'liste': 'mesgroupes' }) }}");' /></div>
+                    <div id="c5"> <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/add-1.png") }}" title="Ajouter un membre à {{ group.cn }} " class="ui-button" onclick='loadPage("{{ path('user_search', { 'opt': 'add', 'cn': group.cn, 'liste': 'mesgroupes' }) }}");' /></div>
                     </div>
                 </dt>
                 
