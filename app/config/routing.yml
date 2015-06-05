@@ -2,6 +2,7 @@ amu_cli_grouper:
     resource: "@AmuCliGrouperBundle/Controller/"
     type:     annotation
     prefix:   /CliGrouper/
+
    
 # Internal routing configuration to handle ESI
 # ****** WARNING ******

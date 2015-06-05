@@ -6,7 +6,7 @@ parameters:
     
         #- { name: "ROLE_GESTIONNAIRE", type: "grouper", link: "isMember", values: "amu:app:grp:pedagiciels:lum:gest" }
         - { name: "ROLE_MEMBRE",         type: "ldap2",    link: "",  values: "", filter: "(|(edupersonaffiliation=employee)(edupersonaffiliation=faculty)(edupersonaffiliation=researcher))" } 
-        - { name: "ROLE_GESTIONNAIRE",   type: "ldap2",    link: "",  values: "", filter: "(memberof=cn=amu:app:grp:grouper-ent,ou=groups,dc=univ-amu,dc=fr)" } 
+        - { name: "ROLE_GESTIONNAIRE",   type: "ldap2",    link: "",  values: "", filter: "(memberof=cn=amu:app:grp:grouper:grouper-ent,ou=groups,dc=univ-amu,dc=fr)" } 
         - { name: "ROLE_DOSI",           type: "ldap2",    link: "",  values: "", filter: "(memberof=cn=amu:svc:dosi:tous,ou=groups,dc=univ-amu,dc=fr)" }
         - { name: "ROLE_ADMIN",          type: "ldap2",    link: "",  values: "", filter: "(memberof=cn=amu:adm:app:groupie,ou=groups,dc=univ-amu,dc=fr)" } 
         - { name: "ROLE_SUPER_ADMIN",    type: "session",  link: "_isDevelopper",  values: "1" } 
