@@ -1007,4 +1007,15 @@ class GroupController extends Controller {
         
     }
     
+    /**
+    * Affichage du document d'aide
+    *
+    * @Route("/aide",name="aide")
+    */
+    public function aideAction() {
+    
+        return $this->render('AmuCliGrouperBundle:Group:aide.html.twig');
+        //return $this->redirect('http://dev-web-test.pj.univ-amu.fr/~admdev-php/CliGrouper/web/app/bundles/amucligrouper/groupie.pdf');
+        
+    }
 }
