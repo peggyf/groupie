@@ -699,13 +699,13 @@ class UserController extends Controller {
         if ($form->isValid()) {
             $usersearch = $form->getData();
             
-            if ($opt=='add')
+/*            if ($opt=='add')
             {
                 return $this->redirect($this->generateUrl('user_add', array('uid'=>$usersearch->getUid(), 'cn'=>$cn)));
             }
             else
             {
-                // On teste si on a qqchose dans le champ uid
+*/                // On teste si on a qqchose dans le champ uid
                 if ($usersearch->getUid()=='')
                 {
                     // si on a rien, on teste le nom
@@ -804,7 +804,7 @@ class UserController extends Controller {
                         return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn));
                     }
                 }   
-            }       
+            //}       
         }
         
         //$this->getRequest()->getSession()->set('_saved',0);
