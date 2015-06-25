@@ -22,7 +22,7 @@
         <br>
         <h3>Nombre de membres du groupe {{ group.cn }} : {{ nb_membres }}</h3>
         <br>
-        <table class="ui-widget-content dataTable TabInfos" filter="-1">
+        <table id="memb" class="ui-widget-content dataTable TabInfos" filter="25">
             <thead>
                 <tr>
                     <th>uid</th>
@@ -54,7 +54,7 @@
         <h3>Nombre de membres du groupe {{ group.cn }} : {{ nb_membres }}</h3>
         <br>
         <form class="amuForms" id="_ajxFromModifier">
-            <table class="ui-widget-content dataTable TabInfos" filter="-1">
+            <table id="memb" class="ui-widget-content dataTable TabInfos" filter="25">
                 <thead>
                     <tr>
                         <th>uid</th>
@@ -81,8 +81,8 @@
             </table>
             <br>
             <p>
-                <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-                onclick="loadPage('{{ path('group_update', { 'cn': group.cn, 'liste': liste }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/save-2.png')}}" />&nbsp;Enregistrer les modifications&nbsp;</button>
+                <button type="button" id="button_val" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+                ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/save-2.png')}}" />&nbsp;Enregistrer les modifications&nbsp;</button>
                 <span class="record_actions"></span>
                 <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
             </p>
@@ -112,6 +112,44 @@
     
     {% endif %}
 
+    <script type="text/javascript" >
+        jQuery.fn.dataTableExt.oApi.fnGetHiddenNodes = function ( settings )
+{
+        var nodes;
+        var display = jQuery('tbody tr', settings.nTable);
+
+        if ( jQuery.fn.dataTable.versionCheck ) {
+                // DataTables 1.10
+                var api = new jQuery.fn.dataTable.Api( settings );
+                nodes = api.rows().nodes().toArray();
+        }
+        else {
+                // 1.9-
+                nodes = this.oApi._fnGetTrNodes( settings );
+        }
+
+        /* Remove nodes which are being displayed */
+        for ( var i=0 ; i<display.length ; i++ ) {
+                var iIndex = jQuery.inArray( display[i], nodes );
+
+                if ( iIndex != -1 ) {
+                        nodes.splice( iIndex, 1 );
+                }
+        }
+
+        return nodes;
+};
+
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#button_val').click( function () {
+                oTable = $('#memb').dataTable();
+                $(oTable.fnGetHiddenNodes()).appendTo(this);
+                loadPage('{{ path('group_update', { 'cn': group.cn, 'liste': liste }) }}', $('#_ajxFromModifier').serializeArray());
+            } );
+        } );
+    </script>
 {% endblock %}
 
 
