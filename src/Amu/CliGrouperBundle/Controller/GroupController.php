@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Amu\CliGrouperBundle\Entity\Group;
 use Amu\CliGrouperBundle\Form\GroupCreateType;
+use Amu\CliGrouperBundle\Form\GroupModifType;
 use Amu\CliGrouperBundle\Form\GroupSearchType;
 use Amu\CliGrouperBundle\Entity\User;
 use Amu\CliGrouperBundle\Entity\Member;
@@ -938,7 +939,7 @@ class GroupController extends Controller {
         else
             $group->setAmugroupfilter($filt);
         
-        $form = $this->createForm(new GroupCreateType(), $group);
+        $form = $this->createForm(new GroupModifType(), $group);
         $form->handleRequest($request);
         if ($form->isValid()) {
             $groupmod = new Group();

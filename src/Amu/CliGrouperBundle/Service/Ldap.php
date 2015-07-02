@@ -1530,9 +1530,17 @@ class Ldap extends WSTools {
     $this->connect();
     if ($this->r) {
 
+        /* Problème sur la fonction ldap_rename : non répercuté au niveau des utilisateurs pour le memberof
+        
         $cn = preg_replace("/(cn=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $dn);
+        //$matches = array();
+        //preg_match("/(cn=)(([A-Za-z0-9:._-]{1,}))(,ou=groups,dc=univ-amu,dc=fr)/", $dn,  $matches);
+        //$cn = $matches[2];
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Renommage entrée</B>=><FONT color =green><PRE>" . print_r($matches, true). "</PRE></FONT></FONT>";
         if ($cn != $groupeinfo['cn'])
         {
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Renommage entrée</B>=><FONT color =green><PRE>" . print_r(array($dn, $cn, $groupeinfo['cn']), true) . "</PRE></FONT></FONT>";
+            
             // Renommage de l'entrée LDAP
             $newRdn = "cn=".$groupeinfo['cn'];
         
@@ -1542,7 +1550,7 @@ class Ldap extends WSTools {
             ldap_rename($this->ds, $dn, $newRdn, $newParent, true);
             $dn = $newRdn . ", ou=groups, dc=univ-amu, dc=fr";
         }
-        
+        */
         
         ldap_modify($this->ds,$dn,$groupeinfo);
      
