@@ -1,0 +1,67 @@
+{% extends 'AppBundle::page.html.twig' %}
+
+{% block titre %}Recherche d'utilisateur{% endblock %}
+
+{% block body %}
+{% if app.session.flashbag.has('flash-notice') %}
+    <center>
+        <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+            {% for flashMessage in app.session.flashbag.get('flash-notice') %}
+                <p>{{ flashMessage }}</p>
+            {% endfor %}
+        </div>
+    </center>
+{% endif %}
+
+
+<form class="amuForms" id="_ajxFromModifier">    
+    <h2> Ajout de personnes en masse </h2>
+    <br>
+    <h3> Saisissez une liste d'identifiants ou d'emails (un par ligne). </h3>
+    <br>       
+    <br>  
+    
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    <div>
+        {{ form_label(form.liste) }}
+        {{ form_errors(form.liste) }}
+        {{ form_widget(form.liste) }}
+    </div>
+    
+    <br>  
+    
+    <br>
+    
+    <p>
+     <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+	onclick="loadPage('{{ path('user_multiple', { 'opt': opt, 'cn' : cn , 'liste' : liste}) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/add-2.png')}}" />&nbsp;Ajouter&nbsp;</button>
+     <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
+     <span class="record_actions"></span>
+    </p>
+    
+    {{ form_end(form) }}
+    
+</form>    
+
+{% if opt=='add' %}
+    <br>
+    
+    {% if liste == 'mesgroupes' %}
+        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+            onclick="loadPage('{{ path('mes_groupes') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes&nbsp;
+        </button>
+    {% endif %}
+    
+    {% if liste == 'recherchegroupe' %}
+        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+            onclick="loadPage('{{path('group_display') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes&nbsp;
+        </button>
+    {% endif %}
+    
+ 
+    
+{% endif %}
+       
+{% endblock %}

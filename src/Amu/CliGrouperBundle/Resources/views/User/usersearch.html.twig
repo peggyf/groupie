@@ -12,12 +12,14 @@
         </div>
     </center>
 {% endif %}
-
-<h3> Veuillez indiquer l'identifiant ou le nom de la personne à rechercher. </h3>
-<br>
-
+<div style="display:-moz-grid-line;">
+<div style="float:left;clear:left;width: 469px;">
 <form class="amuForms" id="_ajxFromModifier">
     
+    <h2> Recherche individuelle </h2>
+    <br>
+    <h3> Veuillez indiquer l'identifiant ou le nom de la personne à rechercher. </h3>
+    <br>    
     <br>
     
     {{ form_start(form) }}
@@ -53,7 +55,23 @@
     {{ form_end(form) }}
     
 </form>
+</div>   
 
+{% if opt=='add' %}   
+    <div style="float:right;clear:right;width: 469px;">
+        <h2> Ajout de personnes en masse </h2>
+        <br>   
+        <h3> Pour ajouter plusieurs membres en même temps, cliquez sur ce bouton. </h3>
+        <br>    
+        <br>
+        <center>
+        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+            onclick="loadPage('{{ path('user_multiple', { 'opt': opt, 'cn' : cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/usergroup-add.png')}}" />&nbsp;Ajouts multiples&nbsp;</button>
+        </center>
+    </div>
+{% endif %}
+
+</div>        
 {% if opt=='add' %}
     <br>
     {% if liste == 'mesgroupes' %}

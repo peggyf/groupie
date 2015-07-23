@@ -1729,6 +1729,50 @@ class Ldap extends WSTools {
 
     return false;
   }  
+  
+  /**
+ * RÃ©cupÃ©ration de l'uid en fonction du mail
+ * @return  \Amu\AppBundle\Service\Ldap
+ */
+ public function getUidFromMail($mail, $restriction = array("uid", "displayName", "sn", "mail", "telephonenumber", "memberof"), $debug = false) {
+    $filtre = "(mail=" . $mail . ")";
+    $AllInfos = array();
+    $this->connect();
+    if ($this->r) {
+      $sr = ldap_search($this->ds, $this->LDAP_racine, $filtre, $restriction); // ,25 pour limiter les rÃ©sultats Ã  25 items
+      if(ldap_error($this->ds) != "Success")
+          return false;
+      $AllInfos = ldap_get_entries($this->ds, $sr);
+   
+    }
+       
+    if ($debug)
+      echo "<hr>DEBUG " . __CLASS__ . "::" . __FUNCTION__ . " arUsers <PRE>" . print_r($AllInfos, true) . "</PRE>";
+
+    return $AllInfos;
+  }
+  
+  /**
+ * Teste la validité de l'uid
+ * @return  \Amu\AppBundle\Service\Ldap
+ */
+ public function TestUid($uid, $restriction = array("uid", "sn", "displayName", "mail", "telephonenumber", "memberof"), $debug = false) {
+    $filtre = "(uid=" . $uid . ")";
+    $AllInfos = array();
+    $this->connect();
+    if ($this->r) {
+      $sr = ldap_search($this->ds, $this->LDAP_racine, $filtre, $restriction); // ,25 pour limiter les rÃ©sultats Ã  25 items
+      if(ldap_error($this->ds) != "Success")
+          return false;
+      $AllInfos = ldap_get_entries($this->ds, $sr);
+   
+    }
+       
+    if ($debug)
+      echo "<hr>DEBUG " . __CLASS__ . "::" . __FUNCTION__ . " arUsers <PRE>" . print_r($AllInfos, true) . "</PRE>";
+
+    return $AllInfos;
+  }
  
  }
 ?>

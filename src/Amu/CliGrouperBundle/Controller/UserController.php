@@ -15,6 +15,7 @@ use Amu\CliGrouperBundle\Entity\Group;
 use Amu\CliGrouperBundle\Entity\User;
 use Amu\CliGrouperBundle\Form\UserEditType;
 use Amu\CliGrouperBundle\Form\UserSearchType;
+use Amu\CliGrouperBundle\Form\UserMultipleType;
 use Amu\CliGrouperBundle\Entity\Membership;
 
 /**
@@ -693,20 +694,21 @@ class UserController extends Controller {
         $users = array();
         $u = new User();
         $u->setExacte(true);
-        $form = $this->createForm(new UserSearchType(), $u);
-        $form->handleRequest($request); 
+        $form = $this->createForm(new UserSearchType(), $u);               
+        
+        $form->handleRequest($request);
                 
         if ($form->isValid()) {
             $usersearch = $form->getData();
             
-/*            if ($opt=='add')
+            if ($opt=='add')
             {
                 return $this->redirect($this->generateUrl('user_add', array('uid'=>$usersearch->getUid(), 'cn'=>$cn)));
             }
             else
             {
-*/                // On teste si on a qqchose dans le champ uid
-                if ($usersearch->getUid()=='')
+                // On teste si on a qqchose dans le champ uid
+               if ($usersearch->getUid()=='')
                 {
                     // si on a rien, on teste le nom
                     // On teste si on fait une recherche exacte ou non
@@ -804,8 +806,9 @@ class UserController extends Controller {
                         return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn));
                     }
                 }   
-            //}       
+            }       
         }
+        
         
         //$this->getRequest()->getSession()->set('_saved',0);
         //return array('form' => $form->createView());
@@ -839,5 +842,206 @@ class UserController extends Controller {
       
         
     }
+    
+    /**
+    * Formulaire pour l'ajout d'utilisateurs en masse
+    *
+    * @Route("/multiple/{opt}/{cn}/{liste}",name="user_multiple")
+    */
+    public function multipleAction(Request $request, $opt='search', $cn='', $liste='') {
+        
+        $formlist = $this->createForm(new UserMultipleType());
+        $formlist->handleRequest($request);
+        
+        // Tableau des utilisateurs
+        $users = array();
+        
+        // Tableau des uids
+        $tabUids = array();
+        // Tableau des erreurs
+        $tabErreurs = array();
+        // Tableau des membres appartenant déjà au groupe
+        $tabMemb = array();
+        
+        
+        if ($formlist->isValid())
+            {
+                $tabErreurs = array();
+                $tabUids = array();
+                $tab = $formlist->getData();
+                $liste = $tab['liste'];
+                // Récupérer un tableau avec une ligne par uid/mail
+                $tabLignes = explode("\n", $liste);
+                
+                // Log ajout sur le groupe
+                openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+                $adm = $request->getSession()->get('login');
+                
+                // Boucle sur la liste
+                foreach($tabLignes as $l)
+                {
+                    // on élimine les caractères superflus
+                    $ligne = trim($l);
+                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>TabLignes</B>=><FONT color =green><PRE>" . $ligne . "</PRE></FONT></FONT>";
+                    // test mail ou login
+                    if (stripos($ligne , "@")>0)
+                    {
+                        // C'est un mail
+                        $r = $this->getLdap()->getUidFromMail($ligne);
+                        
+                        // Si pb connexion ldap
+                        if ($r==false)
+                        {
+                            // Affichage erreur
+                            $this->get('session')->getFlashBag()->add('flash-error', "Erreur LDAP lors de la récupération du mail $ligne");
+                                            
+                            // Log erreur
+                            syslog(LOG_ERR, "LDAP ERREUR : get_uid_from_mail by $adm : $ligne");
+                        }
+                        else
+                        { 
+                            // Si le mail n'est pas valide, on le note
+                            if ($r['count']==0)
+                            {
+                                $tabErreurs[] = $ligne;
+                            }
+                            else
+                            {
+                                // Récupération des appartenances de l'utilisateur à ajouter
+                                $arGroups = array_splice($r[0]['memberof'], 1);
+                                $stop=0;
+                                foreach($arGroups as $dn)
+                                {
+                                    $c = preg_replace("/(cn=)(([A-Za-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
+                                    if ($c==$cn)
+                                    {
+                                        // l'utilisateur est déjà membre de ce groupe
+                                        $stop = 1;
+                                        break;
+                                    }
+                                }
+                                
+                                // Si l'utilisateur n'est pas membre du groupe
+                                if ($stop==0)
+                                {
+                                    // On ajoute l'uid à la liste des utilisateurs à ajouter
+                                    $tabUids[] = $r[0]['uid'][0]; 
+                                
+                                    // Remplissage "user"
+                                    $user = new User();
+                                    $user->setUid($r[0]['uid'][0]);
+                                    $user->setDisplayname($r[0]['displayname'][0]);
+                                    $user->setSn($r[0]['sn'][0]);
+                                    $user->setMail($r[0]['mail'][0]);
+                                    $user->setTel($r[0]['telephonenumber'][0]);
+                                
+                                    $users[] = $user;
+                                }
+                                else
+                                {
+                                    // L'utilisateur est déjà membre, on le note
+                                    $tabMemb[] = $r[0]['uid'][0];
+                                
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // C'est un login
+                        $r = $this->getLdap()->TestUid($ligne);
+                        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Retour LDAP</B>=><FONT color =green><PRE>" . print_r($r, true) . "</PRE></FONT></FONT>";
+                        
+                        // Si pb connexion ldap
+                        if ($r==false)
+                        {
+                            // Affichage erreur
+                            $this->get('session')->getFlashBag()->add('flash-error', "Erreur LDAP lors de l'uid $ligne");
+                                            
+                            // Log erreur
+                            syslog(LOG_ERR, "LDAP ERREUR : get_uid_from_mail by $adm : $ligne");
+                        }
+                        else
+                        {
+                            // Si l'uid n'est pas valide, on le note
+                            if ($r['count']==0)
+                            {
+                                $tabErreurs[] = $ligne; 
+                            }
+                            else
+                            {
+                                // Récupération des appartenances de l'utilisateur à ajouter
+                                $arGroups = array_splice($r[0]['memberof'], 1);
+                                $stop=0;
+                                foreach($arGroups as $dn)
+                                {
+                                    $c = preg_replace("/(cn=)(([A-Za-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
+                                    if ($c==$cn)
+                                    {
+                                        // l'utilisateur est déjà membre de ce groupe
+                                        $stop = 1;
+                                        break;
+                                    }
+                                }
+                                
+                                // Si l'utilisateur n'est pas membre du groupe
+                                if ($stop==0)
+                                {
+                                    // On ajoute l'uid à la liste des utilisateurs à ajouter
+                                    $tabUids[] = $r[0]['uid'][0]; 
+                                
+                                    // Remplissage "user"
+                                    $user = new User();
+                                    $user->setUid($r[0]['uid'][0]);
+                                    $user->setDisplayname($r[0]['displayname'][0]);
+                                    $user->setSn($r[0]['sn'][0]);
+                                    $user->setMail($r[0]['mail'][0]);
+                                    $user->setTel($r[0]['telephonenumber'][0]);
+                                
+                                    $users[] = $user; 
+                                }
+                                else
+                                {
+                                    // L'utilisateur est déjà membre, on le note
+                                    $tabMemb[] = $r[0]['uid'][0];
+                                
+                                }
+                            }
+                        }
+                    }
+                }
+/*                echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>tabUids</B>=><FONT color =green><PRE>" . print_r($tabUids, true) . "</PRE></FONT></FONT>";
+                echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>users</B>=><FONT color =green><PRE>" . print_r($users, true) . "</PRE></FONT></FONT>";
+                echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>tabErreurs</B>=><FONT color =green><PRE>" . print_r($tabErreurs, true) . "</PRE></FONT></FONT>";
+                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos user</B>=><FONT color =green><PRE>" . print_r($tabUids, true) . "</PRE></FONT></FONT>";
+*/                
+                // Ajout de la liste valide au groupe dans le LDAP
+                $dn_group = "cn=" . $cn . ", ou=groups, dc=univ-amu, dc=fr";
+                $b = $this->getLdap()->addMemberGroup($dn_group, $tabUids);
+                
+                if ($b)
+                {
+                    // Log modif
+                    foreach($tabUids as $u)
+                    {
+                        syslog(LOG_INFO, "add_member by $adm : group : $cn, user : $u");
+                    }
+                }
+                else
+                {
+                    // Log erreur
+                    syslog(LOG_ERR, "LDAP ERROR : add_member by $adm : group : $c, multiple user");
+                }     
+                
+                return $this->render('AmuCliGrouperBundle:User:checkmultiple.html.twig', array('cn' => $cn, 'tab_err' => $tabErreurs, 'users' => $users, 'tab_memb' => $tabMemb, 'nb_users' => sizeof($users), 'nb_err' => sizeof($tabErreurs), 'nb_memb' => sizeof($tabMemb)));
+            }
+                            
+        return $this->render('AmuCliGrouperBundle:User:multipleuser.html.twig', array('form' => $formlist->createView(), 'opt' => $opt, 'cn' => $cn, 'liste' => $liste));
+            
+      
+        
+    }
+    
+    
   
 }

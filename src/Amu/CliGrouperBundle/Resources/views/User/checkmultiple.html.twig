@@ -1,0 +1,81 @@
+{% extends 'AppBundle::page.html.twig' %}
+
+{% block titre %}Ajout multiple d'utilisateurs au groupe {{ cn }} {% endblock %}
+
+{% block body %}
+    {% if app.session.flashbag.has('flash-notice') %}
+        <center>
+            <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+                {% for flashMessage in app.session.flashbag.get('flash-notice') %}
+                    <p>{{ flashMessage }}</p>
+                {% endfor %}
+            </div>
+        </center>
+    {% endif %}
+    
+    <br>    
+   
+    {% if nb_err>0 %}
+        <h3>Les identifiants/mails suivants ne sont pas valides :</h3>
+        <br>
+        <center>
+        <h3>
+        {% for err in tab_err %}
+            {{ err }}
+            <br>
+        {% endfor %}
+        </h3>
+        </center>
+        <br>
+        <br>
+    {% endif %}
+    
+    {% if nb_memb>0 %}
+        <h3>Les utilisateurs avec les identifiants suivants sont déjà membres du groupe :</h3>
+        <br>
+        <center>
+        <h3>
+        {% for memb in tab_memb %}
+            {{ memb }}
+            <br>
+        {% endfor %}
+        </h3>
+        </center>
+        <br>
+        <br>
+    {% endif %}
+   
+    {% if nb_users>0 %}
+       
+        <h3>Les utilisateurs suivants ont été ajoutés au groupe {{ cn }} :</h3>
+        <br>
+        <table class="ui-widget-content dataTable TabInfos" filter="25">
+            <thead>
+                <tr>
+                    <th>uid</th>
+                    <th>DisplayName</th>
+                    <th>Mail</th>
+                    <th>Tel</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr> 
+                        <td style="vertical-align: middle;">{{ user.uid }}</td>
+                        <td style="vertical-align: middle;">{{ user.displayname }}</td>
+                        <td style="vertical-align: middle;"> <a href="mailto:{{user.mail}}"> {{ user.mail }}</td>
+                        <td style="vertical-align: middle;">{{ user.tel }} </td>
+                    </tr>  
+                {% endfor %}
+            </tbody>
+        </table>
+ 
+    {% endif %}
+    
+    <br>
+
+    
+</form>    
+
+
+{% endblock %}
