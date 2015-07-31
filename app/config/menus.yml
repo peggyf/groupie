@@ -12,11 +12,13 @@ parameters:
         - { key: 2, name: "Recherche", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"], route: "", fils: [21, 22], description: "" }
         - { key: 21, name: "Rechercher un groupe", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"], route: "group_search", fils: false, description: "" }
         - { key: 22, name: "Rechercher une personne", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"], route: "user_search", fils: false, description: "" }
-        - { key: 3, name: "Gestion des groupes", roles: ["ROLE_ADMIN"], route: "", fils: [31, 32, 33], description: "" }
-        - { key: 31, name: "Cr&eacute;er un groupe", roles: ["ROLE_ADMIN"], route: "group_create", fils: false, description: "" }
-        - { key: 32, name: "Modifier un groupe", roles: ["ROLE_ADMIN"], route: "group_search_modify", fils: false, description: "" }
-        - { key: 33, name: "Supprimer un groupe", roles: ["ROLE_ADMIN"], route: "group_search_del", fils: false, description: "" }
-        - { key: 4, name: "Aide", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"], route: "aide", fils: false, description: "" }
+        - { key: 3, name: "Groupes priv&eacute;s", roles: ["ROLE_MEMBRE"], route: "", fils: [31], description: "" }
+        - { key: 31, name: "G&eacute;rer mes groupes", roles: ["ROLE_MEMBRE"], route: "private_group", fils: false, description: "" }
+        - { key: 4, name: "Gestion des groupes", roles: ["ROLE_ADMIN"], route: "", fils: [41, 42, 43], description: "" }
+        - { key: 41, name: "Cr&eacute;er un groupe", roles: ["ROLE_ADMIN"], route: "group_create", fils: false, description: "" }
+        - { key: 42, name: "Modifier un groupe", roles: ["ROLE_ADMIN"], route: "group_search_modify", fils: false, description: "" }
+        - { key: 43, name: "Supprimer un groupe", roles: ["ROLE_ADMIN"], route: "group_search_del", fils: false, description: "" }
+        - { key: 5, name: "Aide", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"], route: "aide", fils: false, description: "" }
         
         
 #        - { key: 1, name: "Accueil", roles: ["ROLE_STUDENT","ROLE_STUDENT_MED","ROLE_ADMIN","ROLE_MANAGER","ROLE_VIEWER"], route: "accueil",fils: false,  description: "Retour &agrave; la page d'accueil de l'application", ico: "bundles/app/images/ico/16/home.png"  }

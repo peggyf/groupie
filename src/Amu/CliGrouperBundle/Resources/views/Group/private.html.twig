@@ -1,0 +1,39 @@
+{% extends 'AppBundle::page.html.twig' %}
+
+{% block titre %}Gérer mes groupes privés{% endblock %}
+
+{% block body %}
+
+<button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; position:absolute; left:36%" onclick="loadPage('{{ path('private_group_create') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/add-2.png')}}" />&nbsp;Créer un groupe &nbsp;</button>        
+<button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; position:absolute; left:55%" onclick="loadPage('{{ path('private_group') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/delete-2.png')}}" />&nbsp;Supprimer un groupe &nbsp;</button>        
+    
+<br>
+<br>
+<br>
+
+{% if nb_groups == 0 %}
+    <h3>Pas de groupe privé </h3>
+{% else %}
+    <table class="ui-widget-content dataTable TabInfos" filter="25">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Gérer</th>
+            </tr>
+        </thead>
+        <tbody> 
+        {% for group in groups %}
+            <tr > 
+                <td style="vertical-align: middle;">{{group.cn}}</td>
+                <td style="vertical-align: middle;">{{group.description}}</td>
+                <td style="vertical-align: middle;">
+                    <img align="absmiddle" src="{{ asset("bundles/app/images/ico/16/usergroup-edit.png") }}" title="Gérer le groupe" class="ui-button" onclick="loadPage('{{ path('private_group_update', { 'cn': group.cn }) }}');" />
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>    
+    </table>
+{% endif %}
+{% endblock %}
+ 
