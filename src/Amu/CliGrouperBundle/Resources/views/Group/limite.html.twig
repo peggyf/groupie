@@ -1,0 +1,16 @@
+{% extends 'AppBundle::page.html.twig' %}
+
+{% block titre %}Limite atteinte{% endblock %}
+
+{% block body %}
+    <h2>Vous ne pouvez plus créer de nouveaux groupes privés. </h2>
+    <br>
+    <h3>Le nombre maximum de groupes privés créés est atteint (20 groupes). </h3>    
+    
+    <br>
+    <br>
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+        onclick="loadPage('{{path('private_group') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes privés&nbsp;
+    </button>
+                
+{% endblock %}

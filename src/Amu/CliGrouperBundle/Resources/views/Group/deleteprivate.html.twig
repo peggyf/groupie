@@ -1,0 +1,44 @@
+{% extends 'AppBundle::page.html.twig' %}
+
+{% block titre %}Supprimer un groupe privé{% endblock %}
+
+{% block body %}
+
+<br>
+{% if app.session.flashbag.has('flash-notice') %}
+    <center>
+        <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+           {% for flashMessage in app.session.flashbag.get('flash-notice') %}
+                <p>{{ flashMessage }}</p>
+           {% endfor %}
+        </div>
+    </center>
+{% endif %}
+        
+<table class="ui-widget-content dataTable TabInfos" filter="25">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Description</th>
+            <th>Supprimer</th>
+        </tr>
+    </thead>
+    <tbody> 
+        {% for group in groups %}
+            <tr > 
+                <td style="vertical-align: middle;">{{group.cn}}</td>
+                <td style="vertical-align: middle;">{{group.description}}</td>
+                <td style="vertical-align: middle;">
+                    <img align="absmiddle" src="{{ asset("bundles/app/images/ico/16/delete-1.png") }}" title="Supprimer le groupe" class="ui-button" onclick="loadPage('{{ path('private_group_del_1', { 'cn': group.cn }) }}');" />
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>    
+</table>
+<br>
+<button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+    onclick="loadPage('{{path('private_group') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la gestion des groupes privés&nbsp;
+</button>
+    
+{% endblock %}
+ 

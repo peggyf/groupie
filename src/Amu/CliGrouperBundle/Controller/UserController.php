@@ -14,9 +14,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Amu\CliGrouperBundle\Entity\Group;
 use Amu\CliGrouperBundle\Entity\User;
 use Amu\CliGrouperBundle\Form\UserEditType;
+use Amu\CliGrouperBundle\Form\PrivateUserEditType;
 use Amu\CliGrouperBundle\Form\UserSearchType;
 use Amu\CliGrouperBundle\Form\UserMultipleType;
 use Amu\CliGrouperBundle\Entity\Membership;
+use Amu\CliGrouperBundle\Entity\Member;
+use Amu\CliGrouperBundle\Form\PrivateGroupEditType;
 
 /**
  * user controller
@@ -197,13 +200,20 @@ class UserController extends Controller {
         $user->setSn($arData[0]['sn'][0]);
         $user->setTel($arData[0]['telephonenumber'][0]);
         $tab = array_splice($arData[0]['memberof'], 1);
-        $tab_cn = array();
+        $tab_cn = array(); 
+        $nb_public=0;
         foreach($tab as $dn)
         {
-            $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
+            // on ne récupère que les groupes publics
+            if (!strstr($dn, "ou=private"))
+            {
+                $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
+                $nb_public++;
+            }
         }
         $user->setMemberof($tab_cn); 
-        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>memberof=</B>=><FONT color =green><PRE>" . print_r($tab_cn). "</PRE></FONT></FONT>";
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>memberof=</B>=><FONT color =green><PRE>" . print_r($tab_cn,true). "</PRE></FONT></FONT>";
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>nb groupes publics=</B>=><FONT color =green><PRE>" . $nb_public. "</PRE></FONT></FONT>";
         
         // User initial pour détecter les modifications
         $userini = new User();
@@ -227,8 +237,8 @@ class UserController extends Controller {
                 
         $memberships = new ArrayCollection();
         $membershipsini = new ArrayCollection();
-        // Gestion des groupes dont l'utilisateur est membre
-        for($i=0; $i<$arData[0]['memberof']['count'];$i++)
+        // Gestion des groupes publics dont l'utilisateur est membre
+        for($i=0; $i<$nb_public;$i++)
         {
             $membership = new Membership();
             $membership->setGroupname($tab_cn[$i]);
@@ -642,6 +652,185 @@ class UserController extends Controller {
     }
      
     /**
+     * Ajoute les droits d'un utilisateur à un groupe.
+     *
+     * @Route("/addprivate/{uid}/{cn}",name="user_add_private")
+     * @Template("AmuCliGrouperBundle:User:rechercheuseraddprivate.html.twig")
+     */
+    public function addprivateAction(Request $request, $uid='', $cn='') {
+        // Récupération utilisateur
+        $user = new User();
+        $user->setUid($uid);
+        $arDataUser=$this->getLdap()->arDatasFilter("uid=".$uid, array('displayname', 'memberof', 'uid')); 
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>arDataUser</B>=><FONT color =green><PRE>" . print_r($arDataUser) . "</PRE></FONT></FONT>";
+        // Test de la validité de l'uid
+        if ($arDataUser[0]['uid'][0] == '')
+        {
+            $this->get('session')->getFlashBag()->add('flash-notice', 'L\'uid n\'est pas valide');
+            $this->getRequest()->getSession()->set('_saved', 0);
+            return $this->redirect($this->generateUrl('user_search', array('opt' => 'addprivate', 'cn'=>$cn)));
+        }
+        else
+        {
+            $user->setDisplayname($arDataUser[0]['displayname'][0]);
+            $tab = array_splice($arDataUser[0]['memberof'], 1);
+            // Tableau des groupes de l'utilisateur
+            $tab_cn = array();
+            foreach($tab as $dn)
+            {
+                $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $dn);
+            }
+            
+
+            // User initial pour détecter les modifications
+            $userini = new User();
+            $userini->setUid($uid);
+            $userini->setDisplayname($arDataUser[0]['displayname'][0]);
+
+            // on remplit l'objet user avec les droits courants sur le groupe
+            $memberships = new ArrayCollection();
+            $membership = new Membership();
+            $membership->setGroupname($cn);
+
+            // Idem pour userini
+            $membershipsini = new ArrayCollection();
+            $membershipini = new Membership();
+            $membershipini->setGroupname($cn);
+
+            // Droits "membre"
+            foreach($tab_cn as $cn_g)
+            {
+                if ($cn==$cn_g)
+                {
+                    $membership->setMemberof(TRUE);
+                    $membershipini->setMemberof(TRUE);
+                    break;
+                }
+                else 
+                {
+                    $membership->setMemberof(FALSE);
+                    $membershipini->setMemberof(FALSE);
+                }
+            }
+            
+            $memberships[0] = $membership;
+            $user->setMemberships($memberships);       
+
+            // Idem userini
+            $membershipsini[0] = $membershipini;
+            $userini->setMemberships($membershipsini);       
+
+            $editForm = $this->createForm(new PrivateUserEditType(), $user, array(
+                'action' => $this->generateUrl('user_add_private', array('uid'=> $uid, 'cn' => $cn)),
+                'method' => 'POST',
+            ));
+            $editForm->handleRequest($request);
+
+            if ($editForm->isValid()) {
+                $userupdate = new User();
+                $userupdate = $editForm->getData();
+
+                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos user</B>=><FONT color =green><PRE>" . print_r($userupdate, true) . "</PRE></FONT></FONT>";
+                // Log modif de groupe
+                openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+                $adm = $request->getSession()->get('login');
+
+                $m_update = new ArrayCollection();      
+                $m_update = $userupdate->getMemberships();
+
+                //foreach($m_update as $memb)
+                for ($i=0; $i<sizeof($m_update); $i++)
+                {
+                    $memb = $m_update[$i];
+
+                    $dn_group = "cn=" . $cn . ", ou=private, ou=groups, dc=univ-amu, dc=fr";
+
+                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>dn_group</B>=><FONT color =green><PRE>" . print_r($dn_group, true) . "</PRE></FONT></FONT>";
+                    // Traitement des membres
+                    // Si modification des droits, on modifie dans le ldap
+                    if ($memb->getMemberof() != $membershipsini[$i]->getMemberof())
+                    {
+                        if ($memb->getMemberof())
+                        {
+                            $r = $this->getLdap()->addMemberGroup($dn_group, array($uid));
+                            if ($r)
+                            {
+                                // Log modif
+                                syslog(LOG_INFO, "add_member by $adm : group : $cn, user : $uid");
+                            }
+                            else
+                            {
+                                syslog(LOG_ERR, "LDAP ERROR : add_member by $adm : group : $cn, user : $uid");
+                            }
+                            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
+                        }
+                        else
+                        {
+                            $r = $this->getLdap()->delMemberGroup($dn_group, array($uid));
+                            if ($r)
+                            {
+                                // Log modif
+                                syslog(LOG_INFO, "del_member by $adm : group : $cn, user : $uid");
+                            }
+                            else
+                            {
+                                syslog(LOG_ERR, "LDAP ERROR : del_member by $adm : group : $cn, user : $uid");
+                            }
+                            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
+                        }
+                    }
+
+                }
+                // Ferme fichier log
+                closelog();
+
+                $this->get('session')->getFlashBag()->add('flash-notice', 'Les droits ont bien été ajoutés');
+                $this->getRequest()->getSession()->set('_saved',1);
+                
+                // Récupération du nouveau groupe modifié pour affichage
+                $newgroup = new Group();
+                $newgroup->setCn($cn);
+                $newmembers = new ArrayCollection();
+
+                // Recherche des membres dans le LDAP
+                $narUsers = $this->getLdap()->getMembersGroup($cn.",ou=private");
+                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos users</B>=><FONT color =green><PRE>" . print_r($arUsers, true) . "</PRE></FONT></FONT>";
+
+                // Affichage des membres  
+                for ($i=0; $i<$narUsers["count"]; $i++) {                     
+                    $newmembers[$i] = new Member();
+                    $newmembers[$i]->setUid($narUsers[$i]["uid"][0]);
+                    $newmembers[$i]->setDisplayname($narUsers[$i]["displayname"][0]);
+                    $newmembers[$i]->setMail($narUsers[$i]["mail"][0]);
+                    $newmembers[$i]->setTel($narUsers[$i]["telephonenumber"][0]);
+                    $newmembers[$i]->setMember(TRUE); 
+                    $newmembers[$i]->setAdmin(FALSE);
+                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
+
+                }
+                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos membres</B>=><FONT color =green><PRE>" . print_r($members, true) . "</PRE></FONT></FONT>";
+
+                $newgroup ->setMembers($newmembers);
+
+                $editForm = $this->createForm(new PrivateGroupEditType(), $newgroup);
+                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($newgroup, true) . "</PRE></FONT></FONT>";
+
+                return $this->render('AmuCliGrouperBundle:Group:privateupdate.html.twig', array('group' => $newgroup, 'nb_membres' => $narUsers["count"], 'form' => $editForm->createView()));
+                
+            }
+            else { 
+                $this->getRequest()->getSession()->set('_saved',0);
+            }
+        }
+        
+        return array(
+            'user'      => $user,
+            'cn' => $cn,
+            'form'   => $editForm->createView(),
+        );
+    }
+    
+    /**
      * Voir les appartenances et droits d'un utilisateur.
      *
      * @Route("/voir/{uid}", name="voir_user")
@@ -657,11 +846,15 @@ class UserController extends Controller {
         $arData=$this->getLdap()->arDatasFilter("member=uid=".$uid.",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
         for ($i=0; $i<$arData["count"]; $i++)         
         {
+            // on ne récupere que les groupes publics
+            if (!strstr($arData[$i]["dn"], "ou=private"))
+            {
             $gr = new Group();
             $gr->setCn($arData[$i]["cn"][0]);
             $gr->setDescription($arData[$i]["description"][0]);
             $gr->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
             $membersof[] = $gr;
+            }
         }
                 
         // Récupération des groupes dont l'utilisateur est admin
@@ -695,15 +888,19 @@ class UserController extends Controller {
         $u = new User();
         $u->setExacte(true);
         $form = $this->createForm(new UserSearchType(), $u);               
-        
         $form->handleRequest($request);
                 
         if ($form->isValid()) {
             $usersearch = $form->getData();
-            
-            if ($opt=='add')
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>opt</B>=><FONT color =green><PRE>" . $opt . "</PRE></FONT></FONT>";
+            if (($opt=='add')||($opt=='addprivate'))
             {
-                return $this->redirect($this->generateUrl('user_add', array('uid'=>$usersearch->getUid(), 'cn'=>$cn)));
+                if ($opt=='add') {
+                    return $this->redirect($this->generateUrl('user_add', array('uid'=>$usersearch->getUid(), 'cn'=>$cn)));
+                }
+                if ($opt=='addprivate') {
+                    return $this->redirect($this->generateUrl('user_add_private', array('uid'=>$usersearch->getUid(), 'cn'=>$cn)));
+                }
             }
             else
             {

@@ -20,6 +20,8 @@ use Amu\CliGrouperBundle\Form\MemberType;
 use Amu\CliGrouperBundle\Form\GroupEditType;
 use Amu\CliGrouperBundle\Form\UserEditType;
 use Amu\CliGrouperBundle\Entity\Membership;
+use Amu\CliGrouperBundle\Form\PrivateGroupCreateType;
+use Amu\CliGrouperBundle\Form\PrivateGroupEditType;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -57,40 +59,43 @@ class GroupController extends Controller {
          
         $groups = new ArrayCollection();
         for ($i=0; $i<$arData["count"]; $i++) {
-            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>cn=</B>=><FONT color =green><PRE>" . $arData[$i]["cn"][0] . "</PRE></FONT></FONT>";
-            $groups[$i] = new Group();
-            $groups[$i]->setCn($arData[$i]["cn"][0]);
-            $groups[$i]->setDescription($arData[$i]["description"][0]);
-            $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
-            $groups[$i]->setAmugroupadmin("");
-            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
-            
-            // Mise en forme pour la présentation "dossier" avec javascript
-            $arEtages = preg_split('/[:]+/', $arData[$i]["cn"][0]);
-            $NbEtages = count($arEtages);
-            $groups[$i]->setEtages($arEtages);
-            $groups[$i]->setNbetages($NbEtages);
-            $groups[$i]->setLastnbetages($NbEtagesPrec);
-                        
-            // on marque la différence entre les dossiers d'affichage des groupes N et N-1
-            $lastopen = 0;
-            for ($j=0;$j<$NbEtagesPrec;$j++)
-            {
-                if ($arEtages[$j]!=$arEtagesPrec[$j])
+            // on ne garde que les groupes publics
+            if (!strstr($arData[$i]["dn"], "ou=private")) {
+                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>cn=</B>=><FONT color =green><PRE>" . $arData[$i]["cn"][0] . "</PRE></FONT></FONT>";
+                $groups[$i] = new Group();
+                $groups[$i]->setCn($arData[$i]["cn"][0]);
+                $groups[$i]->setDescription($arData[$i]["description"][0]);
+                $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
+                $groups[$i]->setAmugroupadmin("");
+                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
+
+                // Mise en forme pour la présentation "dossier" avec javascript
+                $arEtages = preg_split('/[:]+/', $arData[$i]["cn"][0]);
+                $NbEtages = count($arEtages);
+                $groups[$i]->setEtages($arEtages);
+                $groups[$i]->setNbetages($NbEtages);
+                $groups[$i]->setLastnbetages($NbEtagesPrec);
+
+                // on marque la différence entre les dossiers d'affichage des groupes N et N-1
+                $lastopen = 0;
+                for ($j=0;$j<$NbEtagesPrec;$j++)
                 {
-                    
-                    $lastopen = $j ;
-                    $groups[$i]->setLastopen($lastopen);
-                    break;
+                    if ($arEtages[$j]!=$arEtagesPrec[$j])
+                    {
+
+                        $lastopen = $j ;
+                        $groups[$i]->setLastopen($lastopen);
+                        break;
+                    }
                 }
+
+                if (($NbEtagesPrec>=1) && ($lastopen == 0))
+                    $groups[$i]->setLastopen($NbEtagesPrec-1);
+
+                // on garde le nom du groupe précédent dans la liste
+                $arEtagesPrec = $groups[$i]->getEtages();
+                $NbEtagesPrec = $groups[$i]->getNbetages();
             }
-            
-            if (($NbEtagesPrec>=1) && ($lastopen == 0))
-                $groups[$i]->setLastopen($NbEtagesPrec-1);
-            
-            // on garde le nom du groupe précédent dans la liste
-            $arEtagesPrec = $groups[$i]->getEtages();
-            $NbEtagesPrec = $groups[$i]->getNbetages();
             
         }
 
@@ -174,38 +179,41 @@ class GroupController extends Controller {
         $groups = new ArrayCollection();
         
         for ($i=0; $i<$arData["count"]; $i++) {
-            $groups[$i] = new Group();
-            $groups[$i]->setCn($arData[$i]["cn"][0]);
-            $groups[$i]->setDescription($arData[$i]["description"][0]);
-            $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
-            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
-            
-            // Mise en forme pour la présentation "dossier" avec javascript
-            $arEtages = preg_split('/[:]+/', $arData[$i]["cn"][0]);
-            $NbEtages = count($arEtages);
-            $groups[$i]->setEtages($arEtages);
-            $groups[$i]->setNbetages($NbEtages);
-            $groups[$i]->setLastnbetages($NbEtagesPrec);
-                        
-            // on marque la différence entre les dossiers d'affichage des groupes N et N-1
-            $lastopen = 0;
-            for ($j=0;$j<$NbEtagesPrec;$j++)
-            {
-                if ($arEtages[$j]!=$arEtagesPrec[$j])
+            // on ne garde que les groupes publics
+            if (!strstr($arData[$i]["dn"], "ou=private")) {
+                $groups[$i] = new Group();
+                $groups[$i]->setCn($arData[$i]["cn"][0]);
+                $groups[$i]->setDescription($arData[$i]["description"][0]);
+                $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
+                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
+
+                // Mise en forme pour la présentation "dossier" avec javascript
+                $arEtages = preg_split('/[:]+/', $arData[$i]["cn"][0]);
+                $NbEtages = count($arEtages);
+                $groups[$i]->setEtages($arEtages);
+                $groups[$i]->setNbetages($NbEtages);
+                $groups[$i]->setLastnbetages($NbEtagesPrec);
+
+                // on marque la différence entre les dossiers d'affichage des groupes N et N-1
+                $lastopen = 0;
+                for ($j=0;$j<$NbEtagesPrec;$j++)
                 {
-                    
-                    $lastopen = $j ;
-                    $groups[$i]->setLastopen($lastopen);
-                    break;
+                    if ($arEtages[$j]!=$arEtagesPrec[$j])
+                    {
+
+                        $lastopen = $j ;
+                        $groups[$i]->setLastopen($lastopen);
+                        break;
+                    }
                 }
+
+                if (($NbEtagesPrec>=1) && ($lastopen == 0))
+                    $groups[$i]->setLastopen($NbEtagesPrec-1);
+
+                // on garde le nom du groupe précédent dans la liste
+                $arEtagesPrec = $groups[$i]->getEtages();
+                $NbEtagesPrec = $groups[$i]->getNbetages();
             }
-            
-            if (($NbEtagesPrec>=1) && ($lastopen == 0))
-                $groups[$i]->setLastopen($NbEtagesPrec-1);
-            
-            // on garde le nom du groupe précédent dans la liste
-            $arEtagesPrec = $groups[$i]->getEtages();
-            $NbEtagesPrec = $groups[$i]->getNbetages();
         }
         
         return array('groups' => $groups);
@@ -244,33 +252,36 @@ class GroupController extends Controller {
                 }
                
                 for ($i=0; $i<$arData["count"]; $i++) {
-                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>cn=</B>=><FONT color =green><PRE>" . $arData[$i]["cn"][0] . "</PRE></FONT></FONT>";
-                    $groups[$i] = new Group();
-                    $groups[$i]->setCn($arData[$i]["cn"][0]);
-                    $groups[$i]->setDescription($arData[$i]["description"][0]);
-                    $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
-                    $groups[$i]->setDroits('Aucun');
-                    
-                    // Droits DOSI seulement en visu
-                    if (true === $this->get('security.context')->isGranted('ROLE_DOSI')) {
-                        $groups[$i]->setDroits('Voir');
-                    }
-                    
-                    // Droits gestionnaire seulement sur les groupes dont il est admin
-                    if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
-                        foreach ($tab_cn_admin as $cn_admin)
-                        {    
-                            if ($cn_admin==$arData[$i]["cn"][0])
-                            {
-                                $groups[$i]->setDroits('Modifier');
-                                break;
+                    // on ne garde que les groupes publics
+                    if (!strstr($arData[$i]["dn"], "ou=private")) {
+                        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>cn=</B>=><FONT color =green><PRE>" . $arData[$i]["cn"][0] . "</PRE></FONT></FONT>";
+                        $groups[$i] = new Group();
+                        $groups[$i]->setCn($arData[$i]["cn"][0]);
+                        $groups[$i]->setDescription($arData[$i]["description"][0]);
+                        $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
+                        $groups[$i]->setDroits('Aucun');
+
+                        // Droits DOSI seulement en visu
+                        if (true === $this->get('security.context')->isGranted('ROLE_DOSI')) {
+                            $groups[$i]->setDroits('Voir');
+                        }
+
+                        // Droits gestionnaire seulement sur les groupes dont il est admin
+                        if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
+                            foreach ($tab_cn_admin as $cn_admin)
+                            {    
+                                if ($cn_admin==$arData[$i]["cn"][0])
+                                {
+                                    $groups[$i]->setDroits('Modifier');
+                                    break;
+                                }
                             }
                         }
-                    }
-                    
-                    // Droits Admin
-                    if (true === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
-                        $groups[$i]->setDroits('Modifier');
+
+                        // Droits Admin
+                        if (true === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+                            $groups[$i]->setDroits('Modifier');
+                        }
                     }
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
                 }
@@ -874,6 +885,72 @@ class GroupController extends Controller {
         //             'form' => $form->createView());
     }
     
+    /**
+     * Création d'un groupe privé
+     *
+     * @Route("/private/create/{nb_groups}",name="private_group_create")
+     * @Template("AmuCliGrouperBundle:Group:createprivate.html.twig")
+     */
+    public function createPrivateAction(Request $request, $nb_groups) {
+        
+        if ($nb_groups>6){
+            return $this->render('AmuCliGrouperBundle:Group:limite.html.twig');
+        }
+        
+        $group = new Group();
+        $groups = array();
+                
+        $form = $this->createForm(new PrivateGroupCreateType(), new Group());
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $group = $form->getData();
+            
+            // Log création de groupe
+            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+            $adm = $request->getSession()->get('login');
+                
+            // Création du groupe dans le LDAP
+            $infogroup = $group->infosGroupePriveLdap($adm);
+            $b = $this->getLdap()->createGroupeLdap($infogroup['dn'], $infogroup['infos']);
+            if ($b==true)
+            { 
+                //Le groupe a bien été créé
+                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>retour create groupe ldap</B>=><FONT color =green><PRE>" . $b . "</PRE></FONT></FONT>";
+            
+                // affichage groupe créé
+                $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été créé');
+                $groups[0] = $group;
+                $cn = $adm.":".$group->getCn();
+                $group->setCn($cn);
+                
+                // Log création OK
+                syslog(LOG_INFO, "create_private_group by $adm : group : $cn");
+               
+                return $this->render('AmuCliGrouperBundle:Group:creationgroupe.html.twig',array('groups' => $groups));
+            }
+            else 
+            {
+                // affichage erreur
+                $this->get('session')->getFlashBag()->add('flash-error', 'Erreur LDAP lors de la création du groupe');
+                $groups[0] = $group;
+                $cn = $group->getCn();
+                
+                // Log erreur
+                syslog(LOG_ERR, "LDAP ERREUR : create_private_group by $adm : group : $cn");
+                
+                // Affichage page 
+                return $this->render('AmuCliGrouperBundle:Group:createprivate.html.twig', array('form' => $form->createView()));
+            }
+            
+            // Ferme le fichier de log
+            closelog();
+             
+        }
+        return $this->render('AmuCliGrouperBundle:Group:createprivate.html.twig', array('form' => $form->createView()));
+
+        //return array('groups' => $groups, 
+        //             'form' => $form->createView());
+    }
     
      /**
      * Supprimer un groupe.
@@ -915,6 +992,87 @@ class GroupController extends Controller {
         
         // Ferme fichier de log
         closelog();
+    }
+    
+    /**
+     * Suppression d'un groupe privé
+     *
+     * @Route("/private/delete",name="private_group_delete")
+     * @Template("AmuCliGrouperBundle:Group:deleteprivate.html.twig")
+     */
+    public function deletePrivateAction() {
+        
+        $uid = $this->container->get('request')->getSession()->get('login');
+        // Recherche des groupes dans le LDAP
+        $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=".$uid.":*))",array("cn","description"));
+    
+        $groups = new ArrayCollection();
+        for ($i=0; $i<$arData["count"]; $i++) {
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>cn=</B>=><FONT color =green><PRE>" . $arData[$i]["cn"][0] . "</PRE></FONT></FONT>";
+            $groups[$i] = new Group();
+            $groups[$i]->setCn($arData[$i]["cn"][0]);
+            $groups[$i]->setDescription($arData[$i]["description"][0]);
+            
+        }
+
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos brut</B>=><FONT color =green><PRE>" . print_r($groups, true) . "</PRE></FONT></FONT>";
+        
+        return array('groups' => $groups);
+    }
+    
+    /**
+     * Supprimer un groupe.
+     *
+     * @Route("/private/del_1/{cn}", name="private_group_del_1")
+     * @Template()
+     * // AMU Modif's
+     */
+    public function del1PrivateAction(Request $request, $cn)
+    {
+        // Log suppression de groupe
+        openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+        $adm = $request->getSession()->get('login');
+        
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>delete groupe ldap </B>=><FONT color =green><PRE>" . $cn . "</PRE></FONT></FONT>";
+        $b = $this->getLdap()->deleteGroupeLdap($cn.",ou=private");
+        if ($b==true)
+        {
+            //Le groupe a bien été supprimé
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>retour create groupe ldap</B>=><FONT color =green><PRE>" . $b . "</PRE></FONT></FONT>";
+            
+            // affichage groupe supprimé
+            $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été supprimé');
+            
+            // Log
+            syslog(LOG_INFO, "delete_private_group by $adm : group : $cn");
+                        
+        }
+        else 
+        {
+            // Log erreur
+            syslog(LOG_ERR, "LDAP ERROR : delete_private_group by $adm : group : $cn");
+            // affichage erreur
+            $this->get('session')->getFlashBag()->add('flash-error', 'Erreur LDAP lors de la suppression du groupe');
+        }
+        
+        // Ferme fichier de log
+        closelog();
+        
+        // Recup des infos pour afficahe des groupes restants
+        $uid = $this->container->get('request')->getSession()->get('login');
+        // Recherche des groupes dans le LDAP
+        $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=".$uid.":*))",array("cn","description"));
+    
+        $groups = new ArrayCollection();
+        for ($i=0; $i<$arData["count"]; $i++) {
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>cn=</B>=><FONT color =green><PRE>" . $arData[$i]["cn"][0] . "</PRE></FONT></FONT>";
+            $groups[$i] = new Group();
+            $groups[$i]->setCn($arData[$i]["cn"][0]);
+            $groups[$i]->setDescription($arData[$i]["description"][0]);
+            
+        }
+        
+        return $this->render('AmuCliGrouperBundle:Group:deleteprivate.html.twig', array('groups' => $groups));
     }
     
     /**
@@ -1008,7 +1166,203 @@ class GroupController extends Controller {
         
     }
     
+   
     /**
+    * Gestion des groupes privés de l'utilisateur
+    *
+    * @Route("/private",name="private_group")
+    * @Template() 
+    */
+    public function privateAction() {
+        $uid = $this->container->get('request')->getSession()->get('login');
+        // Recherche des groupes dans le LDAP
+        $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=".$uid.":*))",array("cn","description"));
+    
+        $groups = new ArrayCollection();
+        for ($i=0; $i<$arData["count"]; $i++) {
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>cn=</B>=><FONT color =green><PRE>" . $arData[$i]["cn"][0] . "</PRE></FONT></FONT>";
+            $groups[$i] = new Group();
+            $groups[$i]->setCn($arData[$i]["cn"][0]);
+            $groups[$i]->setDescription($arData[$i]["description"][0]);
+            
+        }
+
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos brut</B>=><FONT color =green><PRE>" . print_r($groups, true) . "</PRE></FONT></FONT>";
+        
+        return array('groups' => $groups, 'nb_groups' => $arData["count"]);
+        
+    }
+    
+    /**
+     * Voir les membres d'un groupe privé.
+     *
+     * @Route("/private/update/{cn}", name="private_group_update")
+     * @Template("AmuCliGrouperBundle:Group:privateupdate.html.twig")
+     * // AMU Modif's
+     */
+    public function privateupdateAction(Request $request, $cn)
+    {
+        $group = new Group();
+        $group->setCn($cn);
+        $members = new ArrayCollection();
+        
+        // Groupe initial pour détecter les modifications
+        $groupini = new Group();
+        $groupini->setCn($cn);
+        $membersini = new ArrayCollection();
+        
+               
+        // Recherche des membres dans le LDAP
+        $arUsers = $this->getLdap()->getMembersGroup($cn.",ou=private");
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos users</B>=><FONT color =green><PRE>" . print_r($arUsers, true) . "</PRE></FONT></FONT>";
+        
+        // Affichage des membres  
+        for ($i=0; $i<$arUsers["count"]; $i++) {                     
+            $members[$i] = new Member();
+            $members[$i]->setUid($arUsers[$i]["uid"][0]);
+            $members[$i]->setDisplayname($arUsers[$i]["displayname"][0]);
+            $members[$i]->setMail($arUsers[$i]["mail"][0]);
+            $members[$i]->setTel($arUsers[$i]["telephonenumber"][0]);
+            $members[$i]->setMember(TRUE);
+            $members[$i]->setAdmin(FALSE);
+           
+            // Idem pour groupini
+            $membersini[$i] = new Member();
+            $membersini[$i]->setUid($arUsers[$i]["uid"][0]);
+            $membersini[$i]->setDisplayname($arUsers[$i]["displayname"][0]);
+            $membersini[$i]->setMail($arUsers[$i]["mail"][0]);
+            $membersini[$i]->setTel($arUsers[$i]["telephonenumber"][0]);
+            $membersini[$i]->setMember(TRUE);
+            $membersini[$i]->setAdmin(FALSE);
+            
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
+                        
+        }
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos membres</B>=><FONT color =green><PRE>" . print_r($members, true) . "</PRE></FONT></FONT>";
+                
+        $group ->setMembers($members);
+        $groupini ->setMembers($membersini);
+                      
+        $editForm = $this->createForm(new PrivateGroupEditType(), $group);
+        
+        $editForm->handleRequest($request);
+
+        if ($editForm->isValid()) {
+            $groupupdate = new Group();
+            $groupupdate = $editForm->getData();
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Form valid : groupupdate</B>=><FONT color =green><PRE>" . print_r($groupupdate, true) . "</PRE></FONT></FONT>";
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Form valid : groupini</B>=><FONT color =green><PRE>" . print_r($groupini, true) . "</PRE></FONT></FONT>";
+            
+            // Log Mise à jour des membres du groupe
+            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+            $adm = $request->getSession()->get('login');
+            
+            $m_update = new ArrayCollection();      
+            $m_update = $groupupdate->getMembers();
+            
+            $nb_memb = sizeof($m_update);
+            
+            //foreach($m_update as $memb)
+            for ($i=0; $i<sizeof($m_update); $i++)
+            {
+                $memb = $m_update[$i];
+                $membi = $membersini[$i];
+                $dn_group = "cn=" . $cn . ", ou=private, ou=groups, dc=univ-amu, dc=fr";
+                
+                $u = $memb->getUid();
+                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Form valid</B>=><FONT color =green><PRE>" . print_r($m_update, true) . "</PRE></FONT></FONT>";
+                // Traitement des membres
+                // Si il y a changement pour le membre, on modifie dans le ldap, sinon, on ne fait rien
+                if ($memb->getMember() != $membi->getMember())
+                {
+                    if ($memb->getMember())
+                    {
+                        $r = $this->getLdap()->addMemberGroup($dn_group, array($u));
+                        if ($r)
+                        {
+                            // Log modif
+                            syslog(LOG_INFO, "add_member by $adm : group : $cn, user : $u ");
+                            $nb_memb++;
+                        }
+                        else
+                        {
+                            syslog(LOG_ERR, "LDAP ERROR : add_member by $adm : group : $cn, user : $u ");
+                        }
+                        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Ajout membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
+                    }
+                    else
+                    {
+                        $r = $this->getLdap()->delMemberGroup($dn_group, array($u));
+                        if ($r)
+                        {
+                            // Log modif
+                            syslog(LOG_INFO, "del_member by $adm : group : $cn, user : $u ");
+                            $nb_memb--;
+                        }
+                        else
+                        {
+                            syslog(LOG_ERR, "LDAP ERROR : del_member by $adm : group : $cn, user : $u ");
+                        }
+                        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Suppression membre</B>=><FONT color =green><PRE>" . print_r($memb, true) . "</PRE></FONT></FONT>";
+                    }
+                }
+                
+            }
+            // Ferme fichier de log
+            closelog();
+            
+            $this->get('session')->getFlashBag()->add('flash-notice', 'Les modifications ont bien été enregistrées');
+            
+            $this->getRequest()->getSession()->set('_saved',1);
+            
+            // Récupération du nouveau groupe modifié pour affichage
+            $newgroup = new Group();
+            $newgroup->setCn($cn);
+            $newmembers = new ArrayCollection();
+
+            // Recherche des membres dans le LDAP
+            $narUsers = $this->getLdap()->getMembersGroup($cn.",ou=private");
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos users</B>=><FONT color =green><PRE>" . print_r($arUsers, true) . "</PRE></FONT></FONT>";
+
+            // Affichage des membres  
+            for ($i=0; $i<$narUsers["count"]; $i++) {                     
+                $newmembers[$i] = new Member();
+                $newmembers[$i]->setUid($narUsers[$i]["uid"][0]);
+                $newmembers[$i]->setDisplayname($narUsers[$i]["displayname"][0]);
+                $newmembers[$i]->setMail($narUsers[$i]["mail"][0]);
+                $newmembers[$i]->setTel($narUsers[$i]["telephonenumber"][0]);
+                $newmembers[$i]->setMember(TRUE); 
+                $newmembers[$i]->setAdmin(FALSE);
+                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
+
+            }
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos membres</B>=><FONT color =green><PRE>" . print_r($members, true) . "</PRE></FONT></FONT>";
+                
+            $newgroup ->setMembers($newmembers);
+                      
+            $editForm = $this->createForm(new PrivateGroupEditType(), $newgroup);
+            echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($newgroup, true) . "</PRE></FONT></FONT>";
+            
+            return array(
+            'group'      => $newgroup,
+            'nb_membres' => $narUsers["count"],
+            'form'   => $editForm->createView()
+            );
+        }
+        else {
+            $this->getRequest()->getSession()->set('_saved',0);
+            
+            return array(
+            'group'      => $group,
+            'nb_membres' => $arUsers["count"],
+            'form'   => $editForm->createView()
+            );
+        }
+
+        
+        
+    }
+    /** 
     * Affichage du document d'aide
     *
     * @Route("/aide",name="aide")
@@ -1019,4 +1373,5 @@ class GroupController extends Controller {
         //return $this->redirect('http://dev-web-test.pj.univ-amu.fr/~admdev-php/CliGrouper/web/app/bundles/amucligrouper/groupie.pdf');
         
     }
+    
 }

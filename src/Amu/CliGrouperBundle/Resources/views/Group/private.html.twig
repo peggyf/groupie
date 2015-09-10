@@ -4,9 +4,10 @@
 
 {% block body %}
 
-<button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; position:absolute; left:36%" onclick="loadPage('{{ path('private_group_create') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/add-2.png')}}" />&nbsp;Créer un groupe &nbsp;</button>        
-<button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; position:absolute; left:55%" onclick="loadPage('{{ path('private_group') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/delete-2.png')}}" />&nbsp;Supprimer un groupe &nbsp;</button>        
-    
+<button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; position:absolute; left:36%" onclick="loadPage('{{ path('private_group_create', { 'nb_groups': nb_groups }) }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/add-2.png')}}" />&nbsp;Créer un groupe &nbsp;</button>        
+{% if nb_groups > 0 %}
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; position:absolute; left:55%" onclick="loadPage('{{ path('private_group_delete') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/delete-2.png')}}" />&nbsp;Supprimer un groupe &nbsp;</button>        
+{% endif %}    
 <br>
 <br>
 <br>
@@ -34,6 +35,6 @@
         {% endfor %}
         </tbody>    
     </table>
-{% endif %}
+{% endif %} 
 {% endblock %}
  
