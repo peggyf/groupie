@@ -29,7 +29,7 @@
     <br>
     <p>
      <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-	onclick="loadPage('{{ path('private_group_create', { 'nb_groups': nb_groups }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/add-2.png')}}" />&nbsp;Créer&nbsp;</button>
+	onclick="loadPage('{{ path('private_group_create', { 'nb_groups': nb_groups } ) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/add-2.png')}}" />&nbsp;Créer&nbsp;</button>
      <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
      <span class="record_actions"></span>
     </p>

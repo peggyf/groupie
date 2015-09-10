@@ -15,6 +15,10 @@
             <th> Groupe </th>
             <th> Ajouter </th>
             {% endif %}
+            {% if opt == 'addprivate' %}
+            <th> Groupe </th>
+            <th> Ajouter </th>
+            {% endif %}
             {% if opt == 'search' %}
             <th> Voir </th>
             <th> Modifier </th>
@@ -35,6 +39,12 @@
               <img class="jqtip ui-button" align="absmiddle" src="{{ asset('bundles/app/images/ico/16/user-add.png') }}" title="Ajouter des droits" class="ui-button" onclick='loadPage("{{ path('user_add', { 'uid': user.uid, 'cn': cn }) }}");' />
             </td>  
           {% else %}
+            {% if opt == 'addprivate' %}
+                <td style="vertical-align: middle;">{{cn}}</td>
+                <td style="vertical-align: middle;"> 
+                <img class="jqtip ui-button" align="absmiddle" src="{{ asset('bundles/app/images/ico/16/user-add.png') }}" title="Ajouter des droits" class="ui-button" onclick='loadPage("{{ path('user_add_private', { 'uid': user.uid, 'cn': cn }) }}");' />
+                </td>  
+            {% else %}
               {% if opt == 'search' %}
                   {% if droits == 'Aucun' %}
                     <td style="vertical-align: middle;">   
@@ -70,6 +80,7 @@
                     </td>  
                   {% endif %}
               {% endif %}
+            {% endif %}  
           {% endif %}
         </tr>
    {% endfor %}
