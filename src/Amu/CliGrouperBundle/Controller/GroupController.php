@@ -893,7 +893,7 @@ class GroupController extends Controller {
      */
     public function createPrivateAction(Request $request, $nb_groups) {
         
-        if ($nb_groups>6){
+        if ($nb_groups>20){
             return $this->render('AmuCliGrouperBundle:Group:limite.html.twig');
         }
         
@@ -926,7 +926,7 @@ class GroupController extends Controller {
                 // Log création OK
                 syslog(LOG_INFO, "create_private_group by $adm : group : $cn");
                
-                return $this->render('AmuCliGrouperBundle:Group:creationgroupe.html.twig',array('groups' => $groups));
+                return $this->render('AmuCliGrouperBundle:Group:creationgroupeprive.html.twig',array('groups' => $groups));
             }
             else 
             {
@@ -946,7 +946,7 @@ class GroupController extends Controller {
             closelog();
              
         }
-        return $this->render('AmuCliGrouperBundle:Group:createprivate.html.twig', array('form' => $form->createView()));
+        return $this->render('AmuCliGrouperBundle:Group:createprivate.html.twig', array('form' => $form->createView(), 'nb_groups' => $nb_groups));
 
         //return array('groups' => $groups, 
         //             'form' => $form->createView());
@@ -1341,7 +1341,7 @@ class GroupController extends Controller {
             $newgroup ->setMembers($newmembers);
                       
             $editForm = $this->createForm(new PrivateGroupEditType(), $newgroup);
-            echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($newgroup, true) . "</PRE></FONT></FONT>";
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($newgroup, true) . "</PRE></FONT></FONT>";
             
             return array(
             'group'      => $newgroup,
