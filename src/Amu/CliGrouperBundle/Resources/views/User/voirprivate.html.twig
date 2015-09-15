@@ -1,0 +1,67 @@
+{% extends 'AppBundle::page.html.twig' %}
+
+{% block titre %}Liste des groupes privés de l'utilisateur {{ uid }} {% endblock %}
+
+{% block body %}
+    
+ {% if nb_grp_prop == 0 %}
+     <h3>   L'utilisateur n'est propriétaire d'aucun groupe privé. </h3>
+    <br>
+ {% else %}
+    
+    <h3>   Nombre de groupes privés dont l'utilisateur est propriétaire : {{ nb_grp_prop }} </h3>
+    <br>
+
+<table class="ui-widget-content dataTable TabInfos" filter="25">
+    <thead>
+        <tr>
+            <th>cn</th>
+	    <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for grp in grp_prop %}
+	<tr > 
+	  <td style="vertical-align: middle;">{{grp.cn }}</td>
+          <td style="vertical-align: middle;">{{grp.description }}</td>
+        </tr>
+   {% endfor %}
+    </tbody>
+{% endif %}      
+{% if nb_grp_membres == 0 %}       
+    <h3>   L'utilisateur n'est membre d'aucun groupe privé. </h3>
+    <br>
+{% else %}    
+</table>
+    <br>
+    <br>
+    
+    <h3>   Nombre de groupes privés dont l'utilisateur est membre : {{ nb_grp_membres }} </h3>
+    <br>
+
+<table class="ui-widget-content dataTable TabInfos" filter="25">
+    <thead>
+        <tr>
+            <th>cn</th>
+	    <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for grp in grp_membres %}
+	<tr > 
+	  <td style="vertical-align: middle;">{{grp.cn }}</td>
+          <td style="vertical-align: middle;">{{grp.description }}</td>
+        </tr>
+   {% endfor %}
+    </tbody>
+      
+</table>
+{% endif %}   
+
+<br>
+
+<button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+	onclick="loadPage('{{path('user_display', {'opt' : 'searchprivate'}) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;
+</button>
+        
+{% endblock %}

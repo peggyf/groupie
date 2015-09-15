@@ -877,6 +877,54 @@ class UserController extends Controller {
     }
     
     /**
+     * Voir les appartenances et droits d'un utilisateur.
+     *
+     * @Route("/voirprivate/{uid}", name="voir_user_private")
+     * @Template()
+     * // AMU Modif's
+     */
+    public function voirprivateAction(Request $request, $uid)
+    {
+        $membersof = array();
+        $propof = array();
+        
+        // Recherche des groupes dont l'utilisateur est membre 
+        $arData=$this->getLdap()->arDatasFilter("member=uid=".$uid.",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+        $nb_grp_memb = 0;
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>data</B>=><FONT color =green><PRE>" . print_r($arData, TRUE) . "</PRE></FONT></FONT>";
+        for ($i=0; $i<$arData["count"]; $i++)         
+        {
+            // on ne récupere que les groupes privés
+            if (strstr($arData[$i]["dn"], "ou=private"))
+            {
+            $gr = new Group();
+            $gr->setCn($arData[$i]["cn"][0]);
+            $gr->setDescription($arData[$i]["description"][0]);
+            $membersof[] = $gr;
+            $nb_grp_memb++;
+            }
+        }
+                
+        // Récupération des groupes dont l'utilisateur est propriétaire
+        $arDataProp=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=".$uid.":*))",array("cn","description"));
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>data</B>=><FONT color =green><PRE>" . print_r($arDataProp, TRUE) . "</PRE></FONT></FONT>";
+        for ($i=0; $i<$arDataProp["count"]; $i++)         
+        {
+            $gr_prop = new Group();
+            $gr_prop->setCn($arDataProp[$i]["cn"][0]);
+            $gr_prop->setDescription($arDataProp[$i]["description"][0]);
+            $propof[] = $gr_prop;
+        }
+        
+        
+        return array('uid' => $uid,
+                    'nb_grp_membres' => $nb_grp_memb, 
+                    'grp_membres' => $membersof,
+                    'nb_grp_prop' => $arDataProp["count"],
+                    'grp_prop' => $propof);
+    }
+    
+    /**
     * Recherche de personnes
     *
     * @Route("/search/{opt}/{cn}/{liste}",name="user_search")
@@ -893,7 +941,7 @@ class UserController extends Controller {
         if ($form->isValid()) {
             $usersearch = $form->getData();
             //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>opt</B>=><FONT color =green><PRE>" . $opt . "</PRE></FONT></FONT>";
-            if (($opt=='add')||($opt=='addprivate'))
+/*            if (($opt=='add')||($opt=='addprivate'))
             {
                 if ($opt=='add') {
                     return $this->redirect($this->generateUrl('user_add', array('uid'=>$usersearch->getUid(), 'cn'=>$cn)));
@@ -903,7 +951,7 @@ class UserController extends Controller {
                 }
             }
             else
-            {
+            {*/
                 // On teste si on a qqchose dans le champ uid
                if ($usersearch->getUid()=='')
                 {
@@ -1003,7 +1051,7 @@ class UserController extends Controller {
                         return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn));
                     }
                 }   
-            }       
+            //}       
         }
         
         

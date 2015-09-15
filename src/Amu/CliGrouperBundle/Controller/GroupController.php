@@ -104,6 +104,35 @@ class GroupController extends Controller {
         return array('groups' => $groups);
     }
 
+    /**
+     * Affiche tous les groupes privés
+     *
+     * @Route("/tous_les_groupes_prives",name="tous_les_groupes_prives")
+     * @Template()
+     */
+    public function touslesgroupesprivesAction() {
+        
+          
+        $arData=$this->getLdap()->arDatasFilter("(objectClass=groupofNames)",array("cn","description","amuGroupFilter"));
+        // echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Tous les groupes : </B>=><FONT color =green><PRE>" . $arData["count"]. "</PRE></FONT></FONT>";
+         
+        $groups = new ArrayCollection();
+        for ($i=0; $i<$arData["count"]; $i++) {
+            // on ne garde que les groupes prives
+            if (strstr($arData[$i]["dn"], "ou=private")) {
+                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>cn=</B>=><FONT color =green><PRE>" . $arData[$i]["cn"][0] . "</PRE></FONT></FONT>";
+                $groups[$i] = new Group();
+                $groups[$i]->setCn($arData[$i]["cn"][0]);
+                $groups[$i]->setDescription($arData[$i]["description"][0]);
+                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
+            }
+            
+        }
+
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos brut</B>=><FONT color =green><PRE>" . print_r($groups, true) . "</PRE></FONT></FONT>";
+        
+        return array('groups' => $groups);
+    }
  
     /**
      * Affiche tous les groupes dont l'utilisateur est administrateur
@@ -217,6 +246,35 @@ class GroupController extends Controller {
         }
         
         return array('groups' => $groups);
+    }
+    
+    /**
+     * Affiche tous les groupes privés dont l'utilisateur est membre
+     *
+     * @Route("/mes_appartenances_privees",name="mes_appartenances_privees")
+     * @Template()
+     */
+    public function mesappartenancespriveesAction(Request $request) {
+        
+        $arData=$this->getLdap()->arDatasFilter("member=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+        
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>memberof=</B>=><FONT color =green><PRE>" . print_r($arData). "</PRE></FONT></FONT>";
+        $groups = new ArrayCollection();
+        
+        $nb_groups=0;
+        for ($i=0; $i<$arData["count"]; $i++) {
+            // on ne garde que les groupes privés
+            if (strstr($arData[$i]["dn"], "ou=private")) {
+                $groups[$i] = new Group();
+                $groups[$i]->setCn($arData[$i]["cn"][0]);
+                $groups[$i]->setDescription($arData[$i]["description"][0]);
+                $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
+                $nb_groups++;
+                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
+            }
+        }
+        
+        return array('groups' => $groups, 'nb_groups' => $nb_groups);
     }
         
     /**
@@ -610,6 +668,48 @@ class GroupController extends Controller {
                     'admins' => $admins,
                     'liste' => $liste);
     }
+     /**
+     * Voir les membres et administrateurs d'un groupe.
+     *
+     * @Route("/voir_prive/{cn}/{opt}", name="voir_groupe_prive")
+     * @Template()
+     * // AMU Modif's
+     */
+    public function voirpriveAction(Request $request, $cn, $opt)
+    {
+        $users = array();
+        // Récupération du propriétaire du groupe
+        $uid_prop = strstr($cn, ":", TRUE);
+        $result = $this->getLdap()->arUserInfos($uid_prop, array("uid", "sn", "displayname", "mail", "telephonenumber"));
+        $proprietaire = new User();
+        $proprietaire->setUid($result["uid"]);
+        $proprietaire->setSn($result["sn"]);
+        $proprietaire->setDisplayname($result["displayname"]);
+        $proprietaire->setMail($result["mail"]);
+        $proprietaire->setTel($result["telephonenumber"]);
+        
+        // Recherche des membres dans le LDAP
+        $arUsers = $this->getLdap()->getMembersGroup($cn.",ou=private");
+        //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos users</B>=><FONT color =green><PRE>" . print_r($arUsers, true) . "</PRE></FONT></FONT>";
+                 
+        for ($i=0; $i<$arUsers["count"]; $i++) {                     
+            $users[$i] = new User();
+            $users[$i]->setUid($arUsers[$i]["uid"][0]);
+            $users[$i]->setSn($arUsers[$i]["sn"][0]);
+            $users[$i]->setDisplayname($arUsers[$i]["displayname"][0]);
+            if ($mail=='true')
+                $users[$i]->setMail($arUsers[$i]["mail"][0]);
+            
+            $users[$i]->setTel($arUsers[$i]["telephonenumber"][0]);
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos groupe</B>=><FONT color =green><PRE>" . print_r($groups[$i], true) . "</PRE></FONT></FONT>";
+        }
+        
+        return array('cn' => $cn,
+                    'nb_membres' => $arUsers["count"], 
+                    'proprietaire' => $proprietaire,
+                    'users' => $users,
+                    'opt' => $opt);
+    }
     
     /**
      * Voir les membres et administrateurs d'un groupe.
@@ -939,7 +1039,7 @@ class GroupController extends Controller {
                 syslog(LOG_ERR, "LDAP ERREUR : create_private_group by $adm : group : $cn");
                 
                 // Affichage page 
-                return $this->render('AmuCliGrouperBundle:Group:createprivate.html.twig', array('form' => $form->createView()));
+                return $this->render('AmuCliGrouperBundle:Group:createprivate.html.twig', array('form' => $form->createView(), 'nb_groups' => $nb_groups));
             }
             
             // Ferme le fichier de log
@@ -1194,7 +1294,7 @@ class GroupController extends Controller {
     }
     
     /**
-     * Voir les membres d'un groupe privé.
+     * Mettre à jour les membres d'un groupe privé.
      *
      * @Route("/private/update/{cn}", name="private_group_update")
      * @Template("AmuCliGrouperBundle:Group:privateupdate.html.twig")
@@ -1370,6 +1470,18 @@ class GroupController extends Controller {
     public function aideAction() {
     
         return $this->render('AmuCliGrouperBundle:Group:aide.html.twig');
+        //return $this->redirect('http://dev-web-test.pj.univ-amu.fr/~admdev-php/CliGrouper/web/app/bundles/amucligrouper/groupie.pdf');
+        
+    }
+    
+    /** 
+    * Affichage du document d'aide
+    *
+    * @Route("/aide_priv",name="aide_priv")
+    */
+    public function aideprivAction() {
+    
+        return $this->render('AmuCliGrouperBundle:Group:aidepriv.html.twig');
         //return $this->redirect('http://dev-web-test.pj.univ-amu.fr/~admdev-php/CliGrouper/web/app/bundles/amucligrouper/groupie.pdf');
         
     }

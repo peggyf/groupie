@@ -1,0 +1,49 @@
+{% extends 'AppBundle::page.html.twig' %}
+
+{% block titre %}Liste des membres du groupe privé {{ cn }} {% endblock %}
+
+{% block body %}
+
+
+{% if nb_membres == 0 %}       
+    <h3>   Le groupe n'a pas de membre. </h3>
+    <br>
+{% else %}  
+    <h3> <b>  Propriétaire du groupe : </b>{{ proprietaire.displayname }} </h3>
+    <br>
+    <h3> <b>  Nombre de membres du groupe : </b>{{ nb_membres }} </h3>
+    <br>
+
+    <table class="ui-widget-content dataTable TabInfos" filter="25">
+        <thead>
+            <tr>
+                <th>uid</th> 
+                <th>Nom</th>
+                <th>Téléphone</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr > 
+                <td style="vertical-align: middle;">{{user.uid }}</td>
+                <td style="vertical-align: middle;">{{user.displayname }}</td>
+                <td style="vertical-align: middle;">{{user.tel }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table> 
+{% endif %}   
+
+<br>
+{% if opt == 'tous' %}
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+    onclick="loadPage('{{path('tous_les_groupes_prives') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes&nbsp;
+    </button>
+{% endif %}
+{% if opt == 'mes' %}
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+        onclick="loadPage('{{path('mes_appartenances_privees') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes&nbsp;
+    </button>
+{% endif %}
+
+{% endblock %}
