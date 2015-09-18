@@ -105,8 +105,12 @@ $('#usersearch_uid').autocomplete({
                         }));
                     }            
                 });
-            }
-}); 
+            },
+    select : function(event, ui) {
+        $('#usersearch_uid').val(ui.item.value);
+        loadPage('{{ path('user_search', { 'opt': opt, 'cn' : cn }) }}', $('#_ajxFromModifier').serializeArray());
+    }        
+});  
 
 $('#usersearch_sn').autocomplete({
     source : function(requete, reponse){

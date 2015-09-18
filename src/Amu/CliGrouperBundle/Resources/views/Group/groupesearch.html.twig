@@ -43,7 +43,7 @@
 {% endif %}
 
 
-<script type="text/javascript">       
+<script type="text/javascript">   
 $('#groupsearch_cn').autocomplete({
     source : function(requete, reponse){
             var motcle = $('#groupsearch_cn').val();                       
@@ -61,9 +61,12 @@ $('#groupsearch_cn').autocomplete({
                         }));
                     }            
                 });
-            }
+            },
+    select : function(event, ui) {
+        $('#groupsearch_cn').val(ui.item.value);
+        loadPage('{{ path('group_search', { 'opt': opt, 'uid' : uid }) }}', $('#_ajxFromModifier').serializeArray());
+    }
 }); 
-    
 </script>
 
 {% endblock %}
