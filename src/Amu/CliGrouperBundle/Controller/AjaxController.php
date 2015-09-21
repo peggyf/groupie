@@ -48,19 +48,27 @@ class AjaxController extends Controller
         $arData=$this->getLdap()->arDatasFilter(     
             "(&(objectClass=groupofNames)(cn=*".$term."*))",
             array("cn"));    
+        
+        $arrayGroups = array();
+        $cpt=0;
        
-        $NbEnreg = $arData['count'];
-        // on limite l'affichage à 20 groupes
-        ($NbEnreg>20) ? $NbEnreg=20 : $NbEnreg;
-            
-        if ($NbEnreg == 0) {
-            $arrayGroups[] = array('label' => '...');
-
-        } else {
-            for($Cpt=0;$Cpt < $NbEnreg ;$Cpt++)             
-            {                
-                $arrayGroups[$Cpt]['label']  = $arData[$Cpt]['cn'][0];
+        for ($i=0; $i<$arData["count"]; $i++) {
+            // on ne garde que les groupes publics
+            if (!strstr($arData[$i]["dn"], "ou=private"))
+            {
+                $arrayGroups[]['label']  = $arData[$i]['cn'][0];
+                $cpt++;
             }
+            
+            // on se limite à 20 groupes affichés
+            if ($cpt==20)
+            {
+                break;
+            }
+        }
+        if ($cpt==0)
+        {
+            $arrayGroups[] = array('label' => '...');
         }
 
         $response = new Response (json_encode($arrayGroups));
@@ -93,7 +101,7 @@ class AjaxController extends Controller
                                         
         $arData = array();                          
         $arData=$this->getLdap()->arDatasFilter(     
-            "(uid=".$term."*)",
+            "(&(uid=".$term."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))",
             array("uid"));    
        
         $NbEnreg = $arData['count'];
@@ -140,7 +148,7 @@ class AjaxController extends Controller
                                         
         $arData = array();                          
         $arData=$this->getLdap()->arDatasFilter(     
-            "(sn=".$term."*)",
+            "(&(sn=".$term."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))",
             array("sn", "givenname", "uid"));    
        
         $NbEnreg = $arData['count'];
