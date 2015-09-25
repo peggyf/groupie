@@ -1003,48 +1003,66 @@ class GroupController extends Controller {
         $form = $this->createForm(new PrivateGroupCreateType(), new Group());
         $form->handleRequest($request);
         if ($form->isValid()) {
+            // Récupération de l'entrée utilisateur
             $group = $form->getData();
             
-            // Log création de groupe
-            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-            $adm = $request->getSession()->get('login');
-                
-            // Création du groupe dans le LDAP
-            $infogroup = $group->infosGroupePriveLdap($adm);
-            $b = $this->getLdap()->createGroupeLdap($infogroup['dn'], $infogroup['infos']);
-            if ($b==true)
-            { 
-                //Le groupe a bien été créé
-                //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>retour create groupe ldap</B>=><FONT color =green><PRE>" . $b . "</PRE></FONT></FONT>";
-            
-                // affichage groupe créé
-                $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été créé');
-                $groups[0] = $group;
-                $cn = $adm.":".$group->getCn();
-                $group->setCn($cn);
-                
-                // Log création OK
-                syslog(LOG_INFO, "create_private_group by $adm : group : $cn");
-               
-                return $this->render('AmuCliGrouperBundle:Group:creationgroupeprive.html.twig',array('groups' => $groups));
-            }
-            else 
+            // Vérification de la validité du champ cn : pas d'espaces, accents, caractères spéciaux
+            $test = preg_match("#^[A-Za-z0-9-_]+$#i", $group->getCn());
+            //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>test validité nom du groupe</B>=><FONT color =green><PRE>" . $test . "</PRE></FONT></FONT>";
+            if ($test>0)
             {
-                // affichage erreur
-                $this->get('session')->getFlashBag()->add('flash-error', 'Erreur LDAP lors de la création du groupe');
-                $groups[0] = $group;
-                $cn = $group->getCn();
-                
-                // Log erreur
-                syslog(LOG_ERR, "LDAP ERREUR : create_private_group by $adm : group : $cn");
-                
-                // Affichage page 
-                return $this->render('AmuCliGrouperBundle:Group:createprivate.html.twig', array('form' => $form->createView(), 'nb_groups' => $nb_groups));
-            }
+                // le nom du groupe est valide, on peut le créer
             
-            // Ferme le fichier de log
-            closelog();
-             
+                // Log création de groupe
+                openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+                $adm = $request->getSession()->get('login');
+                
+                // Création du groupe dans le LDAP
+                $infogroup = $group->infosGroupePriveLdap($adm);
+                $b = $this->getLdap()->createGroupeLdap($infogroup['dn'], $infogroup['infos']);
+                if ($b==true)
+                { 
+                    //Le groupe a bien été créé
+                    //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>retour create groupe ldap</B>=><FONT color =green><PRE>" . $b . "</PRE></FONT></FONT>";
+
+                    // affichage groupe créé
+                    $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été créé');
+                    $groups[0] = $group;
+                    $cn = $adm.":".$group->getCn();
+                    $group->setCn($cn);
+
+                    // Log création OK
+                    syslog(LOG_INFO, "create_private_group by $adm : group : $cn");
+
+                    return $this->render('AmuCliGrouperBundle:Group:creationgroupeprive.html.twig',array('groups' => $groups));
+                }
+                else 
+                {
+                    // affichage erreur
+                    $this->get('session')->getFlashBag()->add('flash-error', 'Erreur LDAP lors de la création du groupe');
+                    $groups[0] = $group;
+                    $cn = $group->getCn();
+
+                    // Log erreur
+                    syslog(LOG_ERR, "LDAP ERREUR : create_private_group by $adm : group : $cn");
+
+                    // Affichage page 
+                    return $this->render('AmuCliGrouperBundle:Group:createprivate.html.twig', array('form' => $form->createView(), 'nb_groups' => $nb_groups));
+                }
+
+                // Ferme le fichier de log
+                closelog();
+            }
+            else
+            {
+                // le nom du groupe n'est pas valide, notification à l'utilisateur
+                // affichage erreur
+                $this->get('session')->getFlashBag()->add('flash-error', 'Le nom du groupe est invalide. Merci de supprimer les accents et caractères spéciaux.');
+                    
+                // Affichage page du formulaire
+                return $this->render('AmuCliGrouperBundle:Group:createprivate.html.twig', array('form' => $form->createView(), 'nb_groups' => $nb_groups));
+            
+            }
         }
         return $this->render('AmuCliGrouperBundle:Group:createprivate.html.twig', array('form' => $form->createView(), 'nb_groups' => $nb_groups));
 

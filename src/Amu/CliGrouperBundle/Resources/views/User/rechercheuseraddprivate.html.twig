@@ -27,7 +27,7 @@
                     <th>DisplayName</th>
                     <th>Membre</th>
                 </tr>
-            </thead>
+            </thead> 
             <tbody>
                 {# itère sur chaque membership existant et affiche les champs : name, memberof et adminof #}
                 {% for m in user.memberships  %}
@@ -52,7 +52,7 @@
     {% else %}
         <form class="amuForms" id="_ajxFromModifier">
             <br>    
-            <h3>Droits sur le groupe : {{ cn }}</h3>
+            <h3>Droits sur le groupe : <b>{{ cn }}</b></h3>
             <br>
             <table class="ui-widget-content dataTable TabInfos" filter="25">
                 <thead>
@@ -85,12 +85,18 @@
             {{ form_rest(form) }}
             {# ... #}
         </form>
-             <br>
+        <br>
 
+        {% if opt == 'liste' %}
             <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
                 onclick="loadPage('{{path('user_display', { 'opt': 'addprivate', 'cn': cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des utilisateurs&nbsp;
             </button>
-
+        {% endif %}
+        {% if opt == 'recherche' %}
+            <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+                onclick="loadPage('{{path('user_search', { 'opt': 'addprivate', 'cn': cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la recherche d'utilisateurs&nbsp;
+            </button>
+        {% endif %}
     {% endif %}
 {% endblock %}
 

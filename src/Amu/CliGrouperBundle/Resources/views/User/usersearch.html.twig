@@ -144,7 +144,11 @@ $('#usersearch_sn').autocomplete({
                         }));    
                     }            
                 });
-            }
+            },
+    select : function(event, ui) {
+        $('#usersearch_sn').val(ui.item.value);
+        loadPage('{{ path('user_search', { 'opt': opt, 'cn' : cn }) }}', $('#_ajxFromModifier').serializeArray());
+    } 
 }); 
     
 </script>   

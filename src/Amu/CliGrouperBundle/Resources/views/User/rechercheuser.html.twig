@@ -45,7 +45,7 @@
             {% if opt == 'addprivate' %}
                 <td style="vertical-align: middle;">{{cn}}</td>
                 <td style="vertical-align: middle;"> 
-                <img class="jqtip ui-button" align="absmiddle" src="{{ asset('bundles/app/images/ico/16/user-add.png') }}" title="Ajouter des droits" class="ui-button" onclick='loadPage("{{ path('user_add_private', { 'uid': user.uid, 'cn': cn }) }}");' />
+                <img class="jqtip ui-button" align="absmiddle" src="{{ asset('bundles/app/images/ico/16/user-add.png') }}" title="Ajouter des droits" class="ui-button" onclick='loadPage("{{ path('user_add_private', { 'uid': user.uid, 'cn': cn, 'opt': 'liste' }) }}");' />
                 </td>  
             {% else %}
               {% if opt == 'search' %}

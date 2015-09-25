@@ -119,7 +119,7 @@ class UserController extends Controller {
      * @Route("/edit/{uid}", name="user_edit")
      * @Template()
      * // AMU Modif's 06/2014
-     */
+     */ 
     public function editAction($uid)
     {
         // Recherche des utilisateurs dans le LDAP
@@ -654,10 +654,10 @@ class UserController extends Controller {
     /**
      * Ajoute les droits d'un utilisateur à un groupe.
      *
-     * @Route("/addprivate/{uid}/{cn}",name="user_add_private")
+     * @Route("/addprivate/{uid}/{cn}/{opt}",name="user_add_private")
      * @Template("AmuCliGrouperBundle:User:rechercheuseraddprivate.html.twig")
      */
-    public function addprivateAction(Request $request, $uid='', $cn='') {
+    public function addprivateAction(Request $request, $uid='', $cn='', $opt='liste') {
         // Récupération utilisateur
         $user = new User();
         $user->setUid($uid);
@@ -721,7 +721,7 @@ class UserController extends Controller {
             $userini->setMemberships($membershipsini);       
 
             $editForm = $this->createForm(new PrivateUserEditType(), $user, array(
-                'action' => $this->generateUrl('user_add_private', array('uid'=> $uid, 'cn' => $cn)),
+                'action' => $this->generateUrl('user_add_private', array('uid'=> $uid, 'cn' => $cn, 'opt' => $opt)),
                 'method' => 'POST',
             ));
             $editForm->handleRequest($request);
@@ -826,6 +826,7 @@ class UserController extends Controller {
         return array(
             'user'      => $user,
             'cn' => $cn,
+            'opt' => $opt,
             'form'   => $editForm->createView(),
         );
     }
@@ -958,10 +959,10 @@ class UserController extends Controller {
                     // si on a rien, on teste le nom
                     // On teste si on fait une recherche exacte ou non
                     if ($usersearch->getExacte()){
-                        $arData=$this->getLdap()->arDatasFilter("sn=".$usersearch->getSn(), array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'memberof'));
+                        $arData=$this->getLdap()->arDatasFilter("(&(sn=".$usersearch->getSn().")(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))", array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'memberof'));
                     }
                     else {
-                        $arData=$this->getLdap()->arDatasFilter("sn=*".$usersearch->getSn()."*", array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'memberof'));
+                        $arData=$this->getLdap()->arDatasFilter("(&(sn=*".$usersearch->getSn()."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))", array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'memberof'));
                     }
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos user arData</B>=><FONT color =green><PRE>" . print_r($arData, true) . "</PRE></FONT></FONT>";
                     //echo "<b> DEBUT DEBUG INFOS <br>" . "<br><B>Infos user count</B>=><FONT color =green><PRE>" . $arData['count'] . "</PRE></FONT></FONT>";
@@ -973,7 +974,7 @@ class UserController extends Controller {
                         
                         $user = new User();
                         $user->setUid($data['uid'][0]);
-                        $user->setDisplayname($data['displayname'][0]);
+                        $user->setDisplayname($data['displayname'][0]); 
                         $user->setMail($data['mail'][0]);
                         $user->setSn($data['sn'][0]);
                         $user->setTel($data['telephonenumber'][0]);
@@ -987,7 +988,7 @@ class UserController extends Controller {
                     // Gestion des droits
                     $droits = 'Aucun';
                     // Droits DOSI seulement en visu
-                    if (true === $this->get('security.context')->isGranted('ROLE_DOSI')) 
+                    if (true === $this->get('security.context')->isGranted('ROLE_DOSI'))  
                     {
                         $droits = 'Voir';
                     }
@@ -1048,11 +1049,21 @@ class UserController extends Controller {
                         // Mise en session des résultats de la recherche
                         $this->container->get('request')->getSession()->set('users', $users); 
                     
+                        if ($opt == 'addprivate')
+                        {
+                            return $this->redirect($this->generateUrl('user_add_private', array('uid' => $user->getUid(), 'cn'=>$cn, 'opt'=>'recherche'))); 
+                        }
+                        if ($opt == 'add')
+                        {
+                            return $this->redirect($this->generateUrl('user_add', array('uid' => $user->getUid(), 'cn'=>$cn))); 
+                        }
+                        
                         return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn));
+                         
                     }
                 }   
             //}       
-        }
+        } 
         
         
         //$this->getRequest()->getSession()->set('_saved',0);
