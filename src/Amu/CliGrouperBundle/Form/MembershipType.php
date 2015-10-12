@@ -27,6 +27,6 @@ class MembershipType extends AbstractType
 
     public function getName()
     {
-        return 'memebrship';
+        return 'membership';
     }
 }
