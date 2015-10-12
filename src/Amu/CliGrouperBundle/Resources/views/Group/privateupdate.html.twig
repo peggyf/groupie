@@ -67,13 +67,12 @@
 
             {{ form_rest(form) }}
             
-        </form>
+        </form>       
+       {% endif %} 
         <br>
         <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
                 onclick="loadPage('{{path('private_group') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes privés&nbsp;
         </button>
-        
-       {% endif %} 
     {% else %}
                
         <br>
@@ -120,14 +119,13 @@
 
             {{ form_rest(form) }}
         </form>
+                
+        {% endif %}
+        
         <br>
         <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
                 onclick="loadPage('{{path('private_group') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes privés&nbsp;
         </button>
-        
-        {% endif %}
-        
-        {# ... #}
 
     {% endif %}
 
