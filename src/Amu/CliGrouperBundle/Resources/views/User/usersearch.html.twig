@@ -47,7 +47,7 @@
     
     <p>
      <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-	onclick="loadPage('{{ path('user_search', { 'opt': opt, 'cn' : cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/search-3.png')}}" />&nbsp;Rechercher&nbsp;</button>
+	onclick="loadPage('{{ path('user_search', { 'opt': opt, 'cn' : cn, 'liste' : liste }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/search-3.png')}}" />&nbsp;Rechercher&nbsp;</button>
      <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>   
      <span class="record_actions"></span>
     </p>
@@ -66,7 +66,7 @@
         <br>
         <center>
         <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-            onclick="loadPage('{{ path('user_multiple', { 'opt': opt, 'cn' : cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/usergroup-add.png')}}" />&nbsp;Ajouts multiples&nbsp;</button>
+            onclick="loadPage('{{ path('user_multiple', { 'opt': opt, 'cn' : cn, 'liste' : liste }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/usergroup-add.png')}}" />&nbsp;Ajouts multiples&nbsp;</button>
         </center>
     </div>
 {% endif %}
@@ -108,14 +108,18 @@ $('#usersearch_uid').autocomplete({
             },
     select : function(event, ui) {
         $('#usersearch_uid').val(ui.item.value);
-        loadPage('{{ path('user_search', { 'opt': opt, 'cn' : cn }) }}', $('#_ajxFromModifier').serializeArray());
+        loadPage('{{ path('user_search', { 'opt': opt, 'cn' : cn, 'liste': liste }) }}', $('#_ajxFromModifier').serializeArray());
     }        
 });  
 
 $('#usersearch_sn').autocomplete({
-    source : function(requete, reponse){
-            var motcle = $('#usersearch_sn').val();                       
-            var DATA = 'motcle=' + motcle;
+    source : function(requete, reponse){ 
+            var motcle = $('#usersearch_sn').val(); 
+            var rech = 0;
+            if($('#usersearch_exacte').is(':checked')){
+                rech = 1;
+            }
+            var DATA = 'motcle=' + motcle + '&exacte=' + rech;
             
             $.ajax({
                     type:"POST",
@@ -147,7 +151,7 @@ $('#usersearch_sn').autocomplete({
             },
     select : function(event, ui) {
         $('#usersearch_sn').val(ui.item.value);
-        loadPage('{{ path('user_search', { 'opt': opt, 'cn' : cn }) }}', $('#_ajxFromModifier').serializeArray());
+        loadPage('{{ path('user_search', { 'opt': opt, 'cn' : cn, 'liste': liste }) }}', $('#_ajxFromModifier').serializeArray());
     } 
 }); 
     

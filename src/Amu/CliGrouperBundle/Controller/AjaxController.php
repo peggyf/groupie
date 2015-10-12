@@ -137,6 +137,7 @@ class AjaxController extends Controller
         $request = $this->get('request');
         
         $term = $request->request->get('motcle');
+        $term2 = $request->request->get('exacte');
                         
         if (strlen($term)<3) 
         {
@@ -146,10 +147,20 @@ class AjaxController extends Controller
             return $response;
         }
                                         
-        $arData = array();                          
-        $arData=$this->getLdap()->arDatasFilter(     
+        $arData = array();  
+        
+        if ($term2==1)
+        {
+            $arData=$this->getLdap()->arDatasFilter(     
+            "(&(sn=".$term.")(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))",
+            array("sn", "givenname", "uid"));    
+        }
+        else
+        {
+            $arData=$this->getLdap()->arDatasFilter(     
             "(&(sn=".$term."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))",
             array("sn", "givenname", "uid"));    
+        }
        
         $NbEnreg = $arData['count'];
         // on limite l'affichage à 20 groupes
