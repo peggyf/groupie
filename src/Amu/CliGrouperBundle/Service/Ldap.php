@@ -1617,8 +1617,10 @@ class Ldap extends WSTools {
         $groupinfo['member'][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
     }
     $this->connect();
+          
     if ($this->r) {
         $sr = ldap_mod_add($this->ds, $dn_group, $groupinfo);      
+        
          if(ldap_error($this->ds) == "Success")
             return true;
         else
@@ -1722,6 +1724,31 @@ class Ldap extends WSTools {
             return true;
         else
             return false;
+    }
+       
+    if ($debug)
+      echo "<hr>DEBUG " . __CLASS__ . "::" . __FUNCTION__ . " arUserUid <PRE>" . print_r($groupinfo, true) . "</PRE>";
+
+    return false;
+  }  
+  
+  /**
+ * Récupérer le amugroupfilter d'un groupe
+ * @return  \Amu\AppBundle\Service\Ldap
+ */
+ public function getAmuGroupFilter($cn_group) {
+       
+    $filtre = "cn=" . $cn_group;
+    $AllInfos = array();
+    $AllInfosBrutes = array();
+    $this->connect();
+    if ($this->r) {
+      $sr = ldap_search($this->ds, $this->LDAP_racine, $filtre, array("amugroupfilter")); 
+      $infos = ldap_get_entries($this->ds, $sr);
+      if ($infos[0][0]=="amugroupfilter")
+            return $infos[0]["amugroupfilter"][0];
+      else
+          return false;
     }
        
     if ($debug)
