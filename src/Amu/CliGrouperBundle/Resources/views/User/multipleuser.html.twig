@@ -48,6 +48,10 @@
 {% if opt=='add' %}
     <br>
     
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+        onclick="loadPage('{{ path('group_update', {'cn' : cn , 'liste' : liste}) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la gestion du groupe&nbsp;
+    </button>
+{#    <br><br>    
     {% if liste == 'mesgroupes' %}
         <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
             onclick="loadPage('{{ path('mes_groupes') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes&nbsp;
@@ -59,7 +63,7 @@
             onclick="loadPage('{{path('group_display') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes&nbsp;
         </button>
     {% endif %}
-    
+#}    
  
     
 {% endif %}
