@@ -163,6 +163,13 @@ class AjaxController extends Controller
         }
        
         $NbEnreg = $arData['count'];
+        // si on a plus de 20 entrées, on affiche que le résultat partiel
+        if ($NbEnreg>20)
+        {
+            $arrayUsers[0]['label']  = "... Résultat partiel ...";
+            $arrayUsers[0]['value'] = "erreur";
+            $arrayUsers[0]['uid'] = "erreur";
+        }
         // on limite l'affichage à 20 groupes
         ($NbEnreg>20) ? $NbEnreg=20 : $NbEnreg;
             
@@ -172,9 +179,9 @@ class AjaxController extends Controller
         } else {
             for($Cpt=0;$Cpt < $NbEnreg ;$Cpt++)             
             {                
-                $arrayUsers[$Cpt]['label']  = $arData[$Cpt]['sn'][0] ." ". $arData[$Cpt]['givenname'][0];
-                $arrayUsers[$Cpt]['value']  = $arData[$Cpt]['sn'][0];
-                $arrayUsers[$Cpt]['uid'] = $arData[$Cpt]['uid'][0];
+                $arrayUsers[$Cpt+1]['label']  = $arData[$Cpt]['sn'][0] ." ". $arData[$Cpt]['givenname'][0];
+                $arrayUsers[$Cpt+1]['value']  = $arData[$Cpt]['sn'][0];
+                $arrayUsers[$Cpt+1]['uid'] = $arData[$Cpt]['uid'][0];
             }
         }
 
