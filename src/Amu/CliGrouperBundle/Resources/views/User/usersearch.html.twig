@@ -19,7 +19,7 @@
     <h2> Recherche individuelle </h2>
     <br>
     <h3> Veuillez indiquer l'identifiant ou le nom de la personne à rechercher. </h3>
-    <br>    
+    <br>  
     <br>
     
     {{ form_start(form) }}
@@ -71,22 +71,33 @@
     </div>
 {% endif %}
 
-</div>        
+</div>    
+<p style='font-size:10px;'> 
+    <img align="absmiddle" src="{{ asset('bundles/app/images/ico/18/warning.gif') }}" />
+    L'autocomplétion fournit un maximum de 20 résultats. 
+   <br>Si vous ne trouvez pas dans la liste la personne que vous recherchez, tapez le nom dans le formulaire puis cliquez sur le bouton "Rechercher". 
+</p>
+<br>
+
 {% if opt=='add' %}
     <br>
     {% if liste == 'mesgroupes' %}
         <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
             onclick="loadPage('{{ path('mes_groupes') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes&nbsp;
         </button>
+        <br>
     {% endif %}
     
     {% if liste == 'recherchegroupe' %}
         <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
             onclick="loadPage('{{path('group_display') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes&nbsp;
         </button>
+        <br>
     {% endif %}
 {% endif %}
-    
+
+
+
 <script type="text/javascript">       
 $('#usersearch_uid').autocomplete({
     source : function(requete, reponse){
