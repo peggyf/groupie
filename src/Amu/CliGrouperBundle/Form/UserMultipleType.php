@@ -11,7 +11,7 @@ class UserMultipleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-             ->add('liste', 'textarea', array('label' => 'Liste d\'identifiants ou de mails', 'required' => false))    
+             ->add('multiple', 'textarea', array('label' => 'Liste d\'identifiants ou de mails', 'required' => false))    
              ->getForm(); 
 
     }
