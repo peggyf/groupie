@@ -43,32 +43,31 @@ class AjaxController extends Controller
             $response->headers->set('Content-Type','application/json');
             return $response;
         }
-                                        
+                     
+        // on ne garde que les groupes publics, ie qui commencent par amu
         $arData = array();                          
         $arData=$this->getLdap()->arDatasFilter(     
-            "(&(objectClass=groupofNames)(cn=*".$term."*))",
+            "(&(objectClass=groupofNames)(cn=amu:*".$term."*))",
             array("cn"));    
         
         $arrayGroups = array();
-        $cpt=0;
        
-        for ($i=0; $i<$arData["count"]; $i++) {
-            // on ne garde que les groupes publics
-            if (!strstr($arData[$i]["dn"], "ou=private"))
-            {
-                $arrayGroups[]['label']  = $arData[$i]['cn'][0];
-                $cpt++;
-            }
+        $NbEnreg = $arData['count'];
+        // si on a plus de 20 entrées, on affiche que le résultat partiel
+        if ($NbEnreg>20)
+            $arrayGroups[0]['label']  = "... Résultat partiel ...";
             
-            // on se limite à 20 groupes affichés
-            if ($cpt==20)
-            {
-                break;
-            }
-        }
-        if ($cpt==0)
-        {
+        // on limite l'affichage à 20 groupes
+        ($NbEnreg>20) ? $NbEnreg=20 : $NbEnreg;
+            
+        if ($NbEnreg == 0) {
             $arrayGroups[] = array('label' => '...');
+
+        } else {
+            for($Cpt=0;$Cpt < $NbEnreg ;$Cpt++)             
+            {                
+                $arrayGroups[$Cpt+1]['label']  = $arData[$Cpt]['cn'][0];
+            }
         }
 
         $response = new Response (json_encode($arrayGroups));
@@ -105,6 +104,10 @@ class AjaxController extends Controller
             array("uid"));    
        
         $NbEnreg = $arData['count'];
+        // si on a plus de 20 entrées, on affiche que le résultat partiel
+        if ($NbEnreg>20)
+            $arrayGroups[0]['label']  = "... Résultat partiel ...";
+            
         // on limite l'affichage à 20 groupes
         ($NbEnreg>20) ? $NbEnreg=20 : $NbEnreg;
             
@@ -114,7 +117,7 @@ class AjaxController extends Controller
         } else {
             for($Cpt=0;$Cpt < $NbEnreg ;$Cpt++)             
             {                
-                $arrayGroups[$Cpt]['label']  = $arData[$Cpt]['uid'][0];
+                $arrayGroups[$Cpt+1]['label']  = $arData[$Cpt]['uid'][0];
             }
         }
 
