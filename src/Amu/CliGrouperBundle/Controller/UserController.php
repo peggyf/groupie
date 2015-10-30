@@ -1184,9 +1184,9 @@ class UserController extends Controller {
     /**
     * Affichage d'une liste d'utilisateurs en session
     *
-    * @Route("/afficheliste/{opt}/{cn}",name="user_display")
+    * @Route("/afficheliste/{opt}/{cn}/{liste}",name="user_display")
     */
-    public function displayAction(Request $request, $opt='search', $cn='') {
+    public function displayAction(Request $request, $opt='search', $cn='', $liste='') {
     
         // Récupération des utilisateurs mis en session
         $users = $this->container->get('request')->getSession()->get('users');
@@ -1201,7 +1201,7 @@ class UserController extends Controller {
             $droits = 'Modifier';
         }
                         
-        return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn));
+        return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn, 'liste' => $liste));
             
       
         
