@@ -11,6 +11,8 @@
 	    <th>DisplayName</th>
             <th>Mail</th>
             <th>Tel</th>
+            <th>Composante</th>
+            <th>Service</th>
             {% if opt == 'add' %}
             <th> Groupe </th>
             <th> Ajouter </th>
@@ -21,8 +23,6 @@
             {% endif %}
             {% if opt == 'search' %}
             <th> Voir </th>
-            <th> Modifier </th>
-            <th> Ajouter </th>
             {% endif %}
             {% if opt == 'searchprivate' %}
             <th> Voir </th>
@@ -36,10 +36,12 @@
           <td style="vertical-align: middle;">{{user.displayname}}</td>
           <td style="vertical-align: middle;"> <a href="mailto:{{user.mail}}"> {{user.mail}}</td>
           <td style="vertical-align: middle;">{{user.tel}}</td>
+          <td style="vertical-align: middle;">{{user.comp}}</td>
+          <td style="vertical-align: middle;">{{user.aff}}</td>
           {% if opt == 'add' %}
               <td style="vertical-align: middle;">{{cn}}</td>
               <td style="vertical-align: middle;"> 
-              <img class="jqtip ui-button" align="absmiddle" src="{{ asset('bundles/app/images/ico/16/user-add.png') }}" title="Ajouter des droits" class="ui-button" onclick='loadPage("{{ path('user_add', { 'uid': user.uid, 'cn': cn }) }}");' />
+              <img class="jqtip ui-button" align="absmiddle" src="{{ asset('bundles/app/images/ico/16/user-add.png') }}" title="Ajouter des droits" class="ui-button" onclick='loadPage("{{ path('user_add', { 'uid': user.uid, 'cn': cn, 'liste': liste }) }}");' />
             </td>  
           {% else %}
             {% if opt == 'addprivate' %}
@@ -49,39 +51,9 @@
                 </td>  
             {% else %}
               {% if opt == 'search' %}
-                  {% if droits == 'Aucun' %}
-                    <td style="vertical-align: middle;">   
-                        <img align="absmiddle" src="{{ asset('bundles/app/images/ico/16/view-page.png') }}" title="Voir les droits sur les groupes" style="filter: grayscale(100%);-webkit-filter: grayscale(100%);-moz-filter: grayscale(100%);"  />
-                    </td>
-                    <td style="vertical-align: middle;"> 
-                        <img align="absmiddle" src="{{ asset('bundles/app/images/ico/16/modif.png') }}" title="Modifier des droits" style="filter: grayscale(100%);-webkit-filter: grayscale(100%);-moz-filter: grayscale(100%);"  />
-                    </td>  
-                    <td style="vertical-align: middle;"> 
-                        <img align="absmiddle" src="{{ asset('bundles/app/images/ico/16/user-add.png') }}" title="Ajouter des droits" style="filter: grayscale(100%);-webkit-filter: grayscale(100%);-moz-filter: grayscale(100%);"  />
-                    </td>  
-                  {% endif %}
-                  {% if droits == 'Voir' %}
-                    <td style="vertical-align: middle;">   
-                        <img class="jqtip ui-button" align="absmiddle" src="{{ asset('bundles/app/images/ico/16/view-page.png') }}" title="Voir les droits sur les groupes" class="ui-button" onclick='loadPage("{{ path('voir_user', { 'uid': user.uid }) }}");' />
-                    </td>
-                    <td style="vertical-align: middle;"> 
-                        <img align="absmiddle" src="{{ asset('bundles/app/images/ico/16/modif.png') }}" title="Modifier des droits" style="filter: grayscale(100%);-webkit-filter: grayscale(100%);-moz-filter: grayscale(100%);"  />
-                    </td>  
-                    <td style="vertical-align: middle;"> 
-                        <img align="absmiddle" src="{{ asset('bundles/app/images/ico/16/user-add.png') }}" title="Ajouter des droits" style="filter: grayscale(100%);-webkit-filter: grayscale(100%);-moz-filter: grayscale(100%);"  />
-                    </td>  
-                  {% endif %}
-                  {% if droits == 'Modifier' %}
-                    <td style="vertical-align: middle;">   
-                        <img class="jqtip ui-button" align="absmiddle" src="{{ asset('bundles/app/images/ico/16/view-page.png') }}" title="Voir les droits sur les groupes" class="ui-button" onclick='loadPage("{{ path('voir_user', { 'uid': user.uid }) }}");' />
-                    </td>
                     <td style="vertical-align: middle;"> 
                         <img class="jqtip ui-button" align="absmiddle" src="{{ asset('bundles/app/images/ico/16/modif.png') }}" title="Modifier des droits" class="ui-button" onclick='loadPage("{{ path('user_update', { 'uid': user.uid }) }}");' />
                     </td>  
-                    <td style="vertical-align: middle;"> 
-                        <img class="jqtip ui-button" align="absmiddle" src="{{ asset('bundles/app/images/ico/16/user-add.png') }}" title="Ajouter des droits" class="ui-button" onclick='loadPage("{{ path('group_search', { 'opt':'add', 'uid': user.uid }) }}");' />
-                    </td>  
-                  {% endif %}
               {% else %}
                   {% if opt == 'searchprivate' %}
                       {# {% if droits == 'Voir' %} #}
