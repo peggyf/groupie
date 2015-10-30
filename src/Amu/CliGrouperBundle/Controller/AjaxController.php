@@ -170,8 +170,8 @@ class AjaxController extends Controller
         if ($NbEnreg>20)
         {
             $arrayUsers[0]['label']  = "... Résultat partiel ...";
-            $arrayUsers[0]['value'] = "erreur";
-            $arrayUsers[0]['uid'] = "erreur";
+            $arrayUsers[0]['value'] = "... Résultat partiel ...";
+            $arrayUsers[0]['uid'] = "... Résultat partiel ...";
         }
         // on limite l'affichage à 20 groupes
         ($NbEnreg>20) ? $NbEnreg=20 : $NbEnreg;

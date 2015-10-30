@@ -36,6 +36,14 @@
 </form>
 
      <br>
+     
+<p style='font-size:10px;'> 
+    <img align="absmiddle" src="{{ asset('bundles/app/images/ico/18/warning.gif') }}" />
+    L'autocomplétion fournit un maximum de 20 résultats. 
+   <br>Si vous ne trouvez pas dans la liste le groupe que vous recherchez, tapez le nom dans le formulaire puis cliquez sur le bouton "Rechercher". 
+</p>
+<br>
+
 {% if opt=='add' %}    
     <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
         onclick="loadPage('{{path('user_display') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des utilisateurs&nbsp;
@@ -64,9 +72,9 @@ $('#groupsearch_cn').autocomplete({
             },
     select : function(event, ui) {
         $('#groupsearch_cn').val(ui.item.value);
-        loadPage('{{ path('group_search', { 'opt': opt, 'uid' : uid }) }}', $('#_ajxFromModifier').serializeArray());
+        loadPage('{{ path('group_search', { 'opt': opt, 'uid' : uid, 'cn': 1}) }}', $('#_ajxFromModifier').serializeArray());
     }
 }); 
 </script>
 
-{% endblock %}
+{% endblock %} 
