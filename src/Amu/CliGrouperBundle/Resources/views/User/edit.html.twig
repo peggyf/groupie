@@ -37,23 +37,24 @@
             <tbody>
                 {# itère sur chaque membership existant et affiche les champs : name, memberof et adminof #}
                 {% for m in form.memberships  %}
-                    <tr>
-                    {# Droits admin sur les groupes concernés #}
-                    {% if user.memberships[loop.index0].droits == 'Modifier' %}
+                   
+                  {# Droits admin sur les groupes concernés #}
+                  {% if user.memberships[loop.index0].droits == 'Modifier' %}
+                     <tr>    
                         <td style="vertical-align: middle;"> {{ user.memberships[loop.index0].groupname }} </td>
                         <td style="vertical-align: middle;"> {{ form_widget(m.memberof) }} </td>
                         <td style="vertical-align: middle;"> {{ form_widget(m.adminof) }} </td>
-                          
-                    {% else %}
-                        {# Droits visu seulement pour la DOSI, sinon, on ne voit rien #}
-                        {% if user.memberships[loop.index0].droits == 'Voir' %}
+                     </tr>      
+                  {% else %}
+                    {# Droits visu seulement pour la DOSI, sinon, on ne voit rien #}
+                    {% if user.memberships[loop.index0].droits == 'Voir' %}
+                        <tr>
                             <td style="vertical-align: middle;"> {{ user.memberships[loop.index0].groupname }} </td>
                             <td style="vertical-align: middle;"> <input type = 'checkbox' disabled="disabled" {% if m.memberof == 1 %} checked='checked' {% endif %} /> </td>
                             <td style="vertical-align: middle;"> <input type = 'checkbox' disabled="disabled" {% if m.adminof == 1 %} checked='checked' {% endif %} /> </td>
-                            
-                        {% endif %}    
-                    {% endif %}
-                    </tr>
+                        </tr>    
+                    {% endif %}    
+                  {% endif %}
                 {% endfor %}
             </tbody>
         </table>

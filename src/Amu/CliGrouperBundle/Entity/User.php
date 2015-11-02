@@ -14,6 +14,8 @@ class User {
   protected $displayname;
   protected $mail;
   protected $tel;
+  protected $comp;
+  protected $aff;
   protected $memberof;
   protected $adminof;
   protected $memberships;
@@ -72,7 +74,24 @@ class User {
  {
     $this->tel = $tel;
  } 
- 
+ /**
+  * Set amucomposante
+  *
+  * @param string $comp
+ */
+ public function setComp($comp)
+ {
+    $this->comp = $comp;
+ } 
+ /**
+  * Set supannEntiteAffectation
+  *
+  * @param string $aff
+ */
+ public function setAff($aff)
+ {
+    $this->aff = $aff;
+ } 
  /**
   * Set memberof
   *
@@ -148,6 +167,23 @@ class User {
     return ($this->tel);
  } 
 
+ /**
+  * Get amuComposante
+  *
+ */
+ public function getComp()
+ {
+    return ($this->comp);
+ } 
+ 
+ /**
+  * Get supannEntiteAffectation
+  *
+ */
+ public function getAff()
+ {
+    return ($this->aff);
+ } 
  /**
   * Get memberof
   *
