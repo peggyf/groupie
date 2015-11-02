@@ -392,7 +392,7 @@ class GroupController extends Controller {
             else {
                 if ($opt=='add')
                 {
-                    return $this->redirect($this->generateUrl('group_add', array('cn_search'=>$groupsearch->getCn(), 'uid'=>$uid)));
+                    return $this->redirect($this->generateUrl('group_add', array('cn_search'=>$groupsearch->getCn(), 'uid'=>$uid, 'flag_cn'=> $cn)));
                 }
             }
                        
@@ -424,10 +424,10 @@ class GroupController extends Controller {
     /**
      * Ajout de personnes dans un groupe
      *
-     * @Route("/add/{cn_search}/{uid}",name="group_add")
+     * @Route("/add/{cn_search}/{uid}/{flag_cn}",name="group_add")
      * @Template("AmuCliGrouperBundle:Group:recherchegroupeadd.html.twig")
      */
-    public function addAction(Request $request, $cn_search='', $uid='') {
+    public function addAction(Request $request, $cn_search='', $uid='', $flag_cn=0) {
         // Dans le cas d'un gestionnaire
         if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
             // Recup des groupes dont l'utilisateur courant (logué) est admin
@@ -465,7 +465,25 @@ class GroupController extends Controller {
         }
         
         // Recherche des groupes dans le LDAP
-        $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=*" . $cn_search . "*))",array("cn","description","amuGroupFilter"));             
+        if ($flag_cn==true)
+        {
+            // On teste si on est sur le message "... Résultat partiel ..."
+            if ($cn_search == "... Résultat partiel ...")
+            {
+                $this->get('session')->getFlashBag()->add('flash-notice', 'Le nom du groupe est invalide');
+                        
+                return $this->redirect($this->generateUrl('group_search', array('opt'=>'add', 'uid'=>$uid, 'cn'=>$cn)));
+            }
+            // Recherche exacte sur le cn sélectionné
+            // Recherche des groupes dans le LDAP
+            $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=" . $cn_search . "))",array("cn","description","amuGroupFilter"));
+                    
+        }
+        else
+        {
+            $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=*" . $cn_search . "*))",array("cn","description","amuGroupFilter"));             
+        }
+        
         for ($i=0; $i<$arData["count"]; $i++) {
             $tab_cn_search[$i] = $arData[$i]["cn"][0];
         }
@@ -543,7 +561,7 @@ class GroupController extends Controller {
         
         // Formulaire
         $editForm = $this->createForm(new UserEditType(), $user, array(
-            'action' => $this->generateUrl('group_add', array('cn_search'=> $cn_search, 'uid' => $uid)),
+            'action' => $this->generateUrl('group_add', array('cn_search'=> $cn_search, 'uid' => $uid, 'flag_cn' => $flag_cn)),
             'method' => 'POST',
         ));
         $editForm->handleRequest($request);
@@ -652,6 +670,7 @@ class GroupController extends Controller {
         return array(
             'user'      => $user,
             'cn_search' => $cn_search,
+            'flag_cn' => $flag_cn,
             'form'   => $editForm->createView(),
         );
     }
