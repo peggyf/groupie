@@ -82,7 +82,7 @@
             <br>
             <p>
                 <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-                onclick="loadPage('{{ path('user_add', { 'uid': user.uid, 'cn': cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/user-add.png')}}" />&nbsp;Ajouter les droits&nbsp;</button>
+                onclick="loadPage('{{ path('user_add', { 'uid': user.uid, 'cn': cn, 'liste': liste }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/user-add.png')}}" />&nbsp;Ajouter les droits&nbsp;</button>
                 <span class="record_actions"></span>
                 <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
             </p>
@@ -93,7 +93,7 @@
              <br>
 
             <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-                onclick="loadPage('{{path('user_display', { 'opt': 'add', 'cn': cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des utilisateurs&nbsp;
+                onclick="loadPage('{{path('user_search', { 'opt': 'add', 'cn': cn, 'liste': liste }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la recherche&nbsp;
             </button>
 
     {% endif %}

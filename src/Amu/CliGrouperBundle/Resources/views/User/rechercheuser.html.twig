@@ -63,13 +63,24 @@
                       {# {% endif %}    #}
                   {% endif %}
               {% endif %}
-            {% endif %}  
+            {% endif %}   
           {% endif %}
         </tr>
    {% endfor %}
     </tbody>
 </table>
 
-       
+<br>
+    
+{% if opt == 'add' %}
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+                onclick="loadPage('{{path('group_update', { 'cn': cn, 'liste': liste }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la gestion du groupe&nbsp;   
+    </button>
+{% endif %}  
+{% if opt == 'search' %}
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+                onclick="loadPage('{{path('user_search') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la recherche&nbsp;
+    </button>
+{% endif %}       
         
 {% endblock %}
