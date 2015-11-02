@@ -29,7 +29,7 @@
                 <td style="vertical-align: middle;">{{group.cn}}</td>
                 <td style="vertical-align: middle;">{{group.description}}</td>
                 <td style="vertical-align: middle;">
-                    <img align="absmiddle" src="{{ asset("bundles/app/images/ico/16/usergroup-edit.png") }}" title="Gérer le groupe" class="ui-button" onclick="loadPage('{{ path('private_group_update', { 'cn': group.cn }) }}');" />
+                    <img align="absmiddle" src="{{ asset("bundles/app/images/ico/16/usergroup-edit.png") }}" title="Gérer le groupe {{group.cn}}" class="ui-button" onclick="loadPage('{{ path('private_group_update', { 'cn': group.cn }) }}');" />
                 </td>
             </tr>
         {% endfor %}
