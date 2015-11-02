@@ -10,6 +10,7 @@ parameters:
         - { name: "ROLE_DOSI",           type: "ldap2",    link: "",  values: "", filter: "(memberof=cn=amu:svc:dosi:tous,ou=groups,dc=univ-amu,dc=fr)" }
         - { name: "ROLE_ADMIN",          type: "ldap2",    link: "",  values: "", filter: "(memberof=cn=amu:adm:app:groupie,ou=groups,dc=univ-amu,dc=fr)" } 
         - { name: "ROLE_SUPER_ADMIN",    type: "session",  link: "_isDevelopper",  values: "1" } 
+        #- { name: "ROLE_SUPER_ADMIN",    type: "ldap2",  link: "",  values: "", filter: "(memberof=cn=amu:adm:app:bo,ou=groups,dc=univ-amu,dc=fr)" }  
     
     # EXEMPLE Role accordé en fonction d'une chaine d'intérrogation ldap complexe...
  

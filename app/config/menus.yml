@@ -16,10 +16,10 @@ parameters:
         - { key: 31, name: "Voir mes appartenances", roles: ["ROLE_MEMBRE"], route: "mes_appartenances_privees", fils: false, description: "" }
         - { key: 32, name: "G&eacute;rer mes groupes", roles: ["ROLE_MEMBRE"], route: "private_group", fils: false, description: "" } 
         - { key: 33, name: "Tous les groupes (DOSI)", roles: ["ROLE_DOSI"], route: "tous_les_groupes_prives", fils: false, description: "" }
-        - { key: 4, name: "Gestion des groupes", roles: ["ROLE_ADMIN"], route: "", fils: [41, 42, 43], description: "" }
+        - { key: 4, name: "Gestion des groupes", roles: ["ROLE_ADMIN"], route: "", fils: [41, 42], description: "" }
         - { key: 41, name: "Cr&eacute;er un groupe", roles: ["ROLE_ADMIN"], route: "group_create", fils: false, description: "" }
-        - { key: 42, name: "Modifier un groupe", roles: ["ROLE_ADMIN"], route: "group_search_modify", fils: false, description: "" }
-        - { key: 43, name: "Supprimer un groupe", roles: ["ROLE_ADMIN"], route: "group_search_del", fils: false, description: "" }
+#        - { key: 42, name: "Modifier un groupe", roles: ["ROLE_ADMIN"], route: "group_search_modify", fils: false, description: "" }
+        - { key: 42, name: "Supprimer un groupe", roles: ["ROLE_ADMIN"], route: "group_search_del", fils: false, description: "" }
         - { key: 5, name: "Aide", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"], route: "", fils: [51, 52], description: "" }
         - { key: 51, name: "Aide groupes institutionnels", roles: ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"], route: "aide", fils: false, description: "" }
         - { key: 52, name: "Aide groupes privés", roles: ["ROLE_MEMBRE", "ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"], route: "aide_priv", fils: false, description: "" }
