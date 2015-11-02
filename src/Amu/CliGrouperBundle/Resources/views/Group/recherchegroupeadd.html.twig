@@ -85,6 +85,12 @@
   
     {% endif %}
     
+    
+    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+        onclick="loadPage('{{path('user_update', { 'uid' : user.uid }) }}');"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à l'utilisateur&nbsp;
+    </button>
+
+    
 {% endblock %}
 
 
