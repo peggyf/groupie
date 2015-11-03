@@ -454,7 +454,7 @@ class GroupController extends Controller {
         $tab_cn = array();
         foreach($tab as $dn)
         {
-            $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $dn);
+            $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:._-]{1,}))(,ou=groups.*)/", "$3", $dn);
         }
         // Récupération des groupes dont l'utilisateur recherché est admin
         $arDataAdmin=$this->getLdap()->arDatasFilter("amuGroupAdmin=uid=".$uid.",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
@@ -484,8 +484,14 @@ class GroupController extends Controller {
             $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=*" . $cn_search . "*))",array("cn","description","amuGroupFilter"));             
         }
         
+        // Récupération des groupes publics issus de la recherche
+        $cpt=0;
         for ($i=0; $i<$arData["count"]; $i++) {
-            $tab_cn_search[$i] = $arData[$i]["cn"][0];
+            // on ne garde que les groupes publics
+            if (!strstr($arData[$i]["dn"], "ou=private")) {
+                $tab_cn_search[$cpt] = $arData[$i]["cn"][0];
+                $cpt++;
+            }
         }
                            
         // on remplit l'objet user avec les groupes retournés par la recherche LDAP
@@ -657,16 +663,11 @@ class GroupController extends Controller {
             closelog();
             
             $this->get('session')->getFlashBag()->add('flash-notice', 'Les modifications ont bien été enregistrées');
-            $this->getRequest()->getSession()->set('_saved',1);
             
             // Retour à la page update d'un utilisateur
             return $this->redirect($this->generateUrl('user_update', array('uid'=>$uid)));
         }
-        else { 
-            $this->getRequest()->getSession()->set('_saved',0);
-            
-        }
-        
+               
         return array(
             'user'      => $user,
             'cn_search' => $cn_search,

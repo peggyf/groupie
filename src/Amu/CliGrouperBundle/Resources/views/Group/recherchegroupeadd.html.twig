@@ -5,10 +5,8 @@
 {% block body %}
 
     {% set hilightColor='#C7FE74' %}
-    
-    {% if app.session.has('_saved') and app.session.get('_saved',0)==1 %}
-        <div style="display: none;"> {{ app.session.remove('_saved') }} </div>
-
+   
+    <form class="amuForms" id="_ajxFromModifier">
         {% if app.session.flashbag.has('flash-notice') %}
             <center>
                 <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
@@ -20,8 +18,7 @@
         {% endif %}
 
         <br>    
-        
-        <h3> Modifications pour l'utilisateur : {{user.displayname}}, uid = {{user.uid}} </h3>
+        <h3>Modifications pour l'utilisateur : {{user.displayname}}, uid = {{user.uid}}</h3>
         <br>
         <table class="ui-widget-content dataTable TabInfos" filter="25">
             <thead>
@@ -33,59 +30,31 @@
             </thead>
             <tbody>
                 {# itère sur chaque membership existant et affiche les champs : name, memberof et adminof #}
-                {% for m in user.memberships  %}
+                {% for m in form.memberships  %}
                     <tr> 
-                        <td style="vertical-align: middle;"> {{ m.groupname }}  </td>
-                        <td style="vertical-align: middle;"> <input type = 'checkbox' disabled="disabled" {% if m.memberof == 1 %} checked='checked' {% endif %} /> </td>
-                        <td style="vertical-align: middle;"> <input type = 'checkbox' disabled="disabled" {% if m.adminof ==1 %} checked='checked' {% endif %} /> </td>
+                        {% if user.memberships[loop.index0].droits == 'Modifier' %}
+                            <td style="vertical-align: middle;"> {{ user.memberships[loop.index0].groupname }} </td>
+                            <td style="vertical-align: middle;"> {{ form_widget(m.memberof) }} </td>
+                            <td style="vertical-align: middle;"> {{ form_widget(m.adminof) }} </td>
+                        {% else %}
+                            <td style="vertical-align: middle;"> {{ user.memberships[loop.index0].groupname }} </td>
+                            <td style="vertical-align: middle;"> {{ form_widget(m.memberof, { 'attr': { 'disabled': 'true', } } ) }} </td>
+                            <td style="vertical-align: middle;"> {{ form_widget(m.adminof, { 'attr': { 'disabled': 'true', } } ) }} </td>
+                        {% endif %}
                     </tr>  
                 {% endfor %}
             </tbody>
         </table>
-
-    {% else %}    
-        <form class="amuForms" id="_ajxFromModifier">
-            <br>    
-            <h3>Modifications pour l'utilisateur : {{user.displayname}}, uid = {{user.uid}}</h3>
-            <br>
-            <table class="ui-widget-content dataTable TabInfos" filter="25">
-                <thead>
-                    <tr>
-                        <th>Nom du groupe</th>
-                        <th>Membre</th>
-                        <th>Administrateur</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {# itère sur chaque membership existant et affiche les champs : name, memberof et adminof #}
-                    {% for m in form.memberships  %}
-                        <tr> 
-                            {% if user.memberships[loop.index0].droits == 'Modifier' %}
-                                <td style="vertical-align: middle;"> {{ user.memberships[loop.index0].groupname }} </td>
-                                <td style="vertical-align: middle;"> {{ form_widget(m.memberof) }} </td>
-                                <td style="vertical-align: middle;"> {{ form_widget(m.adminof) }} </td>
-                            {% else %}
-                                <td style="vertical-align: middle;"> {{ user.memberships[loop.index0].groupname }} </td>
-                                <td style="vertical-align: middle;"> {{ form_widget(m.memberof, { 'attr': { 'disabled': 'true', } } ) }} </td>
-                                <td style="vertical-align: middle;"> {{ form_widget(m.adminof, { 'attr': { 'disabled': 'true', } } ) }} </td>
-                            {% endif %}
-                        </tr>  
-                    {% endfor %}
-                </tbody>
-            </table>
-            <br>
-            <p>
-                <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
+        <br>
+        <p>
+            <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
                 onclick="loadPage('{{ path('group_add', { 'cn_search': cn_search, 'uid': user.uid, 'flag_cn': flag_cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/save-2.png')}}" />&nbsp;Enregistrer les modifications&nbsp;</button>
-                <span class="record_actions"></span>
-            </p>
-            {{ form_rest(form) }}
-            {# ... #}
-        </form>
-  
-    {% endif %}
-    
-    
+            <span class="record_actions"></span>
+        </p>
+        {{ form_rest(form) }}
+        {# ... #}
+    </form>
+      
     <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
         onclick="loadPage('{{path('user_update', { 'uid' : user.uid }) }}');"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à l'utilisateur&nbsp;
     </button>
