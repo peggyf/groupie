@@ -44,15 +44,24 @@ class AjaxController extends Controller
             return $response;
         }
                      
-        // on ne garde que les groupes publics, ie qui commencent par amu
+        // Recherche des groupes dans le LDAP
         $arData = array();                          
+        $arDataPub = array();
+        $cptPub = 0;
         $arData=$this->getLdap()->arDatasFilter(     
-            "(&(objectClass=groupofNames)(cn=amu:*".$term."*))",
+            "(&(objectClass=groupofNames)(cn=*".$term."*))",
             array("cn"));    
+        // on ne garde que les groupes publics
+        for ($i=0; $i<$arData["count"]; $i++) {
+            if (!strstr($arData[$i]["dn"], "ou=private")) {
+                $arDataPub[$cptPub] = $arData[$i];
+                $cptPub++;
+            }
+        }
         
         $arrayGroups = array();
        
-        $NbEnreg = $arData['count'];
+        $NbEnreg = $cptPub;
         // si on a plus de 20 entrées, on affiche que le résultat partiel
         if ($NbEnreg>20)
             $arrayGroups[0]['label']  = "... Résultat partiel ...";
@@ -66,7 +75,7 @@ class AjaxController extends Controller
         } else {
             for($Cpt=0;$Cpt < $NbEnreg ;$Cpt++)             
             {                
-                $arrayGroups[$Cpt+1]['label']  = $arData[$Cpt]['cn'][0];
+                $arrayGroups[$Cpt+1]['label']  = $arDataPub[$Cpt]['cn'][0];
             }
         }
 
