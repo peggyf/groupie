@@ -894,7 +894,7 @@ class UserController extends Controller {
                         return $this->redirect($this->generateUrl('voir_user_private', array('uid' => $user->getUid()))); 
                     }
                     
-                    return $this->redirect($this->generateUrl('voir_user', array('cn'=>$groups[0]->getCn(), 'mail' => true, 'liste' => 'recherchegroupe')));
+                    return $this->redirect($this->generateUrl('user_update', array('uid' => $user->getUid())));
                 }
                 // Sinon, affichage du tableau d'utilisateurs
                 return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn, 'liste' => $liste));
