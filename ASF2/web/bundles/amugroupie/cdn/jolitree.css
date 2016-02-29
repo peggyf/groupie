@@ -1,0 +1,123 @@
+/* static tree styles (if JavaScript is disabled)
+  ----------------------------------------------- */
+
+.jolitree dl {
+    margin: 0;
+    padding: 0;
+}
+
+.jolitree dt {
+    margin: 0;
+    padding: 2px 0;
+    border-left: 1px black dotted;
+    padding-left: 26px;
+    background: url("../images/file.png") no-repeat left center;
+    min-height: 14px;
+}
+
+.jolitree dt.last {
+    border: none;
+    background-image: url("../images/file-last.png");
+}
+
+.jolitree dt.noicon {
+    padding-left: 9px;
+    background: url("../images/noicon.png") no-repeat left center;
+}
+
+.jolitree dt.noicon-last {
+    border: none;
+    padding-left: 9px;
+    background: url("../images/noicon-last.png") no-repeat left center;
+}
+
+.jolitree dd {
+    margin: 0;
+    padding: 0;
+    padding-left: 16px;
+    border-left: 1px black dotted;
+    background: url("../images/folder-opened.png") no-repeat left top;
+    min-height: 14px;
+}
+
+.jolitree dd.last {
+    border: none;
+    background-image: url("../images/folder-opened-last.png");
+}
+
+.jolitree dd p {
+    margin: 1px 0 1px 14px;
+    padding: 1px 0;
+}
+
+.jolitree dd img {
+    vertical-align: middle;
+}
+
+.jolitree dd.separator {
+    background-image: none;
+    padding: 0.4em 4px 0.2em;
+    min-height: 0;
+}
+
+.jolitree dd.separator hr {
+    margin: 0;
+    padding: 0;
+    border-color: #ccc;
+}
+
+
+/* dynamic tree styles (modified by JavaScript)
+  ----------------------------------------------- */
+
+.jolitree .jsFolder, .jolitree .jsFolder-last {
+    background-image: none;
+}
+
+.jolitree .jsFolder {
+    /*background: url(icons/dots-vertical.png) repeat-y top left;
+    border-left: none;*/
+}
+
+.jolitree .jsFolder-last {
+    border-left: none;
+}
+
+.jolitree .jsFolder p, .jolitree .jsFolder-last p {
+    position: relative;
+    left: -20px;
+    margin-left: 34px;
+}
+
+.jolitree .jsFolder-last > p {
+    margin-left: 35px;
+}
+
+.jsTwisty, .jsTwisty-opened, .jsTwisty-last, .jsTwisty-opened-last {
+    display: block;
+    float: left;
+    width: 30px;
+    min-height: 14px;
+    height: 1.2em;
+    position: relative;
+    left: -21px;
+    background: no-repeat left center;
+    clear: both;
+}
+
+.jsTwisty {
+    background-image: url("../images/jsFolder-closed.png");
+}
+.jsTwisty-opened {
+    background-image: url("../images/jsFolder-opened.png");
+}
+
+.jsTwisty-last {
+    left: -20px;
+    background-image: url("../images/jsFolder-closed-last.png");
+}
+
+.jsTwisty-opened-last {
+    left: -20px;
+    background-image: url("../images/jsFolder-opened-last.png");
+}

@@ -1,0 +1,144 @@
+
+@import "jolitree-tango.css";
+
+
+#wrapper {
+        width: 1150px;
+        position : relative;
+}
+
+#listeGroupes {
+    text-align: -moz-center;
+}
+
+#myTree {
+    padding: 1em;
+    text-align: left;
+}
+
+#cl1,#cl2,#cl3, #c2,#c3,#c4,#c5 {
+        float:left;
+}
+#cl1 {
+        background-color:transparent;
+        height:inherit !important;
+        width: 300px;
+}
+#cl2 {
+        background-color:transparent;
+        height:inherit !important;
+        width: 650px;
+        left: 35%;
+}
+#cl3 {
+        background-color:transparent;
+        height:inherit !important;
+        width: 100px;
+        margin-left: 210px;
+}
+#c2 {
+        background-color:transparent;
+        height:inherit !important;
+        width: 400px;
+        position: absolute;
+        left : 50%;
+        margin-left: -150px;
+}
+#c3 {
+        background-color:transparent;
+        height:inherit !important;
+        width: 330px;
+        position: absolute;
+        left : 50%;
+        margin-left:275px;
+        text-align: center;
+}
+#c4 {
+        background-color:transparent;
+        height:inherit !important;
+        width: 60px;
+        position: absolute;
+        left : 50%;
+        margin-left:345px;
+        text-align: center;
+}
+#c5 {
+        background-color:transparent;
+        height:inherit !important;
+        width: 60px;
+        position: absolute;
+        left : 50%;
+        margin-left:405px;
+        text-align: center;
+}
+
+
+
+td.titre1{
+        background-color:#E1EAEF;
+        color: #666666;
+        font-weight: bold;
+        font-family: Verdana, Arial;
+        font-size: 11px;
+        text-align: center;
+        width: 400px;
+}
+td.titre2{
+        background-color:#E1EAEF;
+        color: #666666;
+        font-weight: bold;
+        font-family: Verdana, Arial;
+        font-size: 11px;
+        text-align: center;
+        width: 560px;
+}
+
+td.titre3{
+        background-color:#E1EAEF;
+        color: #666666;
+        font-weight: bold;
+        font-family: Verdana, Arial;
+        font-size: 11px;
+        text-align: center;
+        width: 60px;
+        }
+
+td.titre4{
+        background-color:#E1EAEF;
+        color: #666666;
+        font-weight: bold;
+        font-family: Verdana, Arial;
+        font-size: 11px;
+        text-align: center;
+        width: 60px;
+        }        
+
+td.titre5{
+        background-color:#E1EAEF;
+        color: #666666;
+        font-weight: bold;
+        font-family: Verdana, Arial;
+        font-size: 11px;
+        text-align: center;
+        width: 60px;
+        }
+        
+td.titre6{
+        background-color:#E1EAEF;
+        color: #666666;
+        font-weight: bold;
+        font-family: Verdana, Arial;
+        font-size: 11px;
+        text-align: center;
+        width: 650px;
+}
+
+td.titre7{
+        background-color:#E1EAEF;
+        color: #666666;
+        font-weight: bold;
+        font-family: Verdana, Arial;
+        font-size: 11px;
+        text-align: center;
+        width: 100px;
+        }        
