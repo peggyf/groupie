@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="84ee8af6-9679-4f12-a1ee-f3a069badbc0" name="groupie" url="http://localhost">
+        <fileTransfer mountedRoot="C:\Users\peggy_fernandez\Projets ASF2\CliGrouper\ASF2" accessType="MOUNT" />
+      </webServer>
+    </option>
+  </component>
+</project>
