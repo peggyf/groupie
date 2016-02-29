@@ -1,9 +1,0 @@
-#######################
-#    BETA TESTEURS
-#######################
-parameters:
-    betatesteurs: ~
-#        - { key: "Localhost",                         ip: "127.0.0.1",         login: "*"           } 
-#        - { key: "Infos utilisateur...",              ip: "xxx.xxx.xxx.xxx",   login: "login"      }
-        
-      

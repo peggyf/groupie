@@ -1,0 +1,166 @@
+{% set env = app.request.query.get("env") == "ent" ? "ent" : "site"%}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" version="XHTML+RDFa 1.0" dir="ltr"
+      xmlns:content="http://purl.org/rss/1.0/modules/content/"
+      xmlns:dc="http://purl.org/dc/terms/"
+      xmlns:foaf="http://xmlns.com/foaf/0.1/"
+      xmlns:og="http://ogp.me/ns#"
+      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+      xmlns:sioc="http://rdfs.org/sioc/ns#"
+      xmlns:sioct="http://rdfs.org/sioc/types#"
+      xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+    <head profile="http://www.w3.org/1999/xhtml/vocab">
+        <meta charset="UTF-8" />
+        <meta name="Generator" content="ASF v2.x" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta http-equiv="Content-Language" content="french" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+        <meta name="Author" content="{{ auteur }}" />
+        <title>{% block title %}{{ title }}{% endblock %}</title>
+        <link href="http://fonts.googleapis.com/css?family=Oswald:400,300,700" type="text/css" rel="stylesheet"/>
+        <link rel="icon" type="image/x-icon" href="{{ asset('bundles/amuchartegraphique/images/favicon.ico') }}" />
+        <link rel="stylesheet" href="{{asset('bundles/amuchartegraphique/css/amu.css') }}" type="text/css" />
+        <link rel="stylesheet" href="{{asset('bundles/amuchartegraphique/css/app-menu.css') }}" type="text/css" />
+        <link href="{{ asset('bundles/amugroupie/css/jolitree-group.css') }}" type="text/css" rel="stylesheet" /> 
+        <script type="text/javascript" src="{{ asset('bundles/amugroupie/js/jolitree.js') }}"></script>
+        <script type="text/javascript">
+            function init() {var tree = new JoliTree(document.getElementById("myTree"));}window.onload = init;</script>
+        </script>
+        {% block css %}{% endblock %}
+        
+</head>
+   
+<body class="{{ env }}-std">
+    {% if env != "ent" %}
+        <div id="tools">
+            <div class="outils">
+                <ul class="menu clearfix">
+                    <li id="dhtml_menu-1415" class="first leaf dhtml-menu outils_element outils_element_intramu">
+                        <a class="" href="http://intramu.univ-amu.fr">intrAMU</a>
+                    </li>
+                    <li id="dhtml_menu-314" class="leaf dhtml-menu outils_element outils_element_clef">
+                        <a class="" href="http://ent.univ-amu.fr">Accès ENT</a>
+                    </li>
+                    <li id="dhtml_menu-315" class="last leaf dhtml-menu outils_element outils_element_email">
+                        <a class="" href="http://annuaire.univ-amu.fr">Annuaire</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+    <div class="std-page" id="{{ env }}-page">
+        {% if env != "ent" %}
+            <header id="site-header">
+                <div class="logo">
+                    <h1>
+                        <a href="http://www.univ-amu.fr" title="Accueil Aix-Marseille Université">
+                            <img src="{{ asset('bundles/amuchartegraphique/images/blank_logo.png') }}" alt="Accueil Aix-Marseille Université">
+                        </a>
+                    </h1>
+                </div>
+
+                <div id="name-and-slogan">
+                    <div id="site-name">
+                        <a rel="home" title="Accueil {{ apptitle }}" href="/">
+                            {{ apptitle }}
+                        </a>
+                    </div>
+                    <div id="site-slogan">
+                        <a rel="home" title="Accueil {{ appslogan }}" href="/">
+                            {{ appslogan }}
+                        </a>
+                    </div>
+                </div>
+            </header>
+        {% endif %}
+
+        <header id="app-header">
+            {% block app_header %}{% endblock %}
+        </header>
+        <div id="app-menu">
+            {% block app_menu %}
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    {{ knp_menu_render('AppBundle:Builder:mainMenu') }}
+                {%  endif %}
+            <div class="clear">
+                <hr/>
+            </div>
+            {% endblock %}
+        </div>
+        <div id="app-page">
+{% block app_page %}
+
+<div id="listeGroupes">
+    
+    <h1> Liste de tous les groupes </h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <td class="titre1"> cn </td>
+                <td class="titre6"> Description </td>
+                <td class="titre7"> Voir groupe </td>
+            </tr>
+    </table>
+
+    <div id="wrapper">
+        <dl id="myTree" class="jolitree">
+            {% for group in groups %}    
+                {% if group.lastopen != 0 %}
+                    {% if group.lastopen <= (group.lastnbetages-2) %}
+                        {% for i in group.lastopen .. (group.lastnbetages-2) %}
+                            </dl>
+                            </dd>
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+                {% if group.lastopen <= (group.nbetages-2) %}
+                    {% for i in group.lastopen .. (group.nbetages-2) %}
+                        {% if i<3 %}
+                            <dd class="opened">
+                        {% else %}
+                            <dd class="last">
+                        {% endif %}
+                        <p> {{ group.etages[i] }} </p>     
+                        <dl>
+                    {% endfor %}                    
+                {% endif %}
+                <dt>
+                    <div id="cl1"> {{ group.etages[group.nbetages-1] }} </div>
+                    <div id="cl2"> {{ group.description }} </div>
+                    <div id="cl3"> 
+                    <a href="{{path('voir_groupe', { 'cn': group.cn, 'mail': 'false', 'liste': 'mesappartenances'})}}">
+                        <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/amugroupie/images/view-page.png") }}" title="Voir les membres de {{ group.cn }} "/>
+                    </a>
+                    </div>
+                </dt>
+            {% endfor %}      
+        </dl>
+    </div> 
+</div>
+    
+{% endblock %}
+</div>
+        
+        <div id="app-footer">
+            {% block app_footer %}{% endblock %}
+        </div>
+        <footer id="amu-footer"> 
+            {% block footer %}
+                <div>Amu - Dosi Pôle développement {{ appcontact }}</div>
+            {% endblock %}
+        </footer>
+    </div>
+</body>
+{% block app_js %}{% endblock %}
+
+
+
+
+</html>
+
+
+    

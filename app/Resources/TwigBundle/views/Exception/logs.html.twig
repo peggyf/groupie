@@ -1,7 +1,0 @@
-<ol class="traces logs">
-    {% for log in logs %}
-        <li{% if log.priority >= 400 %} class="error"{% elseif log.priority >= 300 %} class="warning"{% endif %}>
-            {{ log.priorityName }} - <pre>{{ log.message|wordwrap(120, "\n",false)|nl2br|raw }}</pre>
-        </li>
-    {% endfor %}
-</ol>

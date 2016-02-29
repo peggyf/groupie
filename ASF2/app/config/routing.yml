@@ -1,0 +1,23 @@
+amu_groupie:
+    resource: "@AmuGroupieBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+# AmuCasBundle 
+cas:
+    resource: "@AmuCasBundle/Controller/" 
+    type:     annotation
+    prefix:   /
+
+login:
+    path:   /login_check
+
+login_check:
+    path:   /login_check
+    
+logout:
+    path:   /logout    
