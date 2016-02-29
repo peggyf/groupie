@@ -37,7 +37,7 @@ class AjaxController extends Controller
                         
         if (strlen($term)<3) 
         {
-            $json[] = array('label' => 'TEST au moins 3 caractères ('.$term.')', 'value' => '');
+            $json[] = array('label' => 'au moins 3 caractères ('.$term.')', 'value' => '');
             $response = new Response (json_encode($json));
             $response->headers->set('Content-Type','application/json');
             return $response;
