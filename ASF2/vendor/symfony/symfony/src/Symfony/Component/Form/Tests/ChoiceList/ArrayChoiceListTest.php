@@ -22,9 +22,9 @@ class ArrayChoiceListTest extends AbstractChoiceListTest
 
     protected function setUp()
     {
-        parent::setUp();
-
         $this->object = new \stdClass();
+
+        parent::setUp();
     }
 
     protected function createChoiceList()
@@ -34,12 +34,12 @@ class ArrayChoiceListTest extends AbstractChoiceListTest
 
     protected function getChoices()
     {
-        return array(0, 1, '1', 'a', false, true, $this->object);
+        return array(0, 1, '1', 'a', false, true, $this->object, null);
     }
 
     protected function getValues()
     {
-        return array('0', '1', '2', '3', '4', '5', '6');
+        return array('0', '1', '2', '3', '4', '5', '6', '7');
     }
 
     /**
@@ -129,5 +129,37 @@ class ArrayChoiceListTest extends AbstractChoiceListTest
         $choiceList = new ArrayChoiceList(array($obj1, $obj2), $callback);
         $this->assertSame(array(2 => 'value2'), $choiceList->getValuesForChoices(array(2 => $obj2)));
         $this->assertSame(array(2 => 'value2'), $choiceList->getValuesForChoices(array(2 => (object) array('value' => 'value2'))));
+    }
+
+    public function testGetChoicesForValuesWithContainingNull()
+    {
+        $choiceList = new ArrayChoiceList(array('Null' => null));
+
+        $this->assertSame(array(0 => null), $choiceList->getChoicesForValues(array('0')));
+    }
+
+    public function testGetChoicesForValuesWithContainingFalseAndNull()
+    {
+        $choiceList = new ArrayChoiceList(array('False' => false, 'Null' => null));
+
+        $this->assertSame(array(0 => null), $choiceList->getChoicesForValues(array('1')));
+        $this->assertSame(array(0 => false), $choiceList->getChoicesForValues(array('0')));
+    }
+
+    public function testGetChoicesForValuesWithContainingEmptyStringAndNull()
+    {
+        $choiceList = new ArrayChoiceList(array('Empty String' => '', 'Null' => null));
+
+        $this->assertSame(array(0 => ''), $choiceList->getChoicesForValues(array('0')));
+        $this->assertSame(array(0 => null), $choiceList->getChoicesForValues(array('1')));
+    }
+
+    public function testGetChoicesForValuesWithContainingEmptyStringAndBooleans()
+    {
+        $choiceList = new ArrayChoiceList(array('Empty String' => '', 'True' => true, 'False' => false));
+
+        $this->assertSame(array(0 => ''), $choiceList->getChoicesForValues(array('')));
+        $this->assertSame(array(0 => true), $choiceList->getChoicesForValues(array('1')));
+        $this->assertSame(array(0 => false), $choiceList->getChoicesForValues(array('0')));
     }
 }
