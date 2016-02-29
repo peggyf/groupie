@@ -1,8 +1,6 @@
 /nbproject/private/
-/app/cache/*
-/app/logs/*
-/web/bundles/
-/vendor/
+/ASF2/app/cache/*
+/ASF2/app/logs/*
 *~
 *.swp
 *.bak
