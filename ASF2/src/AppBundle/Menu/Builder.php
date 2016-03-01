@@ -21,28 +21,23 @@ class Builder extends ContainerAware
         $menu['Accueil']->addChild('Voir mes appartenances', array('route' => 'mes_appartenances', 'roles' => ["ROLE_MEMBRE", "ROLE_GESTIONNAIRE", "ROLE_ADMIN"]));
         $menu['Accueil']->addChild('Gérer mes groupes', array('route' => 'mes_groupes', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_ADMIN"]));
         $menu['Accueil']->addChild('Voir tous les groupes', array('route' => 'tous_les_groupes', 'roles' => ["ROLE_DOSI", "ROLE_ADMIN"]));
-        $menu['Accueil']->addChild('Bidouille pour voir le menu !!!!!', array('route' => 'homepage', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
                 
         // Sous-menus pour Recherche
         $menu['Recherche']->addChild('Rechercher un groupe', array('route' => 'homepage', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
         $menu['Recherche']->addChild('Rechercher une personne', array('route' => 'homepage', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
-        $menu['Recherche']->addChild('Bidouille pour voir le menu !!!!!', array('route' => 'homepage', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
         
         // Sous-menus pour Groupes privés
         $menu['Groupes privés']->addChild('Voir mes appartenances', array('route' => 'homepage', 'roles' => ["ROLE_MEMBRE"]));
         $menu['Groupes privés']->addChild('Gérer mes groupes', array('route' => 'homepage', 'roles' => ["ROLE_MEMBRE"]));
         $menu['Groupes privés']->addChild('Tous les groupes (DOSI)', array('route' => 'homepage', 'roles' => ["ROLE_DOSI"]));
-        $menu['Groupes privés']->addChild('Bidouille pour voir le menu !!!!!', array('route' => 'homepage', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
 
         // Sous-menus pour Gestion des groupes
         $menu['Gestion des groupes']->addChild('Créer un groupe', array('route' => 'homepage', 'roles' => ["ROLE_ADMIN"]));
         $menu['Gestion des groupes']->addChild('Supprimer un groupe', array('route' => 'homepage', 'roles' => ["ROLE_ADMIN"]));
-        $menu['Gestion des groupes']->addChild('Bidouille pour voir le menu !!!!!', array('route' => 'homepage', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
         
         // Sous-menus pour Aide
         $menu['Aide']->addChild('Aide groupes institutionnels', array('route' => 'homepage', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
         $menu['Aide']->addChild('Aide groupes privés', array('route' => 'homepage', 'roles' => ["ROLE_MEMBRE", "ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
-        $menu['Aide']->addChild('Bidouille pour voir le menu !!!!!', array('route' => 'homepage', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
 
         return $menu;
     }
