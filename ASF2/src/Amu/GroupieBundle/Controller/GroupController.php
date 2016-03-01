@@ -31,11 +31,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  * 
  */
 class GroupController extends Controller {
-    
-    
-/**********************************************************************************************************************************************************************************************************************************/
-/* METHODES PRIVEES DU CONTROLLER                                                                                                                                                                                                 */
-/**********************************************************************************************************************************************************************************************************************************/
     /**
      * Récupération des infos d'un user
      */
@@ -313,13 +308,16 @@ class GroupController extends Controller {
      * @Template()
      */
     public function touslesgroupesprivesAction() {
-        // Récupération tous les groupes privés du LDAP  
-        $arData=$this->getLdap()->arDatasFilter("(objectClass=groupofNames)",array("cn","description","amuGroupFilter"));
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->setLdap($this->get('amu.ldap'));
+        // Récupération tous les groupes du LDAP
+        $arData = $ldapfonctions->recherche("(objectClass=groupofNames)", array("cn", "description", "amugroupfilter"));
          
         // Initialisation tableau des entités Group
         $groups = new ArrayCollection();
         for ($i=0; $i<$arData["count"]; $i++) {
-            // on ne garde que les groupes prives
+            // on ne garde que les groupes privés
             if (strstr($arData[$i]["dn"], "ou=private")) {
                 $groups[$i] = new Group();
                 $groups[$i]->setCn($arData[$i]["cn"][0]);
