@@ -254,11 +254,13 @@ class GroupController extends Controller {
         $NbEtages = 0;
         $arEtagesPrec = array();
         $NbEtagesPrec = 0;
-          
-        // Récupération des groupes dans le LDAP
-        $baseDN = $this->get('amu.ldap')->getBaseDN();
-        $resource = $this->get('amu.ldap')->connect();
-        $arData = $resource->search($baseDN, "(objectClass=groupofNames)", array("cn", "description", "amugroupfilter"));
+
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->setLdap($this->get('amu.ldap'));
+
+        // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
+        $arData = $ldapfonctions->recherche("(objectClass=groupofNames)", array("cn", "description", "amugroupfilter"));
          
         $groups = new ArrayCollection();
         for ($i=0; $i<$arData["count"]; $i++) {
@@ -340,42 +342,14 @@ class GroupController extends Controller {
         $NbEtages = 0;
         $arEtagesPrec = array();
         $NbEtagesPrec = 0;
-        
-        // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
-        $baseDN = $this->get('amu.ldap')->getBaseDN();
-        $resource = $this->get('amu.ldap')->connect();
-        $arData = $resource->search($baseDN, "amuGroupAdmin=uid=".$request->getSession()->get('_attributes_ldap.uid').",ou=people,dc=univ-amu,dc=fr", array("cn", "description", "amugroupfilter"));
-        // Tri des résultats
-        if ($arData['count'] > 1) {
-          for ($i = 0; $i < $arData['count']; $i++) {
-            $index = $arData[$i];
-            $j = $i;
-            $is_greater = true;
-            while ($j > 0 && $is_greater) {
-                //create comparison variables from attributes:
-                $a = $b = null;
-                
-                $a .= strtolower($arData[$j - 1]["cn"][0]);
-                $b .= strtolower($index["cn"][0]);
-                if (strlen($a) > strlen($b))
-                    $b .=str_repeat(" ", (strlen($a) - strlen($b)));
-                if (strlen($b) > strlen($a))
-                    $a .=str_repeat(" ", (strlen($b) - strlen($a)));
-                
-                // do the comparison
-                if ($a > $b) {
-                  $is_greater = true;
-                  $arData[$j] = $arData[$j - 1];
-                  $j = $j - 1;
-                } else {
-                  $is_greater = false;
-                }
-            } 
 
-            $arData[$j] = $index;
-          }
-        }
-        
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->setLdap($this->get('amu.ldap'));
+
+        // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
+        $arData = $ldapfonctions->recherche("amuGroupAdmin=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description", "amugroupfilter"));
+
         // Initialisation tableau des entités Group
         $groups = new ArrayCollection();
         for ($i=0; $i<$arData["count"]; $i++) {
@@ -430,11 +404,13 @@ class GroupController extends Controller {
         $NbEtages = 0;
         $arEtagesPrec = array();
         $NbEtagesPrec = 0;
-        
-        // Récupération des groupes dont l'utilisateur courant est membre
-        $baseDN = $this->get('amu.ldap')->getBaseDN();
-        $resource = $this->get('amu.ldap')->connect();
-        $result = $resource->search($baseDN, "member=uid=".$request->getSession()->get('_attributes_ldap.uid').",ou=people,dc=univ-amu,dc=fr", array("cn", "description", "amugroupfilter"));
+
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->setLdap($this->get('amu.ldap'));
+
+        // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
+        $result = $ldapfonctions->recherche("member=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description", "amugroupfilter"));
         
         // Initialisation du tableau d'entités Group
         $groups = new ArrayCollection();
