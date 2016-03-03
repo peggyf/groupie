@@ -23,7 +23,7 @@ class Builder extends ContainerAware
         $menu['Accueil']->addChild('Voir tous les groupes', array('route' => 'tous_les_groupes', 'roles' => ["ROLE_DOSI", "ROLE_ADMIN"]));
                 
         // Sous-menus pour Recherche
-        $menu['Recherche']->addChild('Rechercher un groupe', array('route' => 'homepage', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
+        $menu['Recherche']->addChild('Rechercher un groupe', array('route' => 'group_search', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
         $menu['Recherche']->addChild('Rechercher une personne', array('route' => 'homepage', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
         
         // Sous-menus pour Groupes privés
