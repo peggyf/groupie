@@ -21,7 +21,7 @@ class MemberType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Amu\Groupie\Entity\Member',
+            'data_class' => 'Amu\GroupieBundle\Entity\Member',
         ));
     }
 
