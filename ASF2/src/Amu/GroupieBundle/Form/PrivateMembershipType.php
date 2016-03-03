@@ -1,6 +1,6 @@
 <?php
 
-namespace Amu\CliGrouperBundle\Form;
+namespace Amu\GroupieBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,7 +18,7 @@ class PrivateMembershipType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Amu\CliGrouperBundle\Entity\Membership',
+            'data_class' => 'Amu\GroupieBundle\Entity\Membership',
         ));
     }
 
