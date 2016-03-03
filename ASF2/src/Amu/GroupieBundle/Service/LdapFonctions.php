@@ -19,7 +19,7 @@ class LdapFonctions
         $this->ldap = $ldap;
     }
 
-    public function recherche($filtre, $restriction)
+    public function recherche($filtre, $restriction, $tri)
     {
         // Connexion au LDAP
         $baseDN = $this->ldap->getBaseDN();
@@ -38,8 +38,8 @@ class LdapFonctions
                         //create comparison variables from attributes:
                         $a = $b = null;
 
-                        $a .= strtolower($arData[$j - 1]["cn"][0]);
-                        $b .= strtolower($index["cn"][0]);
+                        $a .= strtolower($arData[$j - 1][$tri][0]);
+                        $b .= strtolower($index[$tri][0]);
                         if (strlen($a) > strlen($b))
                             $b .= str_repeat(" ", (strlen($a) - strlen($b)));
                         if (strlen($b) > strlen($a))
@@ -70,7 +70,7 @@ class LdapFonctions
     public function getInfosUser($uid) {
         $filtre = "uid=" . $uid;
         $restriction = array("uid", "displayName", "mail", "telephonenumber", "sn");
-        $result = $this->recherche($filtre, $restriction);
+        $result = $this->recherche($filtre, $restriction, "uid");
         return $result;
     }
 
@@ -80,7 +80,7 @@ class LdapFonctions
     public function getMembersGroup($groupName) {
         $filtre = "(&(objectclass=*)(memberOf=cn=" . $groupName . ", ou=groups, dc=univ-amu, dc=fr))";
         $restriction = array("uid", "displayName", "mail", "telephonenumber", "sn");
-        $result = $this->recherche($filtre, $restriction);
+        $result = $this->recherche($filtre, $restriction, "uid");
         return $result;
     }
 
@@ -90,7 +90,7 @@ class LdapFonctions
     public function getAdminsGroup($groupName) {
         $filtre = "cn=". $groupName ;
         $restriction = array("amuGroupAdmin");
-        $result = $this->recherche($filtre, $restriction);
+        $result = $this->recherche($filtre, $restriction, "uid");
         return $result;
     }
 
@@ -212,18 +212,7 @@ class LdapFonctions
     public function getAmuGroupFilter($cn_group) {
 
         $filtre = "cn=" . $cn_group;
-        $AllInfos = array();
-        $AllInfosBrutes = array();
-        $this->connect();
-        if ($this->r) {
-            $sr = ldap_search($this->ds, $this->LDAP_racine, $filtre, array("amugroupfilter"));
-            $infos = ldap_get_entries($this->ds, $sr);
-            if ($infos[0][0]=="amugroupfilter")
-                return $infos[0]["amugroupfilter"][0];
-            else
-                return false;
-        }
-
-        return false;
+        $result = $this->recherche($filtre, array("amugroupfilter"), "cn");
+        return $result;
     }
 }
