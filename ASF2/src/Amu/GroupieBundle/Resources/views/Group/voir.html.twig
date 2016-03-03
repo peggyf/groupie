@@ -1,118 +1,125 @@
 {% extends 'base.html.twig' %}
 
-{% block app_page %}
+{% block app_menu %}
+    {{ knp_menu_render('AppBundle:Builder:mainMenu') }}
+    <div class="clear"><hr /></div>
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" /> 
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
-    $('#tab').DataTable();
+        $('#tab_admin').DataTable();
+        $('#tab_memb').DataTable();
     } );
     </script>
     
 
   <h1> Liste des membres du groupe <span style="font-variant-caps: small-caps;">{{ cn }}</span> </h1>
 
-  {% if amugroupfilter != '' %}
+    {% if amugroupfilter != '' %}
       
       <h3>  amuGroupfilter :  </h3>
       <center> <h4> {{ amugroupfilter }} </h4> </center>
       
-    <br>
-    <br>
- {% endif %}
+        <br>
+        <br>
+    {% endif %}
      
- {% if nb_admins == 0 %}
-     <h3>   Le groupe n'a pas d'administrateur. </h3>
-    <br>
- {% else %}
+    {% if nb_admins == 0 %}
+        <h3>   Le groupe n'a pas d'administrateur. </h3>
+        <br>
+    {% else %}
     
-    <h3>   Nombre d'administrateurs du groupe : {{ nb_admins }} </h3>
-    <br>
+        <h3>   Nombre d'administrateurs du groupe : {{ nb_admins }} </h3>
+        <br>
 
-<table id="tab" class="display">
-    <thead>
-        <tr>
-            <th>uid</th>
-	    <th>Nom</th>
-            <th>Mail</th>
-	    <th>Téléphone</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for admin in admins %}
-            <tr> 
-                <td style="vertical-align: middle;">{{admin.uid }}</td>
-                <td style="vertical-align: middle;">{{admin.displayname }}</td> 
-                <td style="vertical-align: middle;"><a href="mailto:{{admin.mail}}">{{admin.mail }}</td>
-                <td style="vertical-align: middle;">{{admin.tel }}</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<br>
-<br>    
-{% endif %}      
-
-{% if nb_membres == 0 %}       
-    <h3>   Le groupe n'a pas de membre. </h3>
-    <br> 
-{% else %}       
-    <h3>   Nombre de membres du groupe : {{ nb_membres }} </h3>
-    <br>
-
-    <table id="tab" class="display">
-        <thead>
-            <tr>
-                <th>uid</th>
+        <table id="tab_admin" class="display">
+            <thead>
+                <tr>
+                    <th>uid</th>
                 <th>Nom</th>
-                <th>Mail</th>
+                    <th>Mail</th>
                 <th>Téléphone</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for user in users %}
-            <tr > 
-                <td style="vertical-align: middle;">{{user.uid }}</td>
-                <td style="vertical-align: middle;">{{user.displayname }}</td>
-                <td style="vertical-align: middle;"><a href="mailto:{{user.mail}}">{{user.mail }}</td>
-                <td style="vertical-align: middle;">{{user.tel }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-{% endif %}   
+                </tr>
+            </thead>
+            <tbody>
+                {% for admin in admins %}
+                    <tr>
+                        <td style="vertical-align: middle;">{{admin.uid }}</td>
+                        <td style="vertical-align: middle;">{{admin.displayname }}</td>
+                        <td style="vertical-align: middle;"><a href="mailto:{{admin.mail}}">{{admin.mail }}</td>
+                        <td style="vertical-align: middle;">{{admin.tel }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <br>
+    {% endif %}
 
-<br>
+    {% if nb_membres == 0 %}
+        <h3>   Le groupe n'a pas de membre. </h3>
+        <br>
+    {% else %}
+        <h3>   Nombre de membres du groupe : {{ nb_membres }} </h3>
+        <br>
 
-{% if liste == 'touslesgroupes' %}
+        <table id="tab_memb" class="display">
+            <thead>
+                <tr>
+                    <th>uid</th>
+                    <th>Nom</th>
+                    <th>Mail</th>
+                    <th>Téléphone</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr >
+                    <td style="vertical-align: middle;">{{user.uid }}</td>
+                    <td style="vertical-align: middle;">{{user.displayname }}</td>
+                    <td style="vertical-align: middle;"><a href="mailto:{{user.mail}}">{{user.mail }}</td>
+                    <td style="vertical-align: middle;">{{user.tel }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-	onclick="loadPage('{{ path('tous_les_groupes') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;
-    </button>
-    
-{% endif %}
-{% if liste == 'mesgroupes' %}
+    <br>
 
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-	onclick="loadPage('{{ path('mes_groupes') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;
-    </button>
-    
-{% endif %}
-{% if liste == 'mesappartenances' %}
+    {% if liste == 'touslesgroupes' %}
 
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-	onclick="loadPage('{{ path('mes_appartenances') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;
-    </button>
-    
-{% endif %}
-{% if liste == 'recherchegroupe' %}
+        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"
+        onclick="loadPage('{{ path('tous_les_groupes') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;
+        </button>
 
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-	onclick="loadPage('{{path('group_display') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;
-    </button>
-    
-{% endif %}
+    {% endif %}
+    {% if liste == 'mesgroupes' %}
+
+        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"
+        onclick="loadPage('{{ path('mes_groupes') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;
+        </button>
+
+    {% endif %}
+    {% if liste == 'mesappartenances' %}
+
+        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"
+        onclick="loadPage('{{ path('mes_appartenances') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;
+        </button>
+
+    {% endif %}
+    {% if liste == 'recherchegroupe' %}
+
+        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"
+        onclick="loadPage('{{path('group_display') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;
+        </button>
+
+    {% endif %}
 
 
 {% endblock %}
