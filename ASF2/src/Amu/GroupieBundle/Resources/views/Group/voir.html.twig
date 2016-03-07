@@ -7,7 +7,8 @@
 
 {% block body %}
     {{ parent() }}
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" /> 
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
@@ -93,33 +94,16 @@
     <br>
 
     {% if liste == 'touslesgroupes' %}
-
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"
-        onclick="loadPage('{{ path('tous_les_groupes') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;
-        </button>
-
+        <a href="{{ path('tous_les_groupes') }}" class="button"><span class="retour">Retour à la liste</span></a>
     {% endif %}
     {% if liste == 'mesgroupes' %}
-
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"
-        onclick="loadPage('{{ path('mes_groupes') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;
-        </button>
-
+        <a href="{{ path('mes_groupes') }}" class="button"><span class="retour">Retour à la liste</span></a>
     {% endif %}
     {% if liste == 'mesappartenances' %}
-
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"
-        onclick="loadPage('{{ path('mes_appartenances') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;
-        </button>
-
+        <a href="{{ path('mes_appartenances') }}" class="button"><span class="retour">Retour à la liste</span></a>
     {% endif %}
     {% if liste == 'recherchegroupe' %}
-
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"
-        onclick="loadPage('{{path('group_display') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;
-        </button>
-
+        <a href="{{ path('group_display') }}" class="button"><span class="retour">Retour à la liste</span></a>
     {% endif %}
-
 
 {% endblock %}

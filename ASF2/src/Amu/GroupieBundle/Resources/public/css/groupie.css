@@ -1,0 +1,27 @@
+
+a.button{
+    background: #fcfdfd url("../images/ui-bg_inset-hard_100_fcfdfd_1x100.png") repeat-x scroll 50% bottom;
+    border: 1px solid #a6c9e2;
+    /*    color: #222; */
+    display:block;
+    color:#555555;
+    font-weight:bold;
+    height:30px;
+    line-height:29px;
+    margin-bottom:14px;
+    text-decoration:none;
+    width:140px;
+}
+
+a:hover.button  {
+    color: #0066CC;
+}
+
+/* -------------------- */
+/* CLASSES */
+/* -------------------- */
+.retour{
+    background:url("../images/prev-green.png") no-repeat ;
+    text-indent:40px;
+    display:block;
+}
