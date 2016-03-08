@@ -1,8 +1,18 @@
-{% extends 'AppBundle::page.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block titre %}Recherche d'utilisateur{% endblock %}
+{% block app_menu %}
+    {{ knp_menu_render('AppBundle:Builder:mainMenu') }}
+    <div class="clear"><hr /></div>
+{% endblock %}
+
 
 {% block body %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css"/>
+
+    <h1>Recherche d'utilisateur</h1>
+
 {% if app.session.flashbag.has('flash-notice') %}
     <center>
         <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
@@ -14,7 +24,7 @@
 {% endif %}
 <div style="display:-moz-grid-line;">
 <div style="float:left;clear:left;width: 469px;">
-<form class="amuForms" id="_ajxFromModifier">
+<form>
     
     <h2> Recherche individuelle </h2>
     <br>
@@ -46,10 +56,19 @@
     <br>
     
     <p>
-     <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-	onclick="loadPage('{{ path('user_search', { 'opt': opt, 'cn' : cn, 'liste' : liste }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/search-3.png')}}" />&nbsp;Rechercher&nbsp;</button>
-     <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>   
-     <span class="record_actions"></span>
+        <div class="buttons">
+            <a href="{{ path('user_search', { 'opt': opt, 'cn' : cn, 'liste' : liste }) }}">
+                <img src="{{asset('bundles/amugroupie/images/search-3.png')}}" alt=""/>
+                &nbsp;Rechercher&nbsp;
+            </a>
+            <a href="{{ path('homepage') }}">
+                <img src="{{asset('bundles/amugroupie/images/cancel-16.png')}}" alt=""/>
+                &nbsp;Annuler&nbsp;
+            </a>
+        </div>
+     {#<button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"
+	onclick="loadPage('{{ path('user_search', { 'opt': opt, 'cn' : cn, 'liste' : liste }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/amugroupie/images/search-3.png')}}" />&nbsp;Rechercher&nbsp;</button>
+     #}
     </p>
     
     {{ form_end(form) }}
@@ -65,15 +84,19 @@
         <br>    
         <br>
         <center>
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-            onclick="loadPage('{{ path('user_multiple', { 'opt': opt, 'cn' : cn, 'liste' : liste }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/usergroup-add.png')}}" />&nbsp;Ajouts multiples&nbsp;</button>
+            <div class="buttons">
+                <a href="{{ path('user_multiple', { 'opt': opt, 'cn' : cn, 'liste' : liste }) }}">
+                    <img src="{{asset('bundles/amugroupie/images/usergroup-add.png')}}" alt=""/>
+                    &nbsp;Ajouts multiples&nbsp;
+                </a>
+            </div>
         </center>
     </div>
 {% endif %}
 
 </div>    
 <p style='font-size:10px;'> 
-    <img align="absmiddle" src="{{ asset('bundles/app/images/ico/18/warning.gif') }}" />
+    <img align="absmiddle" src="{{ asset('bundles/amugroupie/images/warning.png') }}" />
     L'autocomplétion fournit un maximum de 20 résultats. 
    <br>Si vous ne trouvez pas dans la liste la personne que vous recherchez, tapez le nom dans le formulaire puis cliquez sur le bouton "Rechercher". 
 </p>
@@ -81,9 +104,13 @@
 
 {% if opt=='add' %}
     <br>
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-                onclick="loadPage('{{path('group_update', { 'cn': cn, 'liste': liste }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la gestion du groupe&nbsp;   
+    <div class="buttons">
+        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la gestion du groupe&nbsp;</button>
+    </div>
+
     </button>
+
+    <br>
 {% endif %}
 
 

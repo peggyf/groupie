@@ -36,8 +36,11 @@
             <h3>AmuGroupFilter : </h3> <h4> {{ group.amugroupfilter}} </h4>
         {% endif %}
         <br>
-        <div>
-            <a href="{{ path('user_search', { 'opt': 'add', 'cn' : group.cn, 'liste': liste}) }}" class="button-add"><span class="add-user">&nbsp;Ajouter un membre&nbsp;</span></a>
+        <div class="buttons">
+            <a href="{{ path('user_search', { 'opt': 'add', 'cn' : group.cn, 'liste' : liste }) }}">
+                <img src="{{asset('bundles/amugroupie/images/add-2.png')}}" alt=""/>
+                &nbsp;Ajouter un membre&nbsp;
+            </a>
         </div>
         
         <br>
@@ -76,9 +79,17 @@
             </table>
             <br>
             <p>
-                <button type="button" id="button_val" class="ui-button ui-widget-content ui-corner-all" style="padding:5px; "><img align="absmiddle" src="{{asset('bundles/amugroupie/images/valid.png')}}" />&nbsp;Valider les changements de droits&nbsp;</button>
-                <span class="record_actions"></span>
-                <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('homepage') }}');" ><img align="absmiddle" src="{{asset('bundles/amugroupie/images/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
+            <div class="buttons">
+                <a href="{{ path('user_search', { 'opt': 'add', 'cn' : group.cn, 'liste' : liste }) }}">
+                    <img src="{{asset('bundles/amugroupie/images/valid.png')}}" alt=""/>
+                    &nbsp;Valider les changements de droit&nbsp;
+                </a>
+                <a href="{{ path('homepage') }}">
+                    <img src="{{asset('bundles/amugroupie/images/cancel.png')}}" alt=""/>
+                    &nbsp;Annuler&nbsp;
+                </a>
+            </div>
+
             </p>
 
             {{ form_rest(form) }}
@@ -120,8 +131,11 @@
             <h3>AmuGroupFilter : </h3> <h4> {#{{ group.amugroupfilter}}#} </h4>
         {% endif %}
         <br>
-        <div>
-            <a href="{{ path('user_search', { 'opt': 'add', 'cn' : group.cn, 'liste': liste}) }}" class="button-add"><span class="add-user">&nbsp;Ajouter un membre&nbsp;</span></a>
+        <div class="buttons">
+            <a href="{{ path('user_search', { 'opt': 'add', 'cn' : group.cn, 'liste' : liste }) }}">
+                <img src="{{asset('bundles/amugroupie/images/add-2.png')}}" alt=""/>
+                &nbsp;Ajouter un membre&nbsp;
+            </a>
         </div>
         <br>
         <br>

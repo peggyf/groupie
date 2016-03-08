@@ -1,8 +1,15 @@
-{% extends 'AppBundle::page.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block titre %}Recherche de groupe{% endblock %}
+{% block app_menu %}
+    {{ knp_menu_render('AppBundle:Builder:mainMenu') }}
+    <div class="clear"><hr /></div>
+{% endblock %}
+
 
 {% block body %}
+    {{ parent() }}
+
+    <h1>Recherche de groupe</h1>
 
 {% if app.session.flashbag.has('flash-notice') %}
 <center>
