@@ -106,7 +106,7 @@ class UserController extends Controller {
      * Edite les droits d'un utilisateur issu du LDAP.
      *
      * @Route("/update/{uid}", name="user_update")
-     * @Template("AmuCliGrouperBundle:User:edit.html.twig")
+     * @Template("AmuGroupieBundle:User:edit.html.twig")
      */
     public function updateAction(Request $request, $uid)
     {
@@ -364,7 +364,7 @@ class UserController extends Controller {
      * Ajoute les droits d'un utilisateur à un groupe.
      *
      * @Route("/add/{uid}/{cn}/{liste}",name="user_add")
-     * @Template("AmuCliGrouperBundle:User:rechercheuseradd.html.twig")
+     * @Template("AmuGroupieBundle:User:searchadd.html.twig")
      */
     public function addAction(Request $request, $uid='', $cn='', $liste='') {
         // Récupération utilisateur
@@ -573,7 +573,7 @@ class UserController extends Controller {
                 // Création formulaire de mise à jour de l'utilisateur
                 $editForm = $this->createForm(new GroupEditType(), $newgroup);
                 
-                return $this->render('AmuCliGrouperBundle:Group:update.html.twig', array('group' => $newgroup, 'nb_membres' => $narUsers["count"], 'form' => $editForm->createView(), 'liste' => $liste));
+                return $this->render('AmuGroupieBundle:Group:update.html.twig', array('group' => $newgroup, 'nb_membres' => $narUsers["count"], 'form' => $editForm->createView(), 'liste' => $liste));
             }
             else { 
                 $this->getRequest()->getSession()->set('_saved',0);
@@ -592,7 +592,7 @@ class UserController extends Controller {
      * Ajoute les droits d'un utilisateur à un groupe.
      *
      * @Route("/addprivate/{uid}/{cn}/{opt}",name="user_add_private")
-     * @Template("AmuCliGrouperBundle:User:rechercheuseraddprivate.html.twig")
+     * @Template("AmuGroupieBundle:User:searchaddprivate.html.twig")
      */
     public function addprivateAction(Request $request, $uid='', $cn='', $opt='liste') {
         // Récupération utilisateur
@@ -727,7 +727,7 @@ class UserController extends Controller {
 
                 $editForm = $this->createForm(new PrivateGroupEditType(), $newgroup);
                 
-                return $this->render('AmuCliGrouperBundle:Group:privateupdate.html.twig', array('group' => $newgroup, 'nb_membres' => $narUsers["count"], 'form' => $editForm->createView()));
+                return $this->render('AmuGroupieBundle:Group:privateupdate.html.twig', array('group' => $newgroup, 'nb_membres' => $narUsers["count"], 'form' => $editForm->createView()));
                 
             }
             else { 
@@ -746,10 +746,10 @@ class UserController extends Controller {
     /**
      * Voir les appartenances et droits d'un utilisateur.
      *
-     * @Route("/voir/{uid}", name="voir_user")
+     * @Route("/see/{uid}", name="see_user")
      * @Template()
      */
-    public function voirAction(Request $request, $uid)
+    public function seeAction(Request $request, $uid)
     {
         $membersof = array();
         $adminsof = array();
@@ -787,10 +787,10 @@ class UserController extends Controller {
     /**
      * Voir les appartenances et droits d'un utilisateur.
      *
-     * @Route("/voirprivate/{uid}", name="voir_user_private")
+     * @Route("/seeprivate/{uid}", name="see_user_private")
      * @Template()
      */
-    public function voirprivateAction(Request $request, $uid)
+    public function seeprivateAction(Request $request, $uid)
     {
         $membersof = array();
         $propof = array();
@@ -897,7 +897,7 @@ class UserController extends Controller {
                     return $this->redirect($this->generateUrl('user_update', array('uid' => $user->getUid())));
                 }
                 // Sinon, affichage du tableau d'utilisateurs
-                return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn, 'liste' => $liste));
+                return $this->render('AmuGroupieBundle:User:search.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn, 'liste' => $liste));
             }
             else {
                 // Recherche des utilisateurs dans le LDAP
@@ -947,21 +947,21 @@ class UserController extends Controller {
                     }
                     if ($opt == 'searchprivate')
                     {
-                        return $this->redirect($this->generateUrl('voir_user_private', array('uid' => $user->getUid()))); 
+                        return $this->redirect($this->generateUrl('see_user_private', array('uid' => $user->getUid())));
                     }
                         
                     return $this->redirect($this->generateUrl('user_update', array('uid' => $user->getUid())));              
                 }
             }       
         }         
-        return $this->render('AmuCliGrouperBundle:User:usersearch.html.twig', array('form' => $form->createView(), 'opt' => $opt, 'cn' => $cn, 'liste' => $liste));
+        return $this->render('AmuGroupieBundle:User:usersearch.html.twig', array('form' => $form->createView(), 'opt' => $opt, 'cn' => $cn, 'liste' => $liste));
         
     }
 
     /**
     * Affichage d'une liste d'utilisateurs en session
     *
-    * @Route("/afficheliste/{opt}/{cn}/{liste}",name="user_display")
+    * @Route("/display/{opt}/{cn}/{liste}",name="user_display")
     */
     public function displayAction(Request $request, $opt='search', $cn='', $liste='') {
         // Récupération des utilisateurs mis en session
@@ -977,14 +977,14 @@ class UserController extends Controller {
             $droits = 'Modifier';
         }
                         
-        return $this->render('AmuCliGrouperBundle:User:rechercheuser.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn, 'liste' => $liste));
+        return $this->render('AmuGroupieBundle:User:search.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn, 'liste' => $liste));
     }
    
     /**
     * Formulaire pour l'ajout d'utilisateurs en masse
     *
     * @Route("/multiple/{opt}/{cn}/{liste}",name="user_multiple")
-    * @Template("AmuCliGrouperBundle:User:multipleuser.html.twig")
+    * @Template("AmuGroupieBundle:User:multiple.html.twig")
     */
     public function multipleAction(Request $request, $opt='search', $cn='', $liste='') {
         // Création du formulaire
@@ -1159,7 +1159,7 @@ class UserController extends Controller {
             return $this->redirect($this->generateUrl('group_update', array('cn'=>$cn, 'liste'=>$liste)));
         }
                             
-        return $this->render('AmuCliGrouperBundle:User:multipleuser.html.twig', array('form' => $form->createView(), 'opt' => $opt, 'cn' => $cn, 'liste' => $liste));        
+        return $this->render('AmuGroupieBundle:User:multiple.html.twig', array('form' => $form->createView(), 'opt' => $opt, 'cn' => $cn, 'liste' => $liste));
     }
     
 }

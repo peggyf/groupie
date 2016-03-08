@@ -23,7 +23,7 @@
                 <td style="vertical-align: middle;">{{group.cn}}</td>
                 <td style="vertical-align: middle;">{{group.description}}</td>
                 <td style="vertical-align: middle;">
-                    <img align="absmiddle" src="{{ asset("bundles/app/images/ico/16/view-page.png") }}" title="Gérer le groupe" class="ui-button" onclick="loadPage('{{ path('voir_groupe_prive', { 'cn': group.cn, 'opt': 'mes' }) }}');" />
+                    <img align="absmiddle" src="{{ asset("bundles/app/images/ico/16/view-page.png") }}" title="Gérer le groupe" class="ui-button" onclick="loadPage('{{ path('see_private_group', { 'cn': group.cn, 'opt': 'mes' }) }}');" />
                 </td>
             </tr>
         {% endfor %}

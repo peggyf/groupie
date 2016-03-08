@@ -53,7 +53,7 @@
                         <div id="cl1"> {{ group.etages[group.nbetages-1] }} </div>
                         <div id="cl2"> {{ group.description }} </div>
                         <div id="cl3">
-                        <a href="{{path('voir_groupe', { 'cn': group.cn, 'mail': 'false', 'liste': 'mesappartenances'})}}">
+                        <a href="{{path('see_group', { 'cn': group.cn, 'mail': 'false', 'liste': 'mesappartenances'})}}">
                             <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/amugroupie/images/view-page.png") }}" title="Voir les membres de {{ group.cn }} "/>
                         </a>
                         </div>

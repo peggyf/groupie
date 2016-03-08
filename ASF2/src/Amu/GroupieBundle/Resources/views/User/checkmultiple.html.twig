@@ -78,7 +78,7 @@
     <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('group_update', { 'cn': cn, 'liste': liste }) }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/view-page.png')}}" />&nbsp;Retour à la gestion du groupe&nbsp;</button>        
     {% if liste=='mesgroupes' %}
         <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-            onclick="loadPage('{{path('mes_groupes') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes&nbsp;
+            onclick="loadPage('{{path('my_groups') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes&nbsp;
         </button>
     {% endif %}
     

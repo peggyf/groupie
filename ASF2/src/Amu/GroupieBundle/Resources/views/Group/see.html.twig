@@ -94,13 +94,13 @@
     <br>
 
     {% if liste == 'touslesgroupes' %}
-        <a href="{{ path('tous_les_groupes') }}" class="button"><span class="retour">Retour à la liste</span></a>
+        <a href="{{ path('all_groups') }}" class="button"><span class="retour">Retour à la liste</span></a>
     {% endif %}
     {% if liste == 'mesgroupes' %}
-        <a href="{{ path('mes_groupes') }}" class="button"><span class="retour">Retour à la liste</span></a>
+        <a href="{{ path('my_groups') }}" class="button"><span class="retour">Retour à la liste</span></a>
     {% endif %}
     {% if liste == 'mesappartenances' %}
-        <a href="{{ path('mes_appartenances') }}" class="button"><span class="retour">Retour à la liste</span></a>
+        <a href="{{ path('memberships') }}" class="button"><span class="retour">Retour à la liste</span></a>
     {% endif %}
     {% if liste == 'recherchegroupe' %}
         <a href="{{ path('group_display') }}" class="button"><span class="retour">Retour à la liste</span></a>

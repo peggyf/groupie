@@ -240,10 +240,10 @@ class GroupController extends Controller {
     /**
      * Affiche tous les groupes
      *
-     * @Route("/tous_les_groupes",name="tous_les_groupes")
+     * @Route("/all",name="all_groups")
      * @Template()
     */
-    public function touslesgroupesAction() {        
+    public function allgroupsAction() {
         // Variables pour l'affichage "dossier" avec javascript 
         $arEtages = array();
         $NbEtages = 0;
@@ -255,7 +255,7 @@ class GroupController extends Controller {
         $ldapfonctions->setLdap($this->get('amu.ldap'));
 
         // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
-        $arData = $ldapfonctions->recherche("(objectClass=groupofNames)", array("cn", "description", "amugroupfilter"));
+        $arData = $ldapfonctions->recherche("(objectClass=groupofNames)", array("cn", "description", "amugroupfilter"), "cn");
          
         $groups = new ArrayCollection();
         for ($i=0; $i<$arData["count"]; $i++) {
@@ -304,15 +304,15 @@ class GroupController extends Controller {
     /**
      * Affiche tous les groupes privés
      *
-     * @Route("/tous_les_groupes_prives",name="tous_les_groupes_prives")
+     * @Route("/all_private",name="all_private_groups")
      * @Template()
      */
-    public function touslesgroupesprivesAction() {
+    public function allprivateAction() {
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->setLdap($this->get('amu.ldap'));
         // Récupération tous les groupes du LDAP
-        $arData = $ldapfonctions->recherche("(objectClass=groupofNames)", array("cn", "description", "amugroupfilter"));
+        $arData = $ldapfonctions->recherche("(objectClass=groupofNames)", array("cn", "description", "amugroupfilter"), "cn");
          
         // Initialisation tableau des entités Group
         $groups = new ArrayCollection();
@@ -331,10 +331,10 @@ class GroupController extends Controller {
     /**
      * Affiche tous les groupes dont l'utilisateur est administrateur
      *
-     * @Route("/mes_groupes",name="mes_groupes")
+     * @Route("/my_groups",name="my_groups")
      * @Template()
      */
-    public function mesgroupesAction(Request $request) {
+    public function mygroupsAction(Request $request) {
         // Variables pour l'affichage "dossier" avec javascript 
         $arEtages = array();
         $NbEtages = 0;
@@ -346,7 +346,7 @@ class GroupController extends Controller {
         $ldapfonctions->setLdap($this->get('amu.ldap'));
 
         // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
-        $arData = $ldapfonctions->recherche("amuGroupAdmin=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description", "amugroupfilter"));
+        $arData = $ldapfonctions->recherche("amuGroupAdmin=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description", "amugroupfilter"), "cn");
 
         // Initialisation tableau des entités Group
         $groups = new ArrayCollection();
@@ -393,10 +393,10 @@ class GroupController extends Controller {
     /**
      * Affiche tous les groupes dont l'utilisateur est membre
      *
-     * @Route("/mes_appartenances",name="mes_appartenances")
+     * @Route("/memberships",name="memberships")
      * @Template()
      */
-    public function mesappartenancesAction(Request $request) {
+    public function membershipsAction(Request $request) {
         // Variables pour l'affichage "dossier" avec javascript 
         $arEtages = array();
         $NbEtages = 0;
@@ -408,7 +408,7 @@ class GroupController extends Controller {
         $ldapfonctions->setLdap($this->get('amu.ldap'));
 
         // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
-        $result = $ldapfonctions->recherche("member=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description", "amugroupfilter"));
+        $result = $ldapfonctions->recherche("member=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description", "amugroupfilter"), "cn");
         
         // Initialisation du tableau d'entités Group
         $groups = new ArrayCollection();
@@ -453,10 +453,10 @@ class GroupController extends Controller {
     /**
      * Affiche tous les groupes privés dont l'utilisateur est membre
      *
-     * @Route("/mes_appartenances_privees",name="mes_appartenances_privees")
+     * @Route("/private_memberships",name="private_memberships")
      * @Template()
      */
-    public function mesappartenancespriveesAction(Request $request) {
+    public function privatemembershipsAction(Request $request) {
         // Récupération des groupes privés dont l'utilisateur courant est membre
         $arData=$this->getLdap()->arDatasFilter("member=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
         
@@ -569,7 +569,7 @@ class GroupController extends Controller {
                     }
                 }
   
-                return $this->render('AmuCliGrouperBundle:Group:recherchegroupe.html.twig',array('groups' => $groups, 'opt' => $opt, 'uid' => $uid));
+                return $this->render('AmuGroupieBundle:Group:search.html.twig',array('groups' => $groups, 'opt' => $opt, 'uid' => $uid));
             }
             else {
                 if ($opt=='add') {
@@ -579,7 +579,7 @@ class GroupController extends Controller {
             }
         }
         
-        return $this->render('AmuCliGrouperBundle:Group:groupesearch.html.twig', array('form' => $form->createView(), 'opt' => $opt, 'uid' => $uid));
+        return $this->render('AmuGroupieBundle:Group:search.html.twig', array('form' => $form->createView(), 'opt' => $opt, 'uid' => $uid));
         
     }
     
@@ -607,7 +607,7 @@ class GroupController extends Controller {
      * Ajout de personnes dans un groupe
      *
      * @Route("/add/{cn_search}/{uid}/{flag_cn}",name="group_add")
-     * @Template("AmuCliGrouperBundle:Group:recherchegroupeadd.html.twig")
+     * @Template("AmuGroupieBundle:Group:groupsearchadd.html.twig")
      */
     public function addAction(Request $request, $cn_search='', $uid='', $flag_cn=0) {
         // Dans le cas d'un gestionnaire
@@ -818,20 +818,25 @@ class GroupController extends Controller {
     /**
      * Voir les membres et administrateurs d'un groupe.
      *
-     * @Route("/voir/{cn}/{mail}/{liste}", name="voir_groupe")
+     * @Route("/see/{cn}/{mail}/{liste}", name="see_group")
      * @Template()
      */
-    public function voirAction(Request $request, $cn, $mail, $liste)
+    public function seeAction(Request $request, $cn, $mail, $liste)
     {
         // Initialisation des tableaux d'entités
         $users = array();
-        $admins = array(); 
-        
-        // Récup du groupe 
-        $baseDN = $this->get('amu.ldap')->getBaseDN();
-        $resource = $this->get('amu.ldap')->connect();
-        $result = $resource->search($baseDN, "(&(objectClass=groupofNames)(cn=" . $cn . "))", array("cn", "description", "amugroupfilter"));
-        $amugroupfilter = $result[0]["amugroupfilter"][0];
+        $admins = array();
+
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->setLdap($this->get('amu.ldap'));
+
+        // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
+        $result = $ldapfonctions->recherche("(&(objectClass=groupofNames)(cn=" . $cn . "))", array("cn", "description", "amugroupfilter"), "cn");
+        if (isset($result[0]["amugroupfilter"]))
+            $amugroupfilter = $result[0]["amugroupfilter"][0];
+        else
+            $amugroupfilter = "";
         
         // Recherche des membres dans le LDAP
         //$arUsers = $this->getLdap()->getMembersGroup($cn);
@@ -888,10 +893,10 @@ class GroupController extends Controller {
      /**
      * Voir les membres et administrateurs d'un groupe privé.
      *
-     * @Route("/voir_prive/{cn}/{opt}", name="voir_groupe_prive")
+     * @Route("/see_private/{cn}/{opt}", name="see_private_group")
      * @Template()
      */
-    public function voirpriveAction(Request $request, $cn, $opt)
+    public function seeprivateAction(Request $request, $cn, $opt)
     {
         $users = array();
         // Récupération du propriétaire du groupe
@@ -929,7 +934,7 @@ class GroupController extends Controller {
      * Création d'un groupe
      *
      * @Route("/create",name="group_create")
-     * @Template("AmuCliGrouperBundle:Group:groupe.html.twig")
+     * @Template("AmuGroupieBundle:Group:group.html.twig")
      */
     public function createAction(Request $request) {
         // Initialisation des entités
@@ -960,7 +965,7 @@ class GroupController extends Controller {
                 syslog(LOG_INFO, "create_group by $adm : group : $cn");
                
                 // Affichage via fichier twig
-                return $this->render('AmuCliGrouperBundle:Group:creationgroupe.html.twig',array('groups' => $groups));
+                return $this->render('AmuGroupieBundle:Group:creategroup.html.twig',array('groups' => $groups));
             }
             else {
                 // affichage erreur
@@ -972,7 +977,7 @@ class GroupController extends Controller {
                 syslog(LOG_ERR, "LDAP ERREUR : create_group by $adm : group : $cn");
                 
                 // Retour à la page contenant le formulaire de création de groupe
-                return $this->render('AmuCliGrouperBundle:Group:groupe.html.twig', array('form' => $form->createView()));
+                return $this->render('AmuCliGrouperBundle:Group:group.html.twig', array('form' => $form->createView()));
             }
             
             // Ferme le fichier de log
@@ -980,14 +985,14 @@ class GroupController extends Controller {
         }
         
         // Affichage formulaire de création de groupe
-        return $this->render('AmuCliGrouperBundle:Group:groupe.html.twig', array('form' => $form->createView()));
+        return $this->render('AmuCliGrouperBundle:Group:group.html.twig', array('form' => $form->createView()));
     }
     
     /**
      * Création d'un groupe privé
      *
      * @Route("/private/create/{nb_groups}",name="private_group_create")
-     * @Template("AmuCliGrouperBundle:Group:createprivate.html.twig")
+     * @Template("AmuGroupieBundle:Group:createprivate.html.twig")
      */
     public function createPrivateAction(Request $request, $nb_groups) {
         // Limite sur le nombre de groupes privés qu'il est possible de créer
@@ -1028,7 +1033,7 @@ class GroupController extends Controller {
                     syslog(LOG_INFO, "create_private_group by $adm : group : $cn");
 
                     // Affichage création OK
-                    return $this->render('AmuCliGrouperBundle:Group:creationgroupeprive.html.twig',array('groups' => $groups));
+                    return $this->render('AmuGroupieBundle:Group:privatecreation.html.twig',array('groups' => $groups));
                 }
                 else {
                     // affichage erreur
@@ -1040,7 +1045,7 @@ class GroupController extends Controller {
                     syslog(LOG_ERR, "LDAP ERREUR : create_private_group by $adm : group : $cn");
 
                     // Affichage page 
-                    return $this->render('AmuCliGrouperBundle:Group:createprivate.html.twig', array('form' => $form->createView(), 'nb_groups' => $nb_groups));
+                    return $this->render('AmuGroupieBundle:Group:createprivate.html.twig', array('form' => $form->createView(), 'nb_groups' => $nb_groups));
                 }
 
                 // Ferme le fichier de log
@@ -1052,10 +1057,10 @@ class GroupController extends Controller {
                 $this->get('session')->getFlashBag()->add('flash-error', 'Le nom du groupe est invalide. Merci de supprimer les accents et caractères spéciaux.');
                     
                 // Affichage page du formulaire
-                return $this->render('AmuCliGrouperBundle:Group:createprivate.html.twig', array('form' => $form->createView(), 'nb_groups' => $nb_groups));
+                return $this->render('AmuGroupieBundle:Group:createprivate.html.twig', array('form' => $form->createView(), 'nb_groups' => $nb_groups));
             }
         }
-        return $this->render('AmuCliGrouperBundle:Group:createprivate.html.twig', array('form' => $form->createView(), 'nb_groups' => $nb_groups));
+        return $this->render('AmuGroupieBundle:Group:createprivate.html.twig', array('form' => $form->createView(), 'nb_groups' => $nb_groups));
     }
     
      /**
@@ -1079,7 +1084,7 @@ class GroupController extends Controller {
             // Log
             syslog(LOG_INFO, "delete_group by $adm : group : $cn");
             
-            return $this->render('AmuCliGrouperBundle:Group:suppressiongroupe.html.twig',array('cn' => $cn));
+            return $this->render('AmuGroupieBundle:Group:delete.html.twig',array('cn' => $cn));
         }
         else {
             // Log erreur
@@ -1087,7 +1092,7 @@ class GroupController extends Controller {
             // affichage erreur
             $this->get('session')->getFlashBag()->add('flash-error', 'Erreur LDAP lors de la suppression du groupe');
             // Retour page
-            return $this->render('AmuCliGrouperBundle:Group:groupesearch.html.twig', array('form' => $form->createView()));
+            return $this->render('AmuGroupieBundle:Group:search.html.twig', array('form' => $form->createView()));
         }
         
         // Ferme fichier de log
@@ -1098,7 +1103,7 @@ class GroupController extends Controller {
      * Choisir un groupe privé à supprimer
      *
      * @Route("/private/delete",name="private_group_delete")
-     * @Template("AmuCliGrouperBundle:Group:deleteprivate.html.twig")
+     * @Template("AmuGroupieBundle:Group:deleteprivate.html.twig")
      */
     public function deletePrivateAction() {
         
@@ -1160,7 +1165,7 @@ class GroupController extends Controller {
             
         }
         
-        return $this->render('AmuCliGrouperBundle:Group:deleteprivate.html.twig', array('groups' => $groups));
+        return $this->render('AmuGroupieBundle:Group:deleteprivate.html.twig', array('groups' => $groups));
     }
     
     /**
@@ -1201,7 +1206,7 @@ class GroupController extends Controller {
                 // Log Erreur LDAP
                 syslog(LOG_ERR, "LDAP ERROR : modif_group by $adm : group : $cn, delAmuGroupFilter");
                 $this->get('session')->getFlashBag()->add('flash-error', 'Erreur LDAP lors de la modification du groupe');
-                return $this->render('AmuCliGrouperBundle:Group:groupem.html.twig', array('form' => $form->createView(), 'group' => $group));
+                return $this->render('AmuGroupieBundle:Group:modifyform.html.twig', array('form' => $form->createView(), 'group' => $group));
             }
                 
             // Modification du groupe dans le LDAP
@@ -1219,20 +1224,20 @@ class GroupController extends Controller {
                  // affichage groupe créé
                 $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été modifié');
                 $groups[0] = $group;
-                return $this->render('AmuCliGrouperBundle:Group:modifgroupe.html.twig',array('groups' => $groups));
+                return $this->render('AmuGroupieBundle:Group:modifygroupe.html.twig',array('groups' => $groups));
             }
             else 
             {
                 // Log Erreur LDAP
                 syslog(LOG_ERR, "LDAP ERROR : modif_group by $adm : group : $cn");
                 $this->get('session')->getFlashBag()->add('flash-error', 'Erreur LDAP lors de la modification du groupe');
-                return $this->render('AmuCliGrouperBundle:Group:groupem.html.twig', array('form' => $form->createView(), 'group' => $group));
+                return $this->render('AmuGroupieBundle:Group:modifyform.html.twig', array('form' => $form->createView(), 'group' => $group));
             }
             
             // Ferme fichier log
             closelog();
         }
-        return $this->render('AmuCliGrouperBundle:Group:groupem.html.twig', array('form' => $form->createView(), 'group' => $group));
+        return $this->render('AmuGroupieBundle:Group:modifyform.html.twig', array('form' => $form->createView(), 'group' => $group));
     }
 
     /**
@@ -1245,7 +1250,7 @@ class GroupController extends Controller {
         // Récupération des groupes mis en session
         $groups = $this->container->get('request')->getSession()->get('groups');
 
-        return $this->render('AmuCliGrouperBundle:Group:recherchegroupe.html.twig',array('groups' => $groups, 'opt' => $opt, 'uid' => $uid));   
+        return $this->render('AmuGroupieBundle:Group:search.html.twig',array('groups' => $groups, 'opt' => $opt, 'uid' => $uid));
     }
     
     /**
@@ -1274,7 +1279,7 @@ class GroupController extends Controller {
      * Mettre à jour les membres d'un groupe privé.
      *
      * @Route("/private/update/{cn}", name="private_group_update")
-     * @Template("AmuCliGrouperBundle:Group:privateupdate.html.twig")
+     * @Template("AmuGroupieBundle:Group:privateupdate.html.twig")
      */
     public function privateupdateAction(Request $request, $cn)
     {
@@ -1418,7 +1423,7 @@ class GroupController extends Controller {
      * Mettre à jour les membres d'un groupe 
      *
      * @Route("/update/{cn}/{liste}", name="group_update")
-     * @Template("AmuCliGrouperBundle:Group:update.html.twig")
+     * @Template("AmuGroupieBundle:Group:update.html.twig")
      */
     public function updateAction(Request $request, $cn, $liste)
     {
@@ -1430,17 +1435,21 @@ class GroupController extends Controller {
         $groupini = new Group();
         $groupini->setCn($cn);
         $membersini = new ArrayCollection();
-        
+
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->setLdap($this->get('amu.ldap'));
+
         // Récup du filtre amugroupfilter pour affichage
-        $amugroupfilter = $this->getLdap()->getAmuGroupFilter($cn);
+        $amugroupfilter = $ldapfonctions->getAmuGroupFilter($cn);
         if ($amugroupfilter!=false)
             $group->setAmugroupfilter($amugroupfilter);
                
         // Recherche des membres dans le LDAP
-        $arUsers = $this->getLdap()->getMembersGroup($cn);
+        $arUsers = $ldapfonctions->getMembersGroup($cn);
         
         // Recherche des admins dans le LDAP
-        $arAdmins = $this->getLdap()->getAdminsGroup($cn);
+        $arAdmins = $ldapfonctions->getAdminsGroup($cn);
         $flagMembers = array();
         for($i=0;$i<$arAdmins[0]["amugroupadmin"]["count"];$i++)
             $flagMembers[] = FALSE;
@@ -1481,23 +1490,23 @@ class GroupController extends Controller {
             if ($flagMembers[$j]==FALSE) {
                 // si l'admin n'est pas membre du groupe, il faut aller récupérer ses infos dans le LDAP
                 $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$j]);
-                $result = $this->getLdap()->arUserInfos($uid, array("uid", "sn", "displayname", "mail", "telephonenumber"));
-                
+                $result = $ldapfonctions->getInfosUser($uid);
+
                 $memb = new Member();
-                $memb->setUid($result["uid"]);
-                $memb->setDisplayname($result["displayname"]);
-                $memb->setMail($result["mail"]);
-                $memb->setTel($result["telephonenumber"]);
+                $memb->setUid($result[0]["uid"][0]);
+                $memb->setDisplayname($result[0]["displayname"][0]);
+                $memb->setMail($result[0]["mail"][0]);
+                $memb->setTel($result[0]["telephonenumber"][0]);
                 $memb->setMember(FALSE);
                 $memb->setAdmin(TRUE);
                 $members[] = $memb;
                 
                 // Idem pour groupini
                 $membini = new Member();
-                $membini->setUid($result["uid"]);
-                $membini->setDisplayname($result["displayname"]);
-                $membini->setMail($result["mail"]);
-                $membini->setTel($result["telephonenumber"]);
+                $membini->setUid($result[0]["uid"][0]);
+                $membini->setDisplayname($result[0]["displayname"][0]);
+                $membini->setMail($result[0]["mail"][0]);
+                $membini->setTel($result[0]["telephonenumber"][0]);
                 $membini->setMember(FALSE);
                 $membini->setAdmin(TRUE);
                 $membersini[] = $membini;
@@ -1668,19 +1677,19 @@ class GroupController extends Controller {
     /** 
     * Affichage du document d'aide
     *
-    * @Route("/aide",name="aide")
+    * @Route("/help",name="help")
     */
-    public function aideAction() {
-        return $this->render('AmuCliGrouperBundle:Group:aide.html.twig');
+    public function helpAction() {
+        return $this->render('AmuGroupieBundle:Group:help.html.twig');
     }
     
     /** 
     * Affichage du document d'aide concernant les groupes privés
     *
-    * @Route("/aide_priv",name="aide_priv")
+    * @Route("/private_help",name="private_help")
     */
-    public function aideprivAction() {
-        return $this->render('AmuCliGrouperBundle:Group:aidepriv.html.twig');
+    public function privatehelpAction() {
+        return $this->render('AmuGroupieBundle:Group:privatehelp.html.twig');
     }
     
 }
