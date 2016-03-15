@@ -11,7 +11,7 @@ class GroupSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-             ->add('cn', 'text', array(
+             ->add('cn', 'text', array('label' => 'cn ',
                                          'required' => true
                                          ))
             ->getForm();

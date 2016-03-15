@@ -9,6 +9,12 @@
 {% block body %}
     {{ parent() }}
 
+    <link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
+    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css"/>
+
+    <script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
     <h1>Recherche de groupe</h1>
 
 {% if app.session.flashbag.has('flash-notice') %}
@@ -35,26 +41,35 @@
     {{ form_widget(form) }}
     <br>
     <p>
-     <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-	onclick="loadPage('{{ path('group_search', { 'opt': opt, 'uid' : uid }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/search-3.png')}}" />&nbsp;Rechercher&nbsp;</button>
-     <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
-     <span class="record_actions"></span>
+        <div class="buttons">
+            <a href="{{ path('group_search', { 'opt': opt, 'uid': uid }) }}">
+                <img src="{{asset('bundles/amugroupie/images/search-3.png')}}" alt=""/>
+                &nbsp;Rechercher&nbsp;
+            </a>
+            <a href="{{ path('homepage') }}">
+                <img src="{{asset('bundles/amugroupie/images/cancel-16.png')}}" alt=""/>
+                &nbsp;Annuler&nbsp;
+            </a>
+        </div>
     </p>
+
 </form>
 
-     <br>
+    <br>
+    <br>
      
 <p style='font-size:10px;'> 
-    <img align="absmiddle" src="{{ asset('bundles/app/images/ico/18/warning.gif') }}" />
+    <img align="absmiddle" src="{{ asset('bundles/amugroupie/images/warning.png') }}" />
     L'autocomplétion fournit un maximum de 20 résultats. 
    <br>Si vous ne trouvez pas dans la liste le groupe que vous recherchez, tapez le nom dans le formulaire puis cliquez sur le bouton "Rechercher". 
 </p>
 <br>
 
-{% if opt=='add' %}    
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-        onclick="loadPage('{{path('user_update', { 'uid' : uid }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à l'utilisateur&nbsp;
-    </button>
+{% if opt=='add' %}
+    <div class="buttons">
+        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour&nbsp;</button>
+    </div>
+    <br>
 {% endif %}
 
 

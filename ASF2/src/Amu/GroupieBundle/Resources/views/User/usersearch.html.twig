@@ -9,7 +9,11 @@
 {% block body %}
     {{ parent() }}
 
+    <link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
     <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css"/>
+    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css"/>
+    <script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 
     <h1>Recherche d'utilisateur</h1>
 
@@ -103,14 +107,11 @@
 <br>
 
 {% if opt=='add' %}
-    <br>
     <div class="buttons">
-        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la gestion du groupe&nbsp;</button>
+        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour&nbsp;</button>
     </div>
-
-    </button>
-
     <br>
+
 {% endif %}
 
 
