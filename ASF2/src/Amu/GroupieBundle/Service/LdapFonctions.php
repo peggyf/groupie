@@ -104,10 +104,13 @@ class LdapFonctions
         {
             $groupinfo['member'][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
         }
-        $this->connect();
 
-        if ($this->r) {
-            $sr = ldap_mod_add($this->ds, $dn_group, $groupinfo);
+        // Connexion au LDAP
+        $baseDN = $this->ldap->getBaseDN();
+        $resource = $this->ldap->connect();
+
+        if ($resource) {
+            $sr = ldap_mod_add($resource, $dn_group, $groupinfo);
 
             if(ldap_error($this->ds) == "Success")
                 return true;
@@ -128,9 +131,12 @@ class LdapFonctions
         {
             $groupinfo['member'][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
         }
-        $this->connect();
-        if ($this->r) {
-            $sr = ldap_mod_del($this->ds, $dn_group, $groupinfo);
+        // Connexion au LDAP
+        $baseDN = $this->ldap->getBaseDN();
+        $resource = $this->ldap->connect();
+
+        if ($resource) {
+            $sr = ldap_mod_del($resource, $dn_group, $groupinfo);
             //echo "<hr>DEBUG " . __CLASS__ . "::" . __FUNCTION__ . " Infos groupe <PRE>" . print_r($groupinfo, true) . "</PRE>";
             if(ldap_error($this->ds) == "Success")
                 return true;
@@ -151,9 +157,11 @@ class LdapFonctions
         {
             $groupinfo['amuGroupAdmin'][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
         }
-        $this->connect();
-        if ($this->r) {
-            $sr = ldap_mod_add($this->ds, $dn_group, $groupinfo);
+        // Connexion au LDAP
+        $baseDN = $this->ldap->getBaseDN();
+        $resource = $this->ldap->connect();
+        if ($resource) {
+            $sr = ldap_mod_add($resource, $dn_group, $groupinfo);
             if(ldap_error($this->ds) == "Success")
                 return true;
             else
@@ -173,10 +181,12 @@ class LdapFonctions
         {
             $groupinfo['amuGroupAdmin'][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
         }
-        $this->connect();
-        if ($this->r) {
-            $sr = ldap_mod_del($this->ds, $dn_group, $groupinfo);
-            if(ldap_error($this->ds) == "Success")
+        // Connexion au LDAP
+        $baseDN = $this->ldap->getBaseDN();
+        $resource = $this->ldap->connect();
+        if ($resource) {
+            $sr = ldap_mod_del($resource, $dn_group, $groupinfo);
+            if(ldap_error($resource) == "Success")
                 return true;
             else
                 return false;
