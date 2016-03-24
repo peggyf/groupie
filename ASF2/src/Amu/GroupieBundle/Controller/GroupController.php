@@ -252,7 +252,7 @@ class GroupController extends Controller {
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->setLdap($this->get('amu.ldap'));
+        $ldapfonctions->get('amu.ldap');
 
         // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
         $arData = $ldapfonctions->recherche("(objectClass=groupofNames)", array("cn", "description", "amugroupfilter"), "cn");
@@ -310,7 +310,7 @@ class GroupController extends Controller {
     public function allprivateAction() {
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->setLdap($this->get('amu.ldap'));
+        $ldapfonctions->get('amu.ldap');
         // Récupération tous les groupes du LDAP
         $arData = $ldapfonctions->recherche("(objectClass=groupofNames)", array("cn", "description", "amugroupfilter"), "cn");
          
@@ -343,7 +343,7 @@ class GroupController extends Controller {
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->setLdap($this->get('amu.ldap'));
+        $ldapfonctions->get('amu.ldap');
 
         // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
         $arData = $ldapfonctions->recherche("amuGroupAdmin=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description", "amugroupfilter"), "cn");
@@ -405,7 +405,7 @@ class GroupController extends Controller {
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->setLdap($this->get('amu.ldap'));
+        $ldapfonctions->get('amu.ldap');
 
         // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
         $result = $ldapfonctions->recherche("member=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description", "amugroupfilter"), "cn");
@@ -489,11 +489,20 @@ class GroupController extends Controller {
         $groups = array();
         
         // Création du formulaire de recherche de groupe
-        $form = $this->createForm(new GroupSearchType(), new Group(), array('attr' => array('novalidate' => 'novalidate')));
+        $form = $this->createForm(new GroupSearchType(),
+            new Group(),
+            array('action' => $this->generateUrl('group_search', array('opt'=>$opt, 'uid'=>$uid, 'cn'=>$cn)),
+                  'method' => 'GET'));
         $form->handleRequest($request);
+
         if ($form->isValid()) {
             // Récupération des données du formulaire
-            $groupsearch = $form->getData(); 
+            $groupsearch = $form->getData();
+
+            // On récupère le service ldapfonctions
+            $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+            $ldapfonctions->SetLdap($this->get('amu.ldap'));
+
             // Suivant l'option d'où on vient
             if (($opt=='search')||($opt=='mod')||($opt=='del')){
                 // si on a sélectionné un proposition de la liste d'autocomplétion
@@ -504,18 +513,18 @@ class GroupController extends Controller {
                         return $this->redirect($this->generateUrl('group_search', array('opt'=>$opt, 'uid'=>$uid, 'cn'=>$cn)));
                     }
                     // Recherche exacte des groupes dans le LDAP
-                    $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=" . $groupsearch->getCn() . "))",array("cn","description","amuGroupFilter"));
+                    $arData=$ldapfonctions->recherche("(&(objectClass=groupofNames)(cn=" . $groupsearch->getCn() . "))", array("cn", "description", "amugroupfilter"), "cn");
                 }
                 else {
                     // Recherche avec * des groupes dans le LDAP directement 
-                    $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=*" . $groupsearch->getCn() . "*))",array("cn","description","amuGroupFilter"));
+                    $arData=$ldapfonctions->recherche("(&(objectClass=groupofNames)(cn=*" . $groupsearch->getCn() . "*))",array("cn","description","amuGroupFilter"), "cn");
                 }
                 
                 // si c'est un gestionnaire, on ne renvoie que les groupes dont il est admin
                 $tab_cn_admin = array();
                 if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
                     // Recup des groupes dont l'utilisateur est admin
-                    $arDataAdmin = $this->getLdap()->arDatasFilter("amuGroupAdmin=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+                    $arDataAdmin = $ldapfonctions->recherche("amuGroupAdmin=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"), "cn");
                     for($i=0;$i<$arDataAdmin["count"];$i++)
                         $tab_cn_admin[$i] = $arDataAdmin[$i]["cn"][0];
                 }
@@ -527,7 +536,10 @@ class GroupController extends Controller {
                         $groups[$i] = new Group();
                         $groups[$i]->setCn($arData[$i]["cn"][0]);
                         $groups[$i]->setDescription($arData[$i]["description"][0]);
-                        $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
+                        if (isset($arData[$i]["amugroupfilter"]))
+                            $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
+                        else
+                            $groups[$i]->setAmugroupfilter("");
                         $groups[$i]->setDroits('Aucun');
 
                         // Droits DOSI seulement en visu
@@ -569,7 +581,7 @@ class GroupController extends Controller {
                     }
                 }
   
-                return $this->render('AmuGroupieBundle:Group:search.html.twig',array('groups' => $groups, 'opt' => $opt, 'uid' => $uid));
+                return $this->render('AmuGroupieBundle:Group:searchres.html.twig',array('groups' => $groups, 'opt' => $opt, 'uid' => $uid));
             }
             else {
                 if ($opt=='add') {
@@ -829,7 +841,7 @@ class GroupController extends Controller {
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->setLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
 
         // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
         $result = $ldapfonctions->recherche("(&(objectClass=groupofNames)(cn=" . $cn . "))", array("cn", "description", "amugroupfilter"), "cn");
@@ -1425,7 +1437,7 @@ class GroupController extends Controller {
      * @Route("/update/{cn}/{liste}", name="group_update")
      * @Template("AmuGroupieBundle:Group:update.html.twig")
      */
-    public function updateAction(Request $request, $cn, $liste)
+    public function updateAction(Request $request, $cn, $liste="")
     {
         $group = new Group();
         $group->setCn($cn);
@@ -1438,7 +1450,7 @@ class GroupController extends Controller {
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->setLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
 
         // Récup du filtre amugroupfilter pour affichage
         $amugroupfilter = $ldapfonctions->getAmuGroupFilter($cn);

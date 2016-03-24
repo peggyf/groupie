@@ -17,10 +17,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class AjaxController extends Controller
 {
-    private function getLdap() {
-        return $this->get('CliGrouper.ldap');
-    }
-  
     /**
      * Retourne la liste des groupes du LDAP (autocomplétion)
      *
@@ -47,9 +43,14 @@ class AjaxController extends Controller
         $arData = array();                          
         $arDataPub = array();
         $cptPub = 0;
-        $arData=$this->getLdap()->arDatasFilter(     
-            "(&(objectClass=groupofNames)(cn=*".$term."*))",
-            array("cn"));    
+
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+
+        // Récupération des groupes (on ne récupère que les groupes publics)
+        $arData = $ldapfonctions->recherche("(&(objectClass=groupofNames)(cn=*".$term."*))", array("cn"), "cn");
+
         // on ne garde que les groupes publics
         for ($i=0; $i<$arData["count"]; $i++) {
             if (!strstr($arData[$i]["dn"], "ou=private")) {
@@ -106,11 +107,16 @@ class AjaxController extends Controller
             return $response;
         }
                                         
-        $arData = array();                          
-        $arData=$this->getLdap()->arDatasFilter(     
-            "(&(uid=".$term."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))",
-            array("uid"));    
-       
+        $arData = array();
+
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+
+
+        // Récupération des uid
+        $arData = $ldapfonctions->recherche("(&(uid=".$term."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))", array("uid"), "uid");
+
         $NbEnreg = $arData['count'];
         // si on a plus de 20 entrées, on affiche que le résultat partiel
         if ($NbEnreg>20)
@@ -158,19 +164,25 @@ class AjaxController extends Controller
             return $response;
         }
                                         
-        $arData = array();  
+        $arData = array();
+
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
         
         if ($term2==1)
         {
-            $arData=$this->getLdap()->arDatasFilter(     
+            $arData = $ldapfonctions->recherche(
             "(&(sn=".$term.")(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))",
-            array("sn", "givenname", "uid"));    
+            array("sn", "givenname", "uid"),
+            "sn"    );
         }
         else
         {
-            $arData=$this->getLdap()->arDatasFilter(     
+            $arData = $ldapfonctions->recherche(
             "(&(sn=".$term."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))",
-            array("sn", "givenname", "uid"));    
+            array("sn", "givenname", "uid"),
+            "sn"    );
         }
        
         $NbEnreg = $arData['count'];

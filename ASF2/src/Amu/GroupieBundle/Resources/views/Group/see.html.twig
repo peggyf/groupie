@@ -93,17 +93,9 @@
 
     <br>
 
-    {% if liste == 'touslesgroupes' %}
-        <a href="{{ path('all_groups') }}" class="button"><span class="retour">Retour à la liste</span></a>
-    {% endif %}
-    {% if liste == 'mesgroupes' %}
-        <a href="{{ path('my_groups') }}" class="button"><span class="retour">Retour à la liste</span></a>
-    {% endif %}
-    {% if liste == 'mesappartenances' %}
-        <a href="{{ path('memberships') }}" class="button"><span class="retour">Retour à la liste</span></a>
-    {% endif %}
-    {% if liste == 'recherchegroupe' %}
-        <a href="{{ path('group_display') }}" class="button"><span class="retour">Retour à la liste</span></a>
-    {% endif %}
+    <div class="buttons">
+        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;</button>
+    </div>
+
 
 {% endblock %}

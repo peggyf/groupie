@@ -17,6 +17,11 @@
 
     <h1>Recherche de groupe</h1>
 
+    <br>
+    <h3> Veuillez indiquer le cn du groupe à rechercher. </h3>
+    <br>
+    <br>
+
 {% if app.session.flashbag.has('flash-notice') %}
 <center>
     <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
@@ -35,17 +40,16 @@
     {% endfor %}
     </div>
 </center>
-{% endif %}    
+{% endif %}
 
-<form class="amuForms" id="_ajxFromModifier">
+
+    {{ form_start(form) }}
     {{ form_widget(form) }}
+
     <br>
     <p>
         <div class="buttons">
-            <a href="{{ path('group_search', { 'opt': opt, 'uid': uid }) }}">
-                <img src="{{asset('bundles/amugroupie/images/search-3.png')}}" alt=""/>
-                &nbsp;Rechercher&nbsp;
-            </a>
+            <button type="submit" name="btRechercher"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/search-3.png') }}" />&nbsp;Rechercher&nbsp;</button>
             <a href="{{ path('homepage') }}">
                 <img src="{{asset('bundles/amugroupie/images/cancel-16.png')}}" alt=""/>
                 &nbsp;Annuler&nbsp;
@@ -53,7 +57,7 @@
         </div>
     </p>
 
-</form>
+    {{ form_end(form) }}
 
     <br>
     <br>
@@ -73,30 +77,36 @@
 {% endif %}
 
 
-<script type="text/javascript">   
-$('#groupsearch_cn').autocomplete({
-    source : function(requete, reponse){
-            var motcle = $('#groupsearch_cn').val();                       
-            var DATA = 'motcle=' + motcle;
-            
-            $.ajax({
-                    type:"POST",
-                    url : "{{ path('ajax_groupcompletlist') }}",
-                    dataType : 'json',
-                    data : DATA, 
+<script type="text/javascript">
 
-                    success : function(donnee){
-                        reponse($.map(donnee, function(object){ 
-                            return object;
-                        }));
-                    }            
-                });
-            },
-    select : function(event, ui) {
-        $('#groupsearch_cn').val(ui.item.value);
-        loadPage('{{ path('group_search', { 'opt': opt, 'uid' : uid, 'cn': 1}) }}', $('#_ajxFromModifier').serializeArray());
-    }
-}); 
+    $('#groupsearch_cn').autocomplete({
+        source: function (requete, reponse) {
+            var motcle = $('#groupsearch_cn').val();
+            var DATA = 'motcle=' + motcle;
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('ajax_groupcompletlist') }}",
+                dataType: 'json',
+                data: DATA,
+
+                success: function (donnee) {
+                    reponse($.map(donnee, function (object) {
+                        return object;
+                    }));
+                }
+            });
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            {# $('#groupsearch_cn').val(ui.item.value); #}
+            $(event.target).val(ui.item.value);
+            $('#groupsearch').closest("form").submit();
+            {# $('#groupsearch').submit(); #}
+            return false;
+        }
+    });
+
 </script>
 
 {% endblock %} 

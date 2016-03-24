@@ -71,21 +71,8 @@
     <br>
 
     <div class="buttons">
-        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la gestion du groupe&nbsp;</button>
+        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour&nbsp;</button>
     </div>
-{#    <br><br>    
-    {% if liste == 'mesgroupes' %}
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-            onclick="loadPage('{{ path('mes_groupes') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes&nbsp;
-        </button>
-    {% endif %}
-    
-    {% if liste == 'recherchegroupe' %}
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-            onclick="loadPage('{{path('group_display') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes&nbsp;
-        </button>
-    {% endif %}
-#}    
  
     
 {% endif %}

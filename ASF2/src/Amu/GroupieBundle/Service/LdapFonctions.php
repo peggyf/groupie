@@ -110,9 +110,9 @@ class LdapFonctions
         $resource = $this->ldap->connect();
 
         if ($resource) {
-            $sr = ldap_mod_add($resource, $dn_group, $groupinfo);
+            $sr = ldap_mod_add($this->ldap->link, $dn_group, $groupinfo);
 
-            if(ldap_error($this->ds) == "Success")
+            if(ldap_error($this->ldap->link) == "Success")
                 return true;
             else
                 return false;
@@ -136,9 +136,9 @@ class LdapFonctions
         $resource = $this->ldap->connect();
 
         if ($resource) {
-            $sr = ldap_mod_del($resource, $dn_group, $groupinfo);
+            $sr = ldap_mod_del($this->ldap->link, $dn_group, $groupinfo);
             //echo "<hr>DEBUG " . __CLASS__ . "::" . __FUNCTION__ . " Infos groupe <PRE>" . print_r($groupinfo, true) . "</PRE>";
-            if(ldap_error($this->ds) == "Success")
+            if(ldap_error($this->ldap->link) == "Success")
                 return true;
             else
                 return false;
@@ -161,8 +161,8 @@ class LdapFonctions
         $baseDN = $this->ldap->getBaseDN();
         $resource = $this->ldap->connect();
         if ($resource) {
-            $sr = ldap_mod_add($resource, $dn_group, $groupinfo);
-            if(ldap_error($this->ds) == "Success")
+            $sr = ldap_mod_add($this->ldap->link, $dn_group, $groupinfo);
+            if(ldap_error($this->ldap->link) == "Success")
                 return true;
             else
                 return false;
@@ -185,8 +185,8 @@ class LdapFonctions
         $baseDN = $this->ldap->getBaseDN();
         $resource = $this->ldap->connect();
         if ($resource) {
-            $sr = ldap_mod_del($resource, $dn_group, $groupinfo);
-            if(ldap_error($resource) == "Success")
+            $sr = ldap_mod_del($this->ldap->link, $dn_group, $groupinfo);
+            if(ldap_error($this->ldap->link) == "Success")
                 return true;
             else
                 return false;
@@ -203,10 +203,12 @@ class LdapFonctions
 
         $groupinfo['amuGroupFilter'] = $filter;
 
-        $this->connect();
+        // Connexion au LDAP
+        $baseDN = $this->ldap->getBaseDN();
+        $resource = $this->ldap->connect();
         if ($this->r) {
-            $sr = ldap_mod_del($this->ds, $dn_group, $groupinfo);
-            if(ldap_error($this->ds) == "Success")
+            $sr = ldap_mod_del($this->ldap->link, $dn_group, $groupinfo);
+            if(ldap_error($this->ldap->link) == "Success")
                 return true;
             else
                 return false;

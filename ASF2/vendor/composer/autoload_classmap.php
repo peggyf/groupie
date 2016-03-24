@@ -6,7 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'APCUIterator' => $vendorDir . '/symfony/polyfill-apcu/Resources/stubs/APCUIterator.php',
     'Amu\\CasBundle\\Service\\Cas' => $vendorDir . '/amu/cas-bundle/Amu/CasBundle/Service/Cas.php',
     'Amu\\RoleBundle\\Service\\Networks' => $vendorDir . '/amu/role-bundle/Amu/RoleBundle/Service/Networks.php',
     'Amu\\RoleBundle\\Service\\Roles' => $vendorDir . '/amu/role-bundle/Amu/RoleBundle/Service/Roles.php',

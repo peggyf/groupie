@@ -10,7 +10,11 @@
     <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
-
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#memb').DataTable();
+        } );
+    </script>
     <h1>Modification des membres du groupe <span style="font-variant-caps: small-caps;"> {{ group.cn }} </span></h1>
     {% set hilightColor='#C7FE74' %}
 
@@ -37,17 +41,17 @@
         {% endif %}
         <br>
         <div class="buttons">
-            <a href="{{ path('user_search', { 'opt': 'add', 'cn' : group.cn, 'liste' : liste }) }}">
+            <a href="{{ path('user_search', { 'opt': 'add', 'cn' : group.cn }) }}">
                 <img src="{{asset('bundles/amugroupie/images/add-2.png')}}" alt=""/>
                 &nbsp;Ajouter un membre&nbsp;
             </a>
         </div>
-        
         <br>
-        <br> 
+        <br>
+        <br>
         {% if nb_membres > 0 %}
-        <form class="amuForms" id="_ajxFromModifier">
-            <table id="memb" class="ui-widget-content dataTable TabInfos" filter="25">
+        <form>
+            <table id="memb" class="display">
                 <thead>
                     <tr>
                         <th>uid</th>
@@ -78,37 +82,32 @@
                 </tbody>
             </table>
             <br>
-            <p>
+
             <div class="buttons">
-                <a href="{{ path('user_search', { 'opt': 'add', 'cn' : group.cn, 'liste' : liste }) }}">
+                <a href="{{ path('group_update', { 'cn' : group.cn }) }}" >
                     <img src="{{asset('bundles/amugroupie/images/valid.png')}}" alt=""/>
-                    &nbsp;Valider les changements de droit&nbsp;
+                    &nbsp;Valider les changements de droits&nbsp;
                 </a>
-                <a href="{{ path('homepage') }}">
+                <a href="{{ path('homepage') }}" >
                     <img src="{{asset('bundles/amugroupie/images/cancel.png')}}" alt=""/>
                     &nbsp;Annuler&nbsp;
                 </a>
             </div>
 
-            </p>
-
             {{ form_rest(form) }}
             
         </form>
-        <br> 
-        
-       {% endif %} 
-       
-       {% if liste=='mesgroupes' %}
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-                onclick="loadPage('{{path('my_groups') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste des groupes&nbsp;
-        </button>
+
+        <br>
+        <br>
+        <br>
+
+
         {% endif %}
-        {% if liste=='recherchegroupe' %}
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-            onclick="loadPage('{{path('group_display') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;
-        </button>
-        {% endif %}
+
+        <div class="buttons">
+            <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour &nbsp;</button>
+        </div>
          
     {% else %}
         
@@ -132,16 +131,17 @@
         {% endif %}
         <br>
         <div class="buttons">
-            <a href="{{ path('user_search', { 'opt': 'add', 'cn' : group.cn, 'liste' : liste }) }}">
+            <a href="{{ path('user_search', { 'opt': 'add', 'cn' : group.cn }) }}">
                 <img src="{{asset('bundles/amugroupie/images/add-2.png')}}" alt=""/>
                 &nbsp;Ajouter un membre&nbsp;
             </a>
         </div>
         <br>
         <br>
+        <br>
         {% if nb_membres > 0 %}
-        <form class="amuForms" id="_ajxFromModifier">
-            <table id="memb" class="ui-widget-content dataTable TabInfos" filter="25">
+        <form>
+            <table id="memb" class="display">
                 <thead>
                     <tr>
                         <th>uid</th>
@@ -167,30 +167,30 @@
                 </tbody>
             </table>
             <br>
-            <p>
-                <button type="button" id="button_val" class="ui-button ui-widget-content ui-corner-all" style="padding:5px; "  
-                ><img align="absmiddle" src="{{asset('bundles/amugroupie/images/valid.png')}}" />&nbsp;Valider les changements de droits&nbsp;</button>
-                <span class="record_actions"></span>
-                <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('homepage') }}');" ><img align="absmiddle" src="{{asset('bundles/amugroupie/images/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
-            </p>
+
+            <div class="buttons">
+                <a href="{{ path('group_update', { 'cn' : group.cn, 'liste' : liste }) }}" >
+                    <img src="{{asset('bundles/amugroupie/images/valid.png')}}" alt=""/>
+                    &nbsp;Valider les changements de droits&nbsp;
+                </a>
+                <a href="{{ path('homepage') }}" >
+                    <img src="{{asset('bundles/amugroupie/images/cancel.png')}}" alt=""/>
+                    &nbsp;Annuler&nbsp;
+                </a>
+            </div>
 
             {{ form_rest(form) }}
         </form>
         <br>
+        <br>
+        <br>
         
         
         {% endif %}
-        
-       {% if liste=='mesgroupes' %}
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-                onclick="loadPage('{{path('my_groups') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste des groupes&nbsp;
-        </button>
-        {% endif %}
-        {% if liste=='recherchegroupe' %}
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-            onclick="loadPage('{{path('group_search') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la recherche&nbsp;
-        </button>
-        {% endif %}
+
+        <div class="buttons">
+            <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour &nbsp;</button>
+        </div>
 
     {% endif %}
 

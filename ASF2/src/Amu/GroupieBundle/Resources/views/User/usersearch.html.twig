@@ -11,7 +11,6 @@
 
     <link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
     <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css"/>
-    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css"/>
     <script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" charset="utf8" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 
@@ -60,11 +59,10 @@
     <br>
     
     <p>
+
         <div class="buttons">
-            <a href="{{ path('user_search', { 'opt': opt, 'cn' : cn, 'liste' : liste }) }}">
-                <img src="{{asset('bundles/amugroupie/images/search-3.png')}}" alt=""/>
-                &nbsp;Rechercher&nbsp;
-            </a>
+            <button type="submit" name="btRechercher"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/search-3.png') }}" />&nbsp;Rechercher&nbsp;</button>
+
             <a href="{{ path('homepage') }}">
                 <img src="{{asset('bundles/amugroupie/images/cancel-16.png')}}" alt=""/>
                 &nbsp;Annuler&nbsp;
@@ -135,9 +133,12 @@ $('#usersearch_uid').autocomplete({
                     }            
                 });
             },
+    autoFocus: true,
     select : function(event, ui) {
-        $('#usersearch_uid').val(ui.item.value);
-        loadPage('{{ path('user_search', { 'opt': opt, 'cn' : cn, 'liste': liste }) }}', $('#_ajxFromModifier').serializeArray());
+        {# $('#usersearch_uid').val(ui.item.value); #}
+        $(event.target).val(ui.item.value);
+        $('#usersearch_uid').closest("form").submit();
+        return false;
     }        
 });  
 
@@ -178,9 +179,12 @@ $('#usersearch_sn').autocomplete({
                     }            
                 });
             },
+    autoFocus: true,
     select : function(event, ui) {
-        $('#usersearch_sn').val(ui.item.value);
-        loadPage('{{ path('user_search', { 'opt': opt, 'cn' : cn, 'liste': liste }) }}', $('#_ajxFromModifier').serializeArray());
+        {# $('#usersearch_sn').val(ui.item.value); #}
+        $(event.target).val(ui.item.value);
+        $('#usersearch_sn').closest("form").submit();
+        return false;
     } 
 }); 
     

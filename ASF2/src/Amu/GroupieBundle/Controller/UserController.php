@@ -31,14 +31,7 @@ use Amu\GroupieBundle\Controller\GroupController;
  */
 class UserController extends Controller {
     
-    /**
-    * Fonction de récupération du service LDAP 
-    * @return  \Amu\AppBundle\Service\Ldap
-    */
-    private function getLdap() {
-        return $this->get('CliGrouper.ldap');
-    }
-  
+
      /**
      * Affiche l'utilisateur courant.
      *
@@ -110,10 +103,14 @@ class UserController extends Controller {
      */
     public function updateAction(Request $request, $uid)
     {
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->get('amu.ldap');
+
         // Dans le cas d'un gestionnaire
         if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
             // Recup des groupes dont l'utilisateur est admin
-            $arDataAdminLogin = $this->getLdap()->arDatasFilter("amuGroupAdmin=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+            $arDataAdminLogin = $ldapfonctions->recherche("amuGroupAdmin=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"), "cn");
             for($i=0;$i<$arDataAdminLogin["count"];$i++)
             {
                 $tab_cn_admin_login[$i] = $arDataAdminLogin[$i]["cn"][0];
@@ -121,7 +118,7 @@ class UserController extends Controller {
         }
         
         // Recherche des utilisateurs dans le LDAP
-        $arData=$this->getLdap()->arDatasFilter("uid=".$uid, array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'memberof'));
+        $arData = $ldapfonctions->recherche("uid=".$uid, array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'memberof'), "uid");
             
         // Initialisation de l'utilisateur sur lequel on souhaite modifier les appartenances
         $user = new User();
@@ -152,7 +149,7 @@ class UserController extends Controller {
         $userini->setMemberof($tab_cn); 
         
         // Récupération des groupes dont l'utilisateur est admin
-        $arDataAdmin=$this->getLdap()->arDatasFilter("amuGroupAdmin=uid=".$uid.",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+        $arDataAdmin = $ldapfonctions->recherche("amuGroupAdmin=uid=".$uid.",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"), "cn");
         $flagMember = array();
         for($i=0;$i<$arDataAdmin["count"];$i++)
             $flagMember[$i] = FALSE;
@@ -277,7 +274,7 @@ class UserController extends Controller {
              
             // Log modif de groupe
             openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-            $adm = $request->getSession()->get('login');
+            $adm = $request->getSession()->get('phpCAS_user');
             
             // Traitement des données issues de la récup du formulaire
             $m_update = new ArrayCollection();      
@@ -370,7 +367,12 @@ class UserController extends Controller {
         // Récupération utilisateur
         $user = new User();
         $user->setUid($uid);
-        $arDataUser=$this->getLdap()->arDatasFilter("uid=".$uid, array('displayname', 'memberof', 'uid'));
+
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+
+        $arDataUser = $ldapfonctions->recherche("uid=".$uid, array('displayname', 'memberof', 'uid'), "uid");
                 
         // Test de la validité de l'uid
         if ($arDataUser[0]['uid'][0] == '') {
@@ -387,7 +389,7 @@ class UserController extends Controller {
                 $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $dn);
     
             // Recherche des admins du groupe dans le LDAP
-            $arAdmins = $this->getLdap()->getAdminsGroup($cn);
+            $arAdmins = $ldapfonctions->getAdminsGroup($cn);
 
             // User initial pour détecter les modifications
             $userini = new User();
@@ -440,7 +442,7 @@ class UserController extends Controller {
             // Création du formulaire d'ajout
             $editForm = $this->createForm(new UserEditType(), $user, array(
                 'action' => $this->generateUrl('user_add', array('uid'=> $uid, 'cn' => $cn)),
-                'method' => 'POST',
+                'method' => 'GET',
             ));
             $editForm->handleRequest($request);
             if ($editForm->isValid()) {
@@ -449,8 +451,8 @@ class UserController extends Controller {
                 $userupdate = $editForm->getData();
 
                 // Log modif de groupe
-                openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-                $adm = $request->getSession()->get('login');
+                openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+                $adm = $request->getSession()->get('phpCAS_user');
 
                 $m_update = new ArrayCollection();      
                 $m_update = $userupdate->getMemberships();
@@ -463,7 +465,7 @@ class UserController extends Controller {
                     // Si modification des droits, on modifie dans le ldap
                     if ($memb->getMemberof() != $membershipsini[$i]->getMemberof()) {
                         if ($memb->getMemberof()) {
-                            $r = $this->getLdap()->addMemberGroup($dn_group, array($uid));
+                            $r = $ldapfonctions->addMemberGroup($dn_group, array($uid));
                             if ($r) {
                                 // Log modif
                                 syslog(LOG_INFO, "add_member by $adm : group : $cn, user : $uid");
@@ -473,7 +475,7 @@ class UserController extends Controller {
                             }
                         }
                         else {
-                            $r = $this->getLdap()->delMemberGroup($dn_group, array($uid));
+                            $r = $ldapfonctions->delMemberGroup($dn_group, array($uid));
                             if ($r) {
                                 // Log modif
                                 syslog(LOG_INFO, "del_member by $adm : group : $cn, user : $uid");
@@ -488,7 +490,7 @@ class UserController extends Controller {
                     // Si modification des droits, on modifie dans le ldap
                     if ($memb->getAdminof() != $membershipsini[$i]->getAdminof()) {
                         if ($memb->getAdminof()) {
-                            $r = $this->getLdap()->addAdminGroup($dn_group, array($uid));
+                            $r = $ldapfonctions->addAdminGroup($dn_group, array($uid));
                             if ($r) {
                                 // Log modif
                                 syslog(LOG_INFO, "add_admin by $adm : group : $cn, user : $uid");
@@ -498,7 +500,7 @@ class UserController extends Controller {
                             }
                         }
                         else {
-                            $r = $this->getLdap()->delAdminGroup($dn_group, array($uid));
+                            $r = $ldapfonctions->delAdminGroup($dn_group, array($uid));
                             if ($r) {
                                 // Log modif
                                 syslog(LOG_INFO, "del_admin by $adm : group : $cn, user : $uid");
@@ -522,10 +524,10 @@ class UserController extends Controller {
                 $newmembers = new ArrayCollection();
 
                 // Recherche des membres dans le LDAP
-                $narUsers = $this->getLdap()->getMembersGroup($cn);
+                $narUsers = $ldapfonctions->getMembersGroup($cn);
 
                 // Recherche des admins dans le LDAP
-                $narAdmins = $this->getLdap()->getAdminsGroup($cn);
+                $narAdmins = $ldapfonctions->getAdminsGroup($cn);
                 $nflagMembers = array();
                 for($i=0;$i<$narAdmins[0]["amugroupadmin"]["count"];$i++)
                     $nflagMembers[] = FALSE;
@@ -555,7 +557,7 @@ class UserController extends Controller {
                     if ($nflagMembers[$j]==FALSE)  {
                         // si l'admin n'est pas membre du groupe, il faut aller récupérer ses infos dans le LDAP
                         $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $narAdmins[0]["amugroupadmin"][$j]);
-                        $result = $this->getLdap()->arUserInfos($uid, array("uid", "sn", "displayname", "mail", "telephonenumber"));
+                        $result = $ldapfonctions->arUserInfos($uid, array("uid", "sn", "displayname", "mail", "telephonenumber"));
 
                         $nmemb = new Member();
                         $nmemb->setUid($result["uid"]);
@@ -838,23 +840,33 @@ class UserController extends Controller {
         $users = array();
         $u = new User();
         $u->setExacte(true);
+
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
         
         // Création du formulaire de recherche
-        $form = $this->createForm(new UserSearchType(), $u);               
+        $form = $this->createForm(new UserSearchType(),
+            $u,
+            array('action' => $this->generateUrl('user_search', array('opt'=>$opt, 'cn'=>$cn)),
+                'method' => 'GET'));
         $form->handleRequest($request);
+
         if ($form->isValid()) {
             // Récupération des données du formulaire
             $usersearch = $form->getData();
+
+
             
             // On teste si on a qqchose dans le champ uid
             if ($usersearch->getUid()=='') {
                 // si on a rien, on teste le nom
                 // On teste si on fait une recherche exacte ou non
                 if ($usersearch->getExacte()) {
-                    $arData=$this->getLdap()->arDatasFilter("(&(sn=".$usersearch->getSn().")(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))", array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'amuComposante', 'supannEntiteAffectation', 'memberof'));
+                    $arData=$ldapfonctions->recherche("(&(sn=".$usersearch->getSn().")(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))", array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'amuComposante', 'supannEntiteAffectation', 'memberof'));
                 }
                 else {
-                    $arData=$this->getLdap()->arDatasFilter("(&(sn=".$usersearch->getSn()."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))", array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'amuComposante', 'supannEntiteAffectation', 'memberof'));
+                    $arData=$ldapfonctions->recherche("(&(sn=".$usersearch->getSn()."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))", array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'amuComposante', 'supannEntiteAffectation', 'memberof'));
                 }
                 
                 // on récupère la liste des uilisateurs renvoyés par la recherche
@@ -901,7 +913,7 @@ class UserController extends Controller {
             }
             else {
                 // Recherche des utilisateurs dans le LDAP
-                $arData=$this->getLdap()->arDatasFilter("uid=".$usersearch->getUid(), array('uid', 'sn','displayname', 'mail', 'telephonenumber','amucomposante', 'supannentiteaffectation', 'memberof'));
+                $arData=$ldapfonctions->recherche("uid=".$usersearch->getUid(), array('uid', 'sn','displayname', 'mail', 'telephonenumber','amucomposante', 'supannentiteaffectation', 'memberof'), "uid");
                 
                 // Test de la validité de l'uid
                 if ($arData[0]['uid'][0] == '') {
@@ -915,8 +927,8 @@ class UserController extends Controller {
                     $user->setMail($arData[0]['mail'][0]);
                     $user->setSn($arData[0]['sn'][0]);
                     $user->setTel($arData[0]['telephonenumber'][0]);
-                    $user->setComp($data['amucomposante'][0]);
-                    $user->setAff($data['supannentiteaffectation'][0]);
+                    $user->setComp($arData[0]['amucomposante'][0]);
+                    $user->setAff($arData[0]['supannentiteaffectation'][0]);
                     // Récupération du cn des groupes (memberof)
                     $tab = array_splice($arData[0]['memberof'], 1);
                     $tab_cn = array();

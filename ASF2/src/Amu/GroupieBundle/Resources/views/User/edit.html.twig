@@ -1,9 +1,24 @@
-{% extends 'AppBundle::page.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block titre %}Modification des attributs d'un utilisateur{% endblock %}
+{% block app_menu %}
+    {{ knp_menu_render('AppBundle:Builder:mainMenu') }}
+    <div class="clear"><hr /></div>
+{% endblock %}
+
 
 {% block body %}
- 
+    {{ parent() }}
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#memb').DataTable();
+        } );
+    </script>
+
     {% if app.session.flashbag.has('flash-notice') %}
         <center>
             <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
@@ -16,17 +31,23 @@
     
     {% set hilightColor='#C7FE74' %}
 
+    <h1>Modification des attributs d'un utilisateur</h1>
     <br>    
     <h3>Appartenances de l'utilisateur : {{user.displayname}}, uid = {{user.uid}}</h3>
     <br>
-    <div>
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" 
-        onclick="loadPage('{{ path('group_search', { 'opt': 'add', 'cn': 0, 'uid' : user.uid}) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/add-1.png')}}" />&nbsp;Ajouter un groupe&nbsp;</button>       
+    <div class="buttons">
+        <a href="{{ path('group_search', { 'opt': 'add', 'cn' : 0, 'uid' : user.uid }) }}">
+            <img src="{{asset('bundles/amugroupie/images/add-2.png')}}" alt=""/>
+            &nbsp;Ajouter un groupe&nbsp;
+        </a>
     </div>
+
+    <br>
+    <br>
     <br>
 
     <form class="amuForms" id="_ajxFromModifier">    
-        <table id="memb" class="ui-widget-content dataTable TabInfos" filter="25">
+        <table id="memb" class="display">
             <thead>
                 <tr>
                     <th>Nom du groupe</th>
@@ -60,23 +81,24 @@
         </table>
         <br>
         <p>
-            {#    <button id="button_val" type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-                    onclick="loadPage('{{ path('user_update', { 'uid': user.uid }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/save-2.png')}}" />&nbsp;Enregistrer les modifications&nbsp;</button> #}
-            <button id="button_val" type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"> <img align="absmiddle" src="{{asset('bundles/app/images/ico/16/valid.png')}}" />&nbsp;Valider les changements de droits&nbsp;</button> 
-            <span class="record_actions"></span>
-            <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
-            
+        <div class="buttons">
+            <button type="submit" name="btValider" id="button_val"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/valid.png') }}" />&nbsp;Valider les changements de droits&nbsp;</button>
+            <a href="{{ path('homepage') }}">
+                <img src="{{asset('bundles/amugroupie/images/cancel.png')}}" alt=""/>
+                &nbsp;Annuler&nbsp;
+            </a>
+        </div>
         </p>
         
         <div style="display: none;"> {{ form_rest(form) }}</div> 
         {# ... #}
     </form>
-    
     <br>
-    
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-	onclick="loadPage('{{path('user_search') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la recherche&nbsp;
-    </button>
+    <br>
+    <br>
+    <div class="buttons">
+        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la recherche&nbsp;</button>
+    </div>
   
     {# Ajout d'une fonction javascript pour gérer les lignes cachées de la datatable #}
     <script type="text/javascript" src="http://cdn.datatables.net/plug-ins/1.10.7/api/fnGetHiddenNodes.js"/>
@@ -85,7 +107,7 @@
             $('#button_val').click( function () {
                 oTable = $('#memb').dataTable();
                 $(oTable.fnGetHiddenNodes()).appendTo(this);
-                loadPage('{{ path('user_update', { 'uid': user.uid }) }}', $('#_ajxFromModifier').serializeArray());
+                $('#useredit').closest("form").submit();
             } );
         } );
     </script>

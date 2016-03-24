@@ -1,9 +1,25 @@
-{% extends 'AppBundle::page.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block titre %}Ajout de droits{% endblock %}
+{% block app_menu %}
+    {{ knp_menu_render('AppBundle:Builder:mainMenu') }}
+    <div class="clear"><hr /></div>
+{% endblock %}
+
 
 {% block body %}
-    
+
+    <h1>Ajout de droits</h1>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#memb').DataTable();
+        } );
+    </script>
+
     {% if app.session.has('_saved') and app.session.get('_saved', 0) == 1 %}
         <div style="display: none;"> {{ app.session.remove('_saved') }} </div>
  
@@ -20,7 +36,7 @@
         <br>    
         <h3>Droits sur le groupe : {{ cn }}</h3>
         <br>
-        <table class="ui-widget-content dataTable TabInfos" filter="25">
+        <table id="memb" class="display">
             <thead>
                 <tr>
                     <th>uid</th>
@@ -57,7 +73,7 @@
             <br>    
             <h3>Droits sur le groupe : {{ cn }}</h3>
             <br>
-            <table class="ui-widget-content dataTable TabInfos" filter="25">
+            <table id="memb" class="display">
                 <thead>
                     <tr>
                         <th>uid</th>
@@ -80,21 +96,24 @@
             </table>
     
             <br>
-            <p>
-                <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-                onclick="loadPage('{{ path('user_add', { 'uid': user.uid, 'cn': cn, 'liste': liste }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/user-add.png')}}" />&nbsp;Ajouter les droits&nbsp;</button>
-                <span class="record_actions"></span>
-                <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
-            </p>
+
+            <div class="buttons">
+                <button type="submit" name="btAjouter"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/user-add.png') }}" />&nbsp;Ajouter les droits&nbsp;</button>
+                <a href="{{ path('homepage') }}" >
+                    <img src="{{asset('bundles/amugroupie/images/cancel.png')}}" alt=""/>
+                    &nbsp;Annuler&nbsp;
+                </a>
+            </div>
     
             {{ form_rest(form) }}
             {# ... #}
         </form>
-             <br>
-
-            <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-                onclick="loadPage('{{path('user_search', { 'opt': 'add', 'cn': cn, 'liste': liste }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la recherche&nbsp;
-            </button>
+            <br>
+            <br>
+            <br>
+        <div class="buttons">
+            <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour&nbsp;</button>
+        </div>
 
     {% endif %}
 {% endblock %}

@@ -30,8 +30,8 @@
             "url": "ssh://gitadmin@rubis.pp.univ-amu.fr/CasBundle.git"
         },
         {
-            "type": "git",
-            "url": "ssh://gitadmin@rubis.pp.univ-amu.fr/LdapBundle.git"
+            "type": "vcs",
+            "url": "C:\\Users\\peggy_fernandez\\Projets ASF2\\CliGrouper\\AmuBundles\\LdapBundle"
         },
         {
             "type": "git",
