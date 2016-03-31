@@ -343,7 +343,7 @@ class GroupController extends Controller {
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->get('amu.ldap');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
 
         // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
         $arData = $ldapfonctions->recherche("amuGroupAdmin=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description", "amugroupfilter"), "cn");
@@ -405,7 +405,7 @@ class GroupController extends Controller {
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->get('amu.ldap');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
 
         // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
         $result = $ldapfonctions->recherche("member=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description", "amugroupfilter"), "cn");
@@ -458,18 +458,20 @@ class GroupController extends Controller {
      */
     public function privatemembershipsAction(Request $request) {
         // Récupération des groupes privés dont l'utilisateur courant est membre
-        $arData=$this->getLdap()->arDatasFilter("member=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $result = $ldapfonctions->recherche("member=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description"), "cn");
         
         // Initialisation du tableau d'entités Group
         $groups = new ArrayCollection();
         $nb_groups=0;
-        for ($i=0; $i<$arData["count"]; $i++) {
+        for ($i=0; $i<$result["count"]; $i++) {
             // on ne garde que les groupes privés
-            if (strstr($arData[$i]["dn"], "ou=private")) {
+            if (strstr($result[$i]["dn"], "ou=private")) {
                 $groups[$i] = new Group();
-                $groups[$i]->setCn($arData[$i]["cn"][0]);
-                $groups[$i]->setDescription($arData[$i]["description"][0]);
-                $groups[$i]->setAmugroupfilter($arData[$i]["amugroupfilter"][0]);
+                $groups[$i]->setCn($result[$i]["cn"][0]);
+                $groups[$i]->setDescription($result[$i]["description"][0]);
                 $nb_groups++;
             }
         }
@@ -758,7 +760,7 @@ class GroupController extends Controller {
             $m_update = $userupdate->getMemberships();
             
             // Log Mise à jour des membres du groupe
-            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+            openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
             $adm = $request->getSession()->get('login');
             
             // Pour chaque appartenance
@@ -911,26 +913,29 @@ class GroupController extends Controller {
     public function seeprivateAction(Request $request, $cn, $opt)
     {
         $users = array();
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
         // Récupération du propriétaire du groupe
-        $uid_prop = strstr($cn, ":", TRUE);
-        $result = $this->getLdap()->arUserInfos($uid_prop, array("uid", "sn", "displayname", "mail", "telephonenumber"));
+        $cn_perso = substr($cn, 10); // on retire le préfixe amu:perso
+        $uid_prop = strstr($cn_perso, ":", TRUE);
+        $result = $ldapfonctions->getInfosUser($uid_prop);
         $proprietaire = new User();
-        $proprietaire->setUid($result["uid"]);
-        $proprietaire->setSn($result["sn"]);
-        $proprietaire->setDisplayname($result["displayname"]);
-        $proprietaire->setMail($result["mail"]);
-        $proprietaire->setTel($result["telephonenumber"]);
+        $proprietaire->setUid($result[0]["uid"][0]);
+        $proprietaire->setSn($result[0]["sn"][0]);
+        $proprietaire->setDisplayname($result[0]["displayname"][0]);
+        $proprietaire->setMail($result[0]["mail"][0]);
+        $proprietaire->setTel($result[0]["telephonenumber"][0]);
         
         // Recherche des membres dans le LDAP
-        $arUsers = $this->getLdap()->getMembersGroup($cn.",ou=private");
+        $arUsers = $ldapfonctions->getMembersGroup($cn.",ou=private");
                  
         for ($i=0; $i<$arUsers["count"]; $i++) {                     
             $users[$i] = new User();
             $users[$i]->setUid($arUsers[$i]["uid"][0]);
             $users[$i]->setSn($arUsers[$i]["sn"][0]);
             $users[$i]->setDisplayname($arUsers[$i]["displayname"][0]);
-            if ($mail=='true')
-                $users[$i]->setMail($arUsers[$i]["mail"][0]);
+            $users[$i]->setMail($arUsers[$i]["mail"][0]);
             $users[$i]->setTel($arUsers[$i]["telephonenumber"][0]);
         }
         
@@ -961,7 +966,7 @@ class GroupController extends Controller {
             $group = $form->getData();
             
             // Log création de groupe
-            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+            openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
             $adm = $request->getSession()->get('login');
                 
             // Création du groupe dans le LDAP
@@ -1028,7 +1033,7 @@ class GroupController extends Controller {
             if ($test>0) {
                 // le nom du groupe est valide, on peut le créer
                 // Log création de groupe
-                openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+                openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
                 $adm = $request->getSession()->get('login');
                 
                 // Création du groupe dans le LDAP
@@ -1084,7 +1089,7 @@ class GroupController extends Controller {
     public function deleteAction(Request $request, $cn)
     {
         // Log suppression de groupe
-        openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+        openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
         $adm = $request->getSession()->get('login');
         
         //Suppression du groupe dans le LDAP
@@ -1142,7 +1147,7 @@ class GroupController extends Controller {
      */
     public function del1PrivateAction(Request $request, $cn) {
         // Log suppression de groupe
-        openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+        openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
         $adm = $request->getSession()->get('login');
         
         // Suppression du groupe dans le LDAP
@@ -1208,7 +1213,7 @@ class GroupController extends Controller {
             $groupmod = $form->getData();
             
             // Log modif de groupe
-            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+            openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
             $adm = $request->getSession()->get('login');
             
             // Cas particulier de la suppression amugroupfilter
@@ -1271,20 +1276,23 @@ class GroupController extends Controller {
     * @Route("/private",name="private_group")
     * @Template() 
     */
-    public function privateAction() {
+    public function privateAction(Request $request) {
         // Récupération uid de l'utilisateur logué
-        $uid = $this->container->get('request')->getSession()->get('login');
+        $uid = $request->getSession()->get('phpCAS_user');
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
         // Recherche des groupes dans le LDAP
-        $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=".$uid.":*))",array("cn","description"));
+        $result = $ldapfonctions->recherche("(&(objectClass=groupofNames)(cn=amu:perso:".$uid.":*))", array("cn", "description"), "cn");
     
         $groups = new ArrayCollection();
-        for ($i=0; $i<$arData["count"]; $i++) {
+        for ($i=0; $i<$result["count"]; $i++) {
             $groups[$i] = new Group();
-            $groups[$i]->setCn($arData[$i]["cn"][0]);
-            $groups[$i]->setDescription($arData[$i]["description"][0]);
+            $groups[$i]->setCn($result[$i]["cn"][0]);
+            $groups[$i]->setDescription($result[$i]["description"][0]);
         }
         // Affichage du tableau de groupes privés via fichier twig
-        return array('groups' => $groups, 'nb_groups' => $arData["count"]);
+        return array('groups' => $groups, 'nb_groups' => $result["count"]);
     }
     
     /**
@@ -1340,7 +1348,7 @@ class GroupController extends Controller {
             $groupupdate = $editForm->getData();
             
             // Log Mise à jour des membres du groupe
-            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+            openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
             $adm = $request->getSession()->get('login');
             
             // Récup des appartenances
@@ -1529,14 +1537,18 @@ class GroupController extends Controller {
         $groupini ->setMembers($membersini);
                       
         // Création du formulaire de mise à jour du groupe
-        $editForm = $this->createForm(new GroupEditType(), $group);    
+        $editForm = $this->createForm(new GroupEditType(), $group,array(
+            'action' => $this->generateUrl('group_update', array('cn'=> $cn)),
+            'method' => 'GET',));
+
         $editForm->handleRequest($request);
         if ($editForm->isValid()) {
+            echo "Formulaire validé";
             $groupupdate = new Group();
             $groupupdate = $editForm->getData();
             
             // Log Mise à jour des membres du groupe
-            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+            openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
             $adm = $request->getSession()->get('login');
             
             $m_update = new ArrayCollection();      
@@ -1556,7 +1568,7 @@ class GroupController extends Controller {
                 // Si il y a changement pour le membre, on modifie dans le ldap, sinon, on ne fait rien
                 if ($memb->getMember() != $membi->getMember()) {
                     if ($memb->getMember()) {
-                        $r = $this->getLdap()->addMemberGroup($dn_group, array($u));
+                        $r = $ldapfonctions->addMemberGroup($dn_group, array($u));
                         if ($r) {
                             // Log modif
                             syslog(LOG_INFO, "add_member by $adm : group : $cn, user : $u ");
@@ -1567,7 +1579,7 @@ class GroupController extends Controller {
                         }
                     }
                     else {
-                        $r = $this->getLdap()->delMemberGroup($dn_group, array($u));
+                        $r = $ldapfonctions->delMemberGroup($dn_group, array($u));
                         if ($r) {
                             // Log modif
                             syslog(LOG_INFO, "del_member by $adm : group : $cn, user : $u ");
@@ -1582,7 +1594,7 @@ class GroupController extends Controller {
                 // Idem : si changement, on répercute dans le ldap
                 if ($memb->getAdmin() != $membi->getAdmin()) {
                     if ($memb->getAdmin()) {
-                        $r = $this->getLdap()->addAdminGroup($dn_group, array($u));
+                        $r = $ldapfonctions->addAdminGroup($dn_group, array($u));
                         if ($r) {
                             // Log modif
                             syslog(LOG_INFO, "add_admin by $adm : group : $cn, user : $u ");
@@ -1592,7 +1604,7 @@ class GroupController extends Controller {
                         }
                     }
                     else {
-                        $r = $this->getLdap()->delAdminGroup($dn_group, array($u));
+                        $r = $ldapfonctions->delAdminGroup($dn_group, array($u));
                         if ($r) {
                             // Log modif
                             syslog(LOG_INFO, "del_admin by $adm : group : $cn, user : $u ");
@@ -1615,10 +1627,10 @@ class GroupController extends Controller {
             $newmembers = new ArrayCollection();
 
             // Recherche des membres dans le LDAP
-            $narUsers = $this->getLdap()->getMembersGroup($cn);
+            $narUsers = $ldapfonctions->getMembersGroup($cn);
             
             // Recherche des admins dans le LDAP
-            $narAdmins = $this->getLdap()->getAdminsGroup($cn);
+            $narAdmins = $ldapfonctions->getAdminsGroup($cn);
             $nflagMembers = array();
             for($i=0;$i<$narAdmins[0]["amugroupadmin"]["count"];$i++)
                 $nflagMembers[] = FALSE;
@@ -1649,13 +1661,13 @@ class GroupController extends Controller {
                 {
                     // si l'admin n'est pas membre du groupe, il faut aller récupérer ses infos dans le LDAP
                     $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $narAdmins[0]["amugroupadmin"][$j]);
-                    $result = $this->getLdap()->arUserInfos($uid, array("uid", "sn", "displayname", "mail", "telephonenumber"));
+                    $result = $ldapfonctions->getInfosUsers($uid);
 
                     $nmemb = new Member();
-                    $nmemb->setUid($result["uid"]);
-                    $nmemb->setDisplayname($result["displayname"]);
-                    $nmemb->setMail($result["mail"]);
-                    $nmemb->setTel($result["telephonenumber"]);
+                    $nmemb->setUid($result[0]["uid"][0]);
+                    $nmemb->setDisplayname($result[0]["displayname"][0]);
+                    $nmemb->setMail($result[0]["mail"][0]);
+                    $nmemb->setTel($result[0]["telephonenumber"][0]);
                     $nmemb->setMember(FALSE);
                     $nmemb->setAdmin(TRUE);
                     $newmembers[] = $nmemb;

@@ -105,7 +105,7 @@ class UserController extends Controller {
     {
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->get('amu.ldap');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
 
         // Dans le cas d'un gestionnaire
         if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
@@ -557,13 +557,13 @@ class UserController extends Controller {
                     if ($nflagMembers[$j]==FALSE)  {
                         // si l'admin n'est pas membre du groupe, il faut aller récupérer ses infos dans le LDAP
                         $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $narAdmins[0]["amugroupadmin"][$j]);
-                        $result = $ldapfonctions->arUserInfos($uid, array("uid", "sn", "displayname", "mail", "telephonenumber"));
+                        $result = $ldapfonctions->getInfosUser($uid);
 
                         $nmemb = new Member();
-                        $nmemb->setUid($result["uid"]);
-                        $nmemb->setDisplayname($result["displayname"]);
-                        $nmemb->setMail($result["mail"]);
-                        $nmemb->setTel($result["telephonenumber"]);
+                        $nmemb->setUid($result[0]["uid"][0]);
+                        $nmemb->setDisplayname($result[0]["displayname"][0]);
+                        $nmemb->setMail($result[0]["mail"][0]);
+                        $nmemb->setTel($result[0]["telephonenumber"][0]);
                         $nmemb->setMember(FALSE);
                         $nmemb->setAdmin(TRUE);
                         $newmembers[] = $nmemb;
