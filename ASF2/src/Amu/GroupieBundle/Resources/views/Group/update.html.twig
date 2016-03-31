@@ -8,6 +8,7 @@
 {% block body %}
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
     <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
+    <link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
@@ -23,14 +24,14 @@
 
         {% if app.session.flashbag.has('flash-notice') %}
             <center>
-            <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
-                {% for flashMessage in app.session.flashbag.get('flash-notice') %}
-                    <p>{{ flashMessage }}</p>
-                {% endfor %}
-            </div>
+                <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+                    {% for flashMessage in app.session.flashbag.get('flash-notice') %}
+                        <p>{{ flashMessage }}</p>
+                    {% endfor %}
+                </div>
             </center>
-        {% endif %} 
-
+        {% endif %}
+        <div>
         <br>
         <h3>Nombre de membres du groupe <b>{{ group.cn }}</b> : {{ nb_membres }}</h3>
         <br>
@@ -108,19 +109,20 @@
         <div class="buttons">
             <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour &nbsp;</button>
         </div>
-         
+        </div>
+
     {% else %}
-        
         {% if app.session.flashbag.has('flash-notice') %}
             <center>
-            <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
-                {% for flashMessage in app.session.flashbag.get('flash-notice') %}
-                    <p>{{ flashMessage }}</p>
-                {% endfor %}
-            </div>
+                <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+                    {% for flashMessage in app.session.flashbag.get('flash-notice') %}
+                        <p>{{ flashMessage }}</p>
+                    {% endfor %}
+                </div>
             </center>
-        {% endif %} 
-               
+        {% endif %}
+
+        <div>
         <br>
         <h3>Nombre de membres du groupe <b> {{ group.cn }} </b> : {{ nb_membres }}</h3>
         <br>
@@ -169,10 +171,7 @@
             <br>
 
             <div class="buttons">
-                <a href="{{ path('group_update', { 'cn' : group.cn, 'liste' : liste }) }}" >
-                    <img src="{{asset('bundles/amugroupie/images/valid.png')}}" alt=""/>
-                    &nbsp;Valider les changements de droits&nbsp;
-                </a>
+                <button type="submit" name="btValider" id="submit"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/valid.png') }}" />&nbsp;Valider les changements de droits&nbsp;</button>
                 <a href="{{ path('homepage') }}" >
                     <img src="{{asset('bundles/amugroupie/images/cancel.png')}}" alt=""/>
                     &nbsp;Annuler&nbsp;
@@ -192,6 +191,7 @@
             <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour &nbsp;</button>
         </div>
 
+        </div>
     {% endif %}
 
     <br>
@@ -202,13 +202,14 @@
     <script type="text/javascript" src="http://cdn.datatables.net/plug-ins/1.10.7/api/fnGetHiddenNodes.js"/>
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#button_val').click( function () {
-                oTable = $('#memb').dataTable();
+            oTable = $('#memb').dataTable();
+            $('#groupedit').submit(function () {
                 $(oTable.fnGetHiddenNodes()).appendTo(this);
-                loadPage('{{ path('group_update', { 'cn': group.cn, 'liste': liste }) }}', $('#_ajxFromModifier').serializeArray());
-            } );
-        } );
+                alert(oTable.length + ' nodes were returned');
+            });
+        });
     </script>
+
 {% endblock %}
 
 

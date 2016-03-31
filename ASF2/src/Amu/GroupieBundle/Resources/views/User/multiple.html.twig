@@ -7,7 +7,6 @@
 
 
 {% block body %}
-    {{ parent() }}
 
 <h1>Recherche d'utilisateurs</h1>
 
@@ -46,10 +45,7 @@
     
     <p>
     <div class="buttons">
-        <a href="{{ path('user_search', { 'opt': opt, 'cn' : cn, 'liste' : liste }) }}">
-            <img src="{{asset('bundles/amugroupie/images/add-2.png')}}" alt=""/>
-            &nbsp;Rechercher&nbsp;
-        </a>
+        <button type="submit" name="btRechercher"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/search-3.png') }}" />&nbsp;Rechercher&nbsp;</button>
         <a href="{{ path('homepage') }}">
             <img src="{{asset('bundles/amugroupie/images/cancel-16.png')}}" alt=""/>
             &nbsp;Annuler&nbsp;
