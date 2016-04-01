@@ -6,3 +6,4 @@ parameters:
 services:
   groupie.ldapfonctions:
     class: Amu\GroupieBundle\Service\LdapFonctions
+    arguments: ["@amu.ldap"]

@@ -1,13 +1,37 @@
-{% extends 'AppBundle::page.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block titre %}Gérer mes groupes privés{% endblock %}
+{% block app_menu %}
+    {{ knp_menu_render('AppBundle:Builder:mainMenu') }}
+    <div class="clear"><hr /></div>
+{% endblock %}
+
 
 {% block body %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
+    <link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#groups').DataTable();
+        } );
+    </script>
 
-<button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; position:absolute; left:36%" onclick="loadPage('{{ path('private_group_create', { 'nb_groups': nb_groups }) }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/add-2.png')}}" />&nbsp;Créer un groupe &nbsp;</button>        
-{% if nb_groups > 0 %}
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; position:absolute; left:55%" onclick="loadPage('{{ path('private_group_delete') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/delete-2.png')}}" />&nbsp;Supprimer un groupe &nbsp;</button>        
-{% endif %}    
+    <h1>Gérer mes groupes privés</h1>
+    <br>
+    <div class="buttons">
+        <a href="{{ path('private_group_create', { 'nb_groups': nb_groups }) }}">
+            <img src="{{asset('bundles/amugroupie/images/add-2.png')}}" alt=""/>
+            &nbsp;Créer un groupe&nbsp;
+        </a>
+        {% if nb_groups > 0 %}
+            <a href="{{ path('private_group_delete') }}">
+                <img src="{{asset('bundles/amugroupie/images/delete-2.png')}}" alt=""/>
+                &nbsp;Supprimer un groupe&nbsp;
+            </a>
+        {% endif %}
+    </div>
 <br>
 <br>
 <br>
@@ -15,7 +39,7 @@
 {% if nb_groups == 0 %}
     <h3>Pas de groupe privé </h3>
 {% else %}
-    <table class="ui-widget-content dataTable TabInfos" filter="25">
+    <table id="groups" class="display">
         <thead>
             <tr>
                 <th>Nom</th>

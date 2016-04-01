@@ -1,11 +1,26 @@
-{% extends 'AppBundle::page.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block titre %}Liste des membres du groupe privé <span style="font-variant-caps: small-caps;">{{ cn }}</span> {% endblock %}
+{% block app_menu %}
+    {{ knp_menu_render('AppBundle:Builder:mainMenu') }}
+    <div class="clear"><hr /></div>
+{% endblock %}
+
 
 {% block body %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
+    <link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#memb').DataTable();
+        } );
+    </script>
 
-
-{% if nb_membres == 0 %}       
+    <h1>Liste des membres du groupe privé <span style="font-variant: small-caps; color: #0071b9">{{ cn }}</span></h1>
+    <br>
+{% if nb_membres == 0 %}
     <h3>   Le groupe n'a pas de membre. </h3>
     <br>
 {% else %}  
@@ -14,7 +29,7 @@
     <h3> <b>  Nombre de membres du groupe : </b>{{ nb_membres }} </h3>
     <br>
 
-    <table class="ui-widget-content dataTable TabInfos" filter="25">
+    <table id="memb" class="display">
         <thead>
             <tr>
                 <th>uid</th> 
@@ -35,15 +50,8 @@
 {% endif %}   
 
 <br>
-{% if opt == 'tous' %}
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-    onclick="loadPage('{{path('all_private_groups') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes&nbsp;
-    </button>
-{% endif %}
-{% if opt == 'mes' %}
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-        onclick="loadPage('{{path('private_memberships') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes&nbsp;
-    </button>
-{% endif %}
+    <div class="buttons">
+        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste des groupes &nbsp;</button>
+    </div>
 
 {% endblock %}

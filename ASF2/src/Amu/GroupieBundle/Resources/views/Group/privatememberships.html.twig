@@ -38,7 +38,9 @@
                 <td style="vertical-align: middle;">{{group.cn}}</td>
                 <td style="vertical-align: middle;">{{group.description}}</td>
                 <td style="vertical-align: middle;">
-                    <img align="absmiddle" src="{{ asset("bundles/app/images/ico/16/view-page.png") }}" title="Gérer le groupe" class="ui-button" onclick="loadPage('{{ path('see_private_group', { 'cn': group.cn, 'opt': 'mes' }) }}');" />
+                    <a href="{{path('see_private_group', { 'cn': group.cn, 'opt': 'mes'})}}">
+                        <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/amugroupie/images/view-page.png") }}" title="Voir les membres de {{ group.cn }} "/>
+                    </a>
                 </td>
             </tr>
         {% endfor %}

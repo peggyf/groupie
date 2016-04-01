@@ -2,12 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f7874709-6f66-4129-ba76-d9eb565dc20c" name="Default" comment="Mise à jour des vues mes_groupes, mes_appartenances, tous_les_groupes avec extends base.html">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASF2/vendor/amu/ldap-bundle" afterPath="$PROJECT_DIR$/ASF2/vendor/amu/ldap-bundle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AmuBundles/LdapBundle" afterPath="$PROJECT_DIR$/AmuBundles/LdapBundle" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASF2/app/config/services.yml" afterPath="$PROJECT_DIR$/ASF2/app/config/services.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Controller/GroupController.php" afterPath="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Controller/GroupController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/touslesgroupesprives.html.twig" afterPath="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/touslesgroupesprives.html.twig" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Service/LdapFonctions.php" afterPath="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Service/LdapFonctions.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/public/css/groupie.css" afterPath="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/public/css/groupie.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/private.html.twig" afterPath="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/private.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/privatememberships.html.twig" afterPath="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/privatememberships.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/seeprivate.html.twig" afterPath="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/seeprivate.html.twig" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASF2/src/AppBundle/Menu/Builder.php" afterPath="$PROJECT_DIR$/ASF2/src/AppBundle/Menu/Builder.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASF2/web/bundles/amugroupie/css/groupie.css" afterPath="$PROJECT_DIR$/ASF2/web/bundles/amugroupie/css/groupie.css" />
     </list>
     <ignored path="CliGrouper.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -32,20 +36,50 @@
       <file leaf-file-name="GroupController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Controller/GroupController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.8507462">
-              <caret line="306" column="39" selection-start-line="306" selection-start-column="16" selection-end-line="306" selection-end-column="39" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="924" column="50" selection-start-line="924" selection-start-column="50" selection-end-line="924" selection-end-column="50" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="seeprivate.html.twig" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/seeprivate.html.twig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.660826">
+              <caret line="24" column="8" selection-start-line="24" selection-start-column="8" selection-end-line="24" selection-end-column="8" />
               <folding>
-                <element signature="e#48#105#0#PHP" expanded="true" />
+                <element signature="e#939#987#0#HTML" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="touslesgroupes.html.twig" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/touslesgroupes.html.twig">
+      <file leaf-file-name="see.html.twig" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/see.html.twig">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.806452">
-              <caret line="11" column="42" selection-start-line="11" selection-start-column="42" selection-end-line="11" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="21" column="95" selection-start-line="21" selection-start-column="35" selection-end-line="21" selection-end-column="95" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="privatememberships.html.twig" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/privatememberships.html.twig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="26" column="39" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="39" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="memberships.html.twig" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/memberships.html.twig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="52" column="24" selection-start-line="52" selection-start-column="24" selection-end-line="52" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -54,30 +88,38 @@
       <file leaf-file-name="Builder.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ASF2/src/AppBundle/Menu/Builder.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.4193548">
-              <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="29" column="137" selection-start-line="29" selection-start-column="137" selection-end-line="29" selection-end-column="137" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="touslesgroupesprives.html.twig" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/touslesgroupesprives.html.twig">
+      <file leaf-file-name="private.html.twig" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/private.html.twig">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.645162">
-              <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
-              <folding>
-                <element signature="n#style#0;n#td#0;n#tr#0;n#tbody#0;n#table#0;n#!!top" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.0">
+              <caret line="41" column="38" selection-start-line="41" selection-start-column="11" selection-end-line="41" selection-end-column="38" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mesappartenances.html.twig" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/mesappartenances.html.twig">
+      <file leaf-file-name="update.html.twig" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/update.html.twig">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.935484">
-              <caret line="14" column="13" selection-start-line="0" selection-start-column="0" selection-end-line="14" selection-end-column="13" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="189" column="8" selection-start-line="189" selection-start-column="8" selection-end-line="191" selection-end-column="14" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="search.html.twig" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/search.html.twig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="12" column="0" selection-start-line="10" selection-start-column="4" selection-end-line="12" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -86,30 +128,8 @@
       <file leaf-file-name="LdapFonctions.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Service/LdapFonctions.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-114.258064">
-              <caret line="224" column="9" selection-start-line="224" selection-start-column="9" selection-end-line="224" selection-end-column="9" />
-              <folding>
-                <element signature="e#6#97#0#PHP" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="services.yml" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ASF2/app/config/services.yml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.18554217">
-              <caret line="7" column="50" selection-start-line="7" selection-start-column="50" selection-end-line="7" selection-end-column="50" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="config.yml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ASF2/app/config/config.yml">
-          <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="16" column="49" selection-start-line="16" selection-start-column="49" selection-end-line="16" selection-end-column="49" />
+              <caret line="69" column="32" selection-start-line="69" selection-start-column="20" selection-end-line="69" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -137,23 +157,61 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="mock:///Dummy.txt" root0="SKIP_INSPECTION" />
-    <setting file="mock:///Dummy.txt" root0="SKIP_INSPECTION" />
-    <setting file="mock:///Dummy.txt" root0="SKIP_INSPECTION" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Controller/AjaxController.php" />
-        <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Service/LdapGroups.php" />
-        <option value="$PROJECT_DIR$/ASF2/app/config/services.yml" />
         <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/mesappartenances.html.twig" />
         <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/mesgroupes.html.twig" />
         <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/touslesgroupes.html.twig" />
-        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Service/LdapFonctions.php" />
-        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Controller/GroupController.php" />
-        <option value="$PROJECT_DIR$/ASF2/src/AppBundle/Menu/Builder.php" />
         <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/touslesgroupesprives.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/UserMultipleType.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/GroupCreateType.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/GroupEditType.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/GroupModifType.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/MembershipType.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/PrivateGroupCreateType.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/PrivateGroupEditType.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/PrivateMembershipType.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/PrivateMemberType.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/PrivateUserEditType.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/UserEditType.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/UserSearchType.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/MemberType.php" />
+        <option value="$PROJECT_DIR$/ASF2/web/bundles/amugroupie/css/groupie.css" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/voir.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/app/cache/dev/twig/c9/c9e3268d7752b350255cadac80076828ea9fb0a39e7a15d41fc381cdf72c1e6c.php" />
+        <option value="$PROJECT_DIR$/ASF2/app/cache/dev/twig/8f/8f2e583ef47cb5cd5554c4b2591bcc9cfd8d8616275b0ad8800924a35ca22c78.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/edit.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/User/checkmultiple.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/allgroups.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/allprivate.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/memberships.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/see.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/app/Resources/views/base.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/searchres.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/searchres.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/GroupSearchType.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/User/usersearch.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/User/searchadd.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Controller/AjaxController.php" />
+        <option value="$PROJECT_DIR$/AmuBundles/LdapBundle/Ldap/Client.php" />
+        <option value="$PROJECT_DIR$/ASF2/composer.json" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Service/LdapFonctions.php" />
+        <option value="$PROJECT_DIR$/ASF2/app/config/services.yml" />
+        <option value="$PROJECT_DIR$/ASF2/vendor/amu/ldap-bundle/Ldap/Client.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/public/css/groupie.css" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Controller/UserController.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/User/edit.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/update.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/search.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/User/multiple.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/private.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/AppBundle/Menu/Builder.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/privatememberships.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/privatememberships.html.twig" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Controller/GroupController.php" />
+        <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/seeprivate.html.twig" />
       </list>
     </option>
   </component>
@@ -197,7 +255,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -244,7 +301,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="web" />
+              <option name="myItemId" value="vendor" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -262,37 +319,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="web" />
+              <option name="myItemId" value="vendor" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="bundles" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CliGrouper" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CliGrouper" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ASF2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bundles" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="amugroupie" />
+              <option name="myItemId" value="amu" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -310,19 +341,45 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="web" />
+              <option name="myItemId" value="vendor" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="bundles" />
+              <option name="myItemId" value="amu" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="amugroupie" />
+              <option name="myItemId" value="ldap-bundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CliGrouper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CliGrouper" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="images" />
+              <option name="myItemId" value="ASF2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vendor" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="amu" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ldap-bundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Ldap" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -444,41 +501,15 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CliGrouper" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CliGrouper" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ASF2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Amu" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="GroupieBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="Resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="User" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -517,6 +548,40 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Group" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CliGrouper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CliGrouper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ASF2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Amu" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GroupieBundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -621,6 +686,14 @@
               <option name="myItemId" value="Resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="css" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -648,7 +721,37 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Controller" />
+              <option name="myItemId" value="Resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CliGrouper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CliGrouper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ASF2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Amu" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GroupieBundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Form" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -692,8 +795,23 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CliGrouper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CliGrouper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AmuBundles" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -719,6 +837,16 @@
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="1316" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\peggy_fernandez\Projets ASF2\CliGrouper\ASF2\src\Amu\GroupieBundle\Resources\views\Group" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\peggy_fernandez\Projets ASF2\CliGrouper\ASF2\src\Amu\GroupieBundle\Resources\public\images" />
+      <recent name="C:\Users\peggy_fernandez\Projets ASF2\CliGrouper\ASF2\web\bundles\amugroupie\images" />
+      <recent name="C:\Users\peggy_fernandez\Projets ASF2\CliGrouper\ASF2\src\Amu\GroupieBundle\Resources\public\css" />
+    </key>
   </component>
   <component name="RunManager" selected="PHP Built-in Web Server.Groupie">
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
@@ -820,32 +948,80 @@
       <option name="project" value="LOCAL" />
       <updated>1456844600040</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Ajout image pour bouton &quot;précédent&quot;">
+      <created>1456999710224</created>
+      <option name="number" value="00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1456999710224</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Ajout image pour bouton &quot;précédent&quot; dans le répertoire web">
+      <created>1456999784252</created>
+      <option name="number" value="00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1456999784252</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Mise à jour des chemins Amu/CliGrouperBundle -&gt; Amu/GroupieBundle">
+      <created>1457018855108</created>
+      <option name="number" value="00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1457018855108</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Ajout du menu recherche groupe">
+      <created>1457018915572</created>
+      <option name="number" value="00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1457018915572</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Oubli Groupie -&gt; GroupieBundle">
+      <created>1457019123166</created>
+      <option name="number" value="00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1457019123166</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Mise à jour des fonctions LDAP">
+      <created>1457019929761</created>
+      <option name="number" value="00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1457019929761</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Mise à jour des images valid, cancel et add">
+      <created>1457021098857</created>
+      <option name="number" value="00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1457021098857</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Déclaration de 2 datatables dans le vue voir">
+      <created>1457022314322</created>
+      <option name="number" value="00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1457022314322</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="2578" height="1420" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18359375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298731" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32944834" sideWeight="0.5015625" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Command Line Tools Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32944834" sideWeight="0.4984375" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32944834" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18958819" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Command Line Tools Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32944834" sideWeight="0.4984375" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32944834" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298731" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18958819" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32944834" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -869,174 +1045,387 @@
     <MESSAGE value="Mise à jour des fonctions mes_groupes, mes_appartenances, tous_les_groupes avec le service ldapfonctions" />
     <MESSAGE value="Mise à jour des vues mes_groupes, mes_appartenances, tous_les_groupes avec extends base.html.twig" />
     <MESSAGE value="Mise au propre des menus" />
-    <option name="LAST_COMMIT_MESSAGE" value="Mise au propre des menus" />
+    <MESSAGE value="Ajout image pour bouton &quot;précédent&quot;" />
+    <MESSAGE value="Ajout image pour bouton &quot;précédent&quot; dans le répertoire web" />
+    <MESSAGE value="Mise à jour des chemins Amu/CliGrouperBundle -&gt; Amu/GroupieBundle" />
+    <MESSAGE value="Ajout du menu recherche groupe" />
+    <MESSAGE value="Oubli Groupie -&gt; GroupieBundle" />
+    <MESSAGE value="Mise à jour des fonctions LDAP" />
+    <MESSAGE value="Mise à jour des images valid, cancel et add" />
+    <MESSAGE value="Déclaration de 2 datatables dans le vue voir" />
+    <option name="LAST_COMMIT_MESSAGE" value="Déclaration de 2 datatables dans le vue voir" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <option name="time" value="1" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Controller/GroupController.php">
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/modifyform.html.twig">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#48#105#0#PHP" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Service/LdapFonctions.php">
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/modify.html.twig">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="55" selection-start-line="31" selection-start-column="55" selection-end-line="31" selection-end-column="55" />
-          <folding>
-            <element signature="e#6#97#0#PHP" expanded="true" />
-          </folding>
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/app/config/services.yml">
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/User/searchresults.html.twig">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="7" column="50" selection-start-line="7" selection-start-column="50" selection-end-line="7" selection-end-column="50" />
-          <folding />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/allprivate.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.419354">
+          <caret line="30" column="191" selection-start-line="30" selection-start-column="191" selection-end-line="30" selection-end-column="191" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/User/checkmultiple.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.68085104">
+          <caret line="80" column="48" selection-start-line="80" selection-start-column="48" selection-end-line="80" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/allgroups.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="9" column="18" selection-start-line="0" selection-start-column="0" selection-end-line="9" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/app/Resources/views/base.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/UserSearchType.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-19.870968">
+          <caret line="30" column="1" selection-start-line="30" selection-start-column="1" selection-end-line="30" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/User/search.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.87234044">
+          <caret line="24" column="27" selection-start-line="24" selection-start-column="27" selection-end-line="24" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/User/searchform.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/GroupSearchType.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="15" column="43" selection-start-line="15" selection-start-column="43" selection-end-line="15" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/web/bundles/amugroupie/css/groupie.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.064516">
+          <caret line="17" column="41" selection-start-line="17" selection-start-column="41" selection-end-line="17" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/UserEditType.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.52315396">
+          <caret line="21" column="65" selection-start-line="21" selection-start-column="65" selection-end-line="21" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/ldap.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.34543177">
+          <caret line="586" column="9" selection-start-line="586" selection-start-column="9" selection-end-line="586" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/User/usersearch.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/User/searchadd.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="17" column="38" selection-start-line="17" selection-start-column="38" selection-end-line="17" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/app/config/routing.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5831325">
+          <caret line="22" column="23" selection-start-line="22" selection-start-column="23" selection-end-line="22" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/test_ldap.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AmuBundles/LdapBundle/AmuLdapBundle.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AmuBundles/LdapBundle/README">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.3590361">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AmuBundles/LdapBundle/Resources/config/services.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.26506025">
+          <caret line="10" column="39" selection-start-line="10" selection-start-column="39" selection-end-line="10" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AmuBundles/LdapBundle/composer.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/app/config/parameters.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/app/config/cas.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/app/config/security.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/app/config/security_cas.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.39759037">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/app/config/roles.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ASF2/app/config/config.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="49" selection-start-line="16" selection-start-column="49" selection-end-line="16" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Controller/GroupController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state vertical-scroll-proportion="-1.9421687">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#48#105#0#PHP" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Service/LdapFonctions.php">
+    <entry file="file://$PROJECT_DIR$/AmuBundles/LdapBundle/Ldap/Client.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="42" selection-start-line="16" selection-start-column="42" selection-end-line="16" selection-end-column="42" />
-          <folding>
-            <element signature="e#6#97#0#PHP" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.38548186">
+          <caret line="18" column="7" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/app/config/services.yml">
+    <entry file="file://$PROJECT_DIR$/ASF2/composer.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/app/config/config.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="49" selection-start-line="16" selection-start-column="49" selection-end-line="16" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.22">
-          <caret line="8" column="5" selection-start-line="8" selection-start-column="5" selection-end-line="8" selection-end-column="5" />
+        <state vertical-scroll-proportion="0.7434293">
+          <caret line="27" column="9" selection-start-line="27" selection-start-column="9" selection-end-line="27" selection-end-column="9" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Controller/AjaxController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.096774">
-          <caret line="25" column="6" selection-start-line="25" selection-start-column="6" selection-end-line="25" selection-end-column="6" />
+        <state vertical-scroll-proportion="0.19274093">
+          <caret line="44" column="20" selection-start-line="44" selection-start-column="20" selection-end-line="44" selection-end-column="20" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/app/config/config.yml">
+    <entry file="file://$PROJECT_DIR$/ASF2/app/config/services.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.14035088">
+          <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/vendor/amu/ldap-bundle/Ldap/Client.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="49" selection-start-line="16" selection-start-column="49" selection-end-line="16" selection-end-column="49" />
+          <caret line="31" column="22" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/searchres.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.027534418">
+          <caret line="19" column="33" selection-start-line="19" selection-start-column="33" selection-end-line="19" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/GroupEditType.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/public/css/groupie.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="76" column="13" selection-start-line="76" selection-start-column="13" selection-end-line="76" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/User/edit.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.677419">
+          <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/User/multiple.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="47" column="166" selection-start-line="47" selection-start-column="166" selection-end-line="47" selection-end-column="166" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Controller/UserController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.903226">
+          <caret line="36" column="6" selection-start-line="36" selection-start-column="6" selection-end-line="36" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/edit.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.41301626">
+          <caret line="15" column="45" selection-start-line="15" selection-start-column="45" selection-end-line="15" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/public/images/delete-1.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/private.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="41" column="38" selection-start-line="41" selection-start-column="11" selection-end-line="41" selection-end-column="38" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/mesgroupes.html.twig">
+    <entry file="file://$PROJECT_DIR$/ASF2/src/AppBundle/Menu/Builder.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.35794744">
-          <caret line="13" column="106" selection-start-line="13" selection-start-column="106" selection-end-line="13" selection-end-column="106" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="29" column="137" selection-start-line="29" selection-start-column="137" selection-end-line="29" selection-end-column="137" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/mesappartenances.html.twig">
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Service/LdapFonctions.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.935484">
-          <caret line="14" column="13" selection-start-line="0" selection-start-column="0" selection-end-line="14" selection-end-column="13" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="69" column="32" selection-start-line="69" selection-start-column="20" selection-end-line="69" selection-end-column="32" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Controller/GroupController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.8507462">
-          <caret line="306" column="39" selection-start-line="306" selection-start-column="16" selection-end-line="306" selection-end-column="39" />
-          <folding>
-            <element signature="e#48#105#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/src/AppBundle/Menu/Builder.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.4193548">
-          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="924" column="50" selection-start-line="924" selection-start-column="50" selection-end-line="924" selection-end-column="50" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/touslesgroupes.html.twig">
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/memberships.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.806452">
-          <caret line="11" column="42" selection-start-line="11" selection-start-column="42" selection-end-line="11" selection-end-column="42" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="52" column="24" selection-start-line="52" selection-start-column="24" selection-end-line="52" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/touslesgroupesprives.html.twig">
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/privatememberships.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.645162">
-          <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
-          <folding>
-            <element signature="n#style#0;n#td#0;n#tr#0;n#tbody#0;n#table#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Service/LdapFonctions.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-114.258064">
-          <caret line="224" column="9" selection-start-line="224" selection-start-column="9" selection-end-line="224" selection-end-column="9" />
-          <folding>
-            <element signature="e#6#97#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/app/config/services.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.18554217">
-          <caret line="7" column="50" selection-start-line="7" selection-start-column="50" selection-end-line="7" selection-end-column="50" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="26" column="39" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="39" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/search.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="0" selection-start-line="10" selection-start-column="4" selection-end-line="12" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/update.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="189" column="8" selection-start-line="189" selection-start-column="8" selection-end-line="191" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/see.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="21" column="95" selection-start-line="21" selection-start-column="35" selection-end-line="21" selection-end-column="95" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/seeprivate.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.660826">
+          <caret line="24" column="8" selection-start-line="24" selection-start-column="8" selection-end-line="24" selection-end-column="8" />
+          <folding>
+            <element signature="e#939#987#0#HTML" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
