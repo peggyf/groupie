@@ -28,7 +28,7 @@ class Builder extends ContainerAware
         
         // Sous-menus pour Groupes privés
         $menu['Groupes privés']->addChild('Voir mes appartenances', array('route' => 'private_memberships', 'roles' => ["ROLE_MEMBRE"]));
-        $menu['Groupes privés']->addChild('Gérer mes groupes', array('route' => 'homepage', 'roles' => ["ROLE_MEMBRE"]));
+        $menu['Groupes privés']->addChild('Gérer mes groupes', array('route' => 'private_group', 'roles' => ["ROLE_MEMBRE"]));
         $menu['Groupes privés']->addChild('Tous les groupes (DOSI)', array('route' => 'all_private_groups', 'roles' => ["ROLE_DOSI"]));
 
         // Sous-menus pour Gestion des groupes
