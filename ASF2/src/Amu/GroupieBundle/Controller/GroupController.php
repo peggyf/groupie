@@ -1022,7 +1022,11 @@ class GroupController extends Controller {
         $groups = array();
                 
         // Création du formulaire
-        $form = $this->createForm(new PrivateGroupCreateType(), new Group());
+        $form = $this->createForm(new PrivateGroupCreateType(),
+            new Group(),
+            array('action' => $this->generateUrl('private_group_create', array('nb_groups'=>$nb_groups)),
+                'method' => 'GET'));
+
         $form->handleRequest($request);
         if ($form->isValid()) {
             // Récupération de l'entrée utilisateur
@@ -1034,11 +1038,15 @@ class GroupController extends Controller {
                 // le nom du groupe est valide, on peut le créer
                 // Log création de groupe
                 openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
-                $adm = $request->getSession()->get('login');
-                
+                $adm = $request->getSession()->get('phpCAS_user');
+
+                // On récupère le service ldapfonctions/create
+                $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+                $ldapfonctions->SetLdap($this->get('amu.ldap'));
+
                 // Création du groupe dans le LDAP
                 $infogroup = $group->infosGroupePriveLdap($adm);
-                $b = $this->getLdap()->createGroupeLdap($infogroup['dn'], $infogroup['infos']);
+                $b = $ldapfonctions->createGroupeLdap($infogroup['dn'], $infogroup['infos']);
                 if ($b==true) { 
                     //Le groupe a bien été créé
                     $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été créé');

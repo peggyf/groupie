@@ -193,14 +193,14 @@ public function __construct()
    $addgroup = array();
 
    // on préfixe le nom du groupe avec l'uid de l'utilisateur qui crée le groupe
-   $addgroup['cn'] = $uid.':'.$this->cn;
+   $addgroup['cn'] = 'amu:perso:'.$uid.':'.$this->cn;
    $addgroup['description'] = $this->description;
       
    $addgroup['objectClass'][0] = "groupOfNames";
    $addgroup['objectClass'][1] = "AMUGroup";
    $addgroup['objectClass'][2] = "top";
    
-   $infogroupe['dn'] = "cn=".$uid.':'.$this->cn.", ou=private, ou=groups, dc=univ-amu, dc=fr";
+   $infogroupe['dn'] = "cn=amu:perso:".$uid.':'.$this->cn.", ou=private, ou=groups, dc=univ-amu, dc=fr";
 
    $infogroupe['infos'] = $addgroup;  
 

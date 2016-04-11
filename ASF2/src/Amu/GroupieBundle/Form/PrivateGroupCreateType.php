@@ -12,7 +12,8 @@ class PrivateGroupCreateType extends AbstractType
     {
         $builder
              ->add('cn', 'text', array(
-                                         'required' => true
+                     'label' => 'Nom du groupe',
+                     'required' => true
                                          ))
 
             ->add('description', 'text', array(

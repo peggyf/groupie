@@ -227,4 +227,19 @@ class LdapFonctions
         $result = $this->recherche($filtre, array("amugroupfilter"), "cn");
         return $result;
     }
+
+    public function createGroupeLdap($dn, $groupeinfo)
+    {
+        // Connexion au LDAP
+        $baseDN = $this->ldap->getBaseDN();
+        $resource = $this->ldap->connect();
+        // Recherche avec les filtres et restrictions demandés
+        if ($resource) {
+           $res = $resource->add($dn, $groupeinfo);
+           return($res);
+        }
+
+        return(false);
+
+    }
 }
