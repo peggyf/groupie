@@ -1051,7 +1051,7 @@ class GroupController extends Controller {
                     //Le groupe a bien été créé
                     $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été créé');
                     $groups[0] = $group;
-                    $cn = $adm.":".$group->getCn();
+                    $cn = "amu:perso:".$adm.":".$group->getCn();
                     $group->setCn($cn);
 
                     // Log création OK
@@ -1064,7 +1064,7 @@ class GroupController extends Controller {
                     // affichage erreur
                     $this->get('session')->getFlashBag()->add('flash-error', 'Erreur LDAP lors de la création du groupe');
                     $groups[0] = $group;
-                    $cn = $group->getCn();
+                    $cn = "amu:perso:".$adm.":".$group->getCn();
 
                     // Log erreur
                     syslog(LOG_ERR, "LDAP ERREUR : create_private_group by $adm : group : $cn");
@@ -1098,7 +1098,7 @@ class GroupController extends Controller {
     {
         // Log suppression de groupe
         openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
-        $adm = $request->getSession()->get('login');
+        $adm = $request->getSession()->get('phpCAS_user');
         
         //Suppression du groupe dans le LDAP
         $b = $this->getLdap()->deleteGroupeLdap($cn);
@@ -1130,11 +1130,15 @@ class GroupController extends Controller {
      * @Route("/private/delete",name="private_group_delete")
      * @Template("AmuGroupieBundle:Group:deleteprivate.html.twig")
      */
-    public function deletePrivateAction() {
+    public function deletePrivateAction(Request $request) {
         
-        $uid = $this->container->get('request')->getSession()->get('login');
+        $uid = $request->getSession()->get('phpCAS_user');
         // Recherche des groupes dans le LDAP
-        $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=".$uid.":*))",array("cn","description"));
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+
+        $arData = $ldapfonctions->recherche("(&(objectClass=groupofNames)(cn=amu:perso:".$uid.":*))",array("cn","description"), "cn");
     
         $groups = new ArrayCollection();
         for ($i=0; $i<$arData["count"]; $i++) {
@@ -1156,10 +1160,13 @@ class GroupController extends Controller {
     public function del1PrivateAction(Request $request, $cn) {
         // Log suppression de groupe
         openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
-        $adm = $request->getSession()->get('login');
+        $adm = $request->getSession()->get('phpCAS_user');
         
         // Suppression du groupe dans le LDAP
-        $b = $this->getLdap()->deleteGroupeLdap($cn.",ou=private");
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $b = $ldapfonctions->deleteGroupeLdap($cn.",ou=private");
         if ($b==true) {
             //Le groupe a bien été supprimé
             $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été supprimé');
@@ -1178,9 +1185,9 @@ class GroupController extends Controller {
         closelog();
         
         // Recup des infos pour affichage des groupes restants
-        $uid = $this->container->get('request')->getSession()->get('login');
+        $uid = $request->getSession()->get('phpCAS_user');
         // Recherche des groupes dans le LDAP
-        $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=".$uid.":*))",array("cn","description"));
+        $arData=$ldapfonctions->recherche("(&(objectClass=groupofNames)(cn=amu:perso:".$uid.":*))",array("cn","description"), "cn");
     
         $groups = new ArrayCollection();
         for ($i=0; $i<$arData["count"]; $i++) {
@@ -1222,7 +1229,7 @@ class GroupController extends Controller {
             
             // Log modif de groupe
             openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
-            $adm = $request->getSession()->get('login');
+            $adm = $request->getSession()->get('phpCAS_user');
             
             // Cas particulier de la suppression amugroupfilter
             if (($filt != "no") && ($groupmod->getAmugroupfilter() == "")) {
@@ -1320,9 +1327,13 @@ class GroupController extends Controller {
         $groupini = new Group();
         $groupini->setCn($cn);
         $membersini = new ArrayCollection();
-        
+
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+
         // Recherche des membres dans le LDAP
-        $arUsers = $this->getLdap()->getMembersGroup($cn.",ou=private");
+        $arUsers = $ldapfonctions->getMembersGroup($cn.",ou=private");
         
         // Affichage des membres  
         for ($i=0; $i<$arUsers["count"]; $i++) {                     
@@ -1348,7 +1359,10 @@ class GroupController extends Controller {
         $groupini ->setMembers($membersini);
                       
         // Création du formulaire de mise à jour
-        $editForm = $this->createForm(new PrivateGroupEditType(), $group);
+        $editForm = $this->createForm(new PrivateGroupEditType(), $group, array(
+            'action' => $this->generateUrl('private_group_update', array('cn'=> $cn)),
+            'method' => 'GET',));
+
         $editForm->handleRequest($request);
         if ($editForm->isValid()) {
             // Récupération des données du formulaire
@@ -1357,7 +1371,7 @@ class GroupController extends Controller {
             
             // Log Mise à jour des membres du groupe
             openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
-            $adm = $request->getSession()->get('login');
+            $adm = $request->getSession()->get('phpCAS_user');
             
             // Récup des appartenances
             $m_update = new ArrayCollection();      
@@ -1377,7 +1391,7 @@ class GroupController extends Controller {
                 // Si il y a changement pour le membre, on modifie dans le ldap, sinon, on ne fait rien
                 if ($memb->getMember() != $membi->getMember()) {
                     if ($memb->getMember()) {
-                        $r = $this->getLdap()->addMemberGroup($dn_group, array($u));
+                        $r = $ldapfonctions->addMemberGroup($dn_group, array($u));
                         if ($r) {
                             // Log modif
                             syslog(LOG_INFO, "add_member by $adm : group : $cn, user : $u ");
@@ -1388,7 +1402,7 @@ class GroupController extends Controller {
                         }
                     }
                     else {
-                        $r = $this->getLdap()->delMemberGroup($dn_group, array($u));
+                        $r = $ldapfonctions->delMemberGroup($dn_group, array($u));
                         if ($r) {
                             // Log modif
                             syslog(LOG_INFO, "del_member by $adm : group : $cn, user : $u ");
@@ -1413,7 +1427,7 @@ class GroupController extends Controller {
             $newmembers = new ArrayCollection();
 
             // Recherche des membres dans le LDAP
-            $narUsers = $this->getLdap()->getMembersGroup($cn.",ou=private");
+            $narUsers = $ldapfonctions->getMembersGroup($cn.",ou=private");
 
             // Affichage des membres  
             for ($i=0; $i<$narUsers["count"]; $i++) {                     
@@ -1428,7 +1442,9 @@ class GroupController extends Controller {
             $newgroup ->setMembers($newmembers);
             
             // Nouveau formulaire avec les infos mises à jour
-            $editForm = $this->createForm(new PrivateGroupEditType(), $newgroup);
+            $editForm = $this->createForm(new PrivateGroupEditType(), $newgroup, array(
+                'action' => $this->generateUrl('private_group_update', array('cn'=> $cn)),
+                'method' => 'GET'));
             
             return array(
             'group'      => $newgroup,

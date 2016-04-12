@@ -242,4 +242,20 @@ class LdapFonctions
         return(false);
 
     }
+
+    public function deleteGroupeLdap($cn)
+    {
+        $dn = "cn=".$cn.",ou=groups,dc=univ-amu,dc=fr";
+        // Connexion au LDAP
+        $baseDN = $this->ldap->getBaseDN();
+        $resource = $this->ldap->connect();
+        // Recherche avec les filtres et restrictions demandés
+        if ($resource) {
+            $res = $resource->delete($dn);
+            return($res);
+        }
+
+        return(false);
+
+    }
 }

@@ -594,13 +594,15 @@ class UserController extends Controller {
      * Ajoute les droits d'un utilisateur à un groupe.
      *
      * @Route("/addprivate/{uid}/{cn}/{opt}",name="user_add_private")
-     * @Template("AmuGroupieBundle:User:searchaddprivate.html.twig")
      */
     public function addprivateAction(Request $request, $uid='', $cn='', $opt='liste') {
         // Récupération utilisateur
         $user = new User();
         $user->setUid($uid);
-        $arDataUser=$this->getLdap()->arDatasFilter("uid=".$uid, array('displayname', 'memberof', 'uid')); 
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $arDataUser = $ldapfonctions->recherche("uid=".$uid, array('displayname', 'memberof', 'uid'), "uid");
         
         // Test de la validité de l'uid
         if ($arDataUser[0]['uid'][0] == '') {
@@ -614,92 +616,35 @@ class UserController extends Controller {
             // Tableau des groupes de l'utilisateur
             $tab_cn = array();
             foreach($tab as $dn)
-                $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $dn);         
+                $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $dn);
 
-            // User initial pour détecter les modifications
-            $userini = new User();
-            $userini->setUid($uid);
-            $userini->setDisplayname($arDataUser[0]['displayname'][0]);
-
-            // on remplit l'objet user avec les droits courants sur le groupe
-            $memberships = new ArrayCollection();
-            $membership = new Membership();
-            $membership->setGroupname($cn);
-
-            // Idem pour userini
-            $membershipsini = new ArrayCollection();
-            $membershipini = new Membership();
-            $membershipini->setGroupname($cn);
-
-            // Droits "membre"
+            // On teste si le user est déjà membre du groupe
+            $FlagMemb = FALSE;
             foreach($tab_cn as $cn_g) {
                 if ($cn==$cn_g) {
-                    $membership->setMemberof(TRUE);
-                    $membershipini->setMemberof(TRUE);
+                    $FlagMemb = TRUE;
                     break;
                 }
-                else {
-                    $membership->setMemberof(FALSE);
-                    $membershipini->setMemberof(FALSE);
-                }
             }
-            
-            $memberships[0] = $membership;
-            $user->setMemberships($memberships);       
 
-            // Idem userini
-            $membershipsini[0] = $membershipini;
-            $userini->setMemberships($membershipsini);       
-
-            // Création formulaire de mise à jour
-            $editForm = $this->createForm(new PrivateUserEditType(), $user, array(
-                'action' => $this->generateUrl('user_add_private', array('uid'=> $uid, 'cn' => $cn, 'opt' => $opt)),
-                'method' => 'POST',
-            ));
-            $editForm->handleRequest($request);
-
-            if ($editForm->isValid()) {
-                $userupdate = new User();
-                // Récupération des données du formulaire
-                $userupdate = $editForm->getData();
+            if (!$FlagMemb) {
+                // Si le user n'est pas membre, on le rajoute
 
                 // Log modif de groupe
-                openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-                $adm = $request->getSession()->get('login');
+                openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+                $adm = $request->getSession()->get('phpCAS_user');
 
-                $m_update = new ArrayCollection();      
-                $m_update = $userupdate->getMemberships();
+                $dn_group = "cn=" . $cn . ", ou=private, ou=groups, dc=univ-amu, dc=fr";
 
-                // On parcourt les groupes
-                for ($i=0; $i<sizeof($m_update); $i++) {
-                    $memb = $m_update[$i];
-                    $dn_group = "cn=" . $cn . ", ou=private, ou=groups, dc=univ-amu, dc=fr";
-
-                    // Traitement des membres
-                    // Si modification des droits, on modifie dans le ldap
-                    if ($memb->getMemberof() != $membershipsini[$i]->getMemberof()) {
-                        if ($memb->getMemberof()) {
-                            $r = $this->getLdap()->addMemberGroup($dn_group, array($uid));
-                            if ($r) {
-                                // Log modif
-                                syslog(LOG_INFO, "add_member by $adm : group : $cn, user : $uid");
-                            }
-                            else {
-                                syslog(LOG_ERR, "LDAP ERROR : add_member by $adm : group : $cn, user : $uid");
-                            }
-                        }
-                        else {
-                            $r = $this->getLdap()->delMemberGroup($dn_group, array($uid));
-                            if ($r) {
-                                // Log modif
-                                syslog(LOG_INFO, "del_member by $adm : group : $cn, user : $uid");
-                            }
-                            else {
-                                syslog(LOG_ERR, "LDAP ERROR : del_member by $adm : group : $cn, user : $uid");
-                            }
-                        }
-                    }
+                $r = $ldapfonctions->addMemberGroup($dn_group, array($uid));
+                if ($r) {
+                    // Log modif
+                    syslog(LOG_INFO, "add_member by $adm : group : $cn, user : $uid");
                 }
+                else {
+                    syslog(LOG_ERR, "LDAP ERROR : add_member by $adm : group : $cn, user : $uid");
+                }
+
                 // Ferme fichier log
                 closelog();
 
@@ -712,7 +657,7 @@ class UserController extends Controller {
                 $newmembers = new ArrayCollection();
 
                 // Recherche des membres dans le LDAP
-                $narUsers = $this->getLdap()->getMembersGroup($cn.",ou=private");
+                $narUsers = $ldapfonctions->getMembersGroup($cn.",ou=private");
 
                 // Affichage des membres  
                 for ($i=0; $i<$narUsers["count"]; $i++) {                     
@@ -727,22 +672,19 @@ class UserController extends Controller {
                 
                 $newgroup ->setMembers($newmembers);
 
-                $editForm = $this->createForm(new PrivateGroupEditType(), $newgroup);
+                $editForm = $this->createForm(new PrivateGroupEditType(), $newgroup, array(
+                    'action' => $this->generateUrl('private_group_update', array('cn'=> $cn)),
+                    'method' => 'GET',));
                 
                 return $this->render('AmuGroupieBundle:Group:privateupdate.html.twig', array('group' => $newgroup, 'nb_membres' => $narUsers["count"], 'form' => $editForm->createView()));
                 
             }
             else { 
                 $this->getRequest()->getSession()->set('_saved',0);
+                $this->get('session')->getFlashBag()->add('flash-notice', 'Cette personne est déjà membre du groupe');
+                return $this->redirect($this->generateUrl('user_search', array('opt' => 'addprivate', 'cn'=>$cn)));
             }
         }
-        
-        return array(
-            'user'      => $user,
-            'cn' => $cn,
-            'opt' => $opt,
-            'form'   => $editForm->createView(),
-        );
     }
     
     /**

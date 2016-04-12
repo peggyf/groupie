@@ -7,6 +7,17 @@
 
 {% block body %}
 
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
+    <link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#groups').DataTable();
+        } );
+    </script>
+
 <h1>Le groupe a été créé</h1>
 
 {% if app.session.flashbag.has('flash-notice') %}
@@ -17,14 +28,13 @@
     {% endfor %}
   </div>
   </center>
-{% endif %}    
+{% endif %}
 
-<table class="ui-widget-content dataTable TabInfos" filter="25">
+    <table id="groups" class="display">
     <thead>
         <tr>
             <th>cn</th>
 	    <th>Description</th>
-            <th>amuGroupFilter</th>
 	    <th>Ajouter des droits</th>
         </tr>
     </thead>
@@ -33,9 +43,10 @@
 	<tr > 
 	  <td style="vertical-align: middle;">{{group.cn }}</td>
           <td style="vertical-align: middle;">{{group.description }}</td>
-          <td style="vertical-align: middle;">{{group.amugroupfilter }}</td>
           <td style="vertical-align: middle;">
-            <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/app/images/ico/16/add-1.png") }}" title="Ajouter un membre" class="ui-button" onclick='loadPage("{{ path('user_search', { 'opt': 'addprivate', 'cn': group.cn }) }}");' />
+              <a href="{{path('user_search', { 'opt': 'addprivate', 'cn': group.cn })}}">
+                  <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/amugroupie/images/add-1.png") }}" title="Ajouter un membre"/>
+              </a>
           </td>
         </tr>
    {% endfor %}
@@ -44,8 +55,11 @@
              
 </table>
 <br>
-<button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-    onclick="loadPage('{{path('private_group') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes privés&nbsp;
-</button>
+    <div class="buttons">
+        <a href="{{ path('private_group') }}" >
+            <img src="{{asset('bundles/amugroupie/images/prev-green.png')}}" alt=""/>
+            &nbsp;Retour à la liste des groupes privés&nbsp;
+        </a>
+    </div>
 
 {% endblock %}

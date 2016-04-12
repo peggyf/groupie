@@ -1,10 +1,23 @@
-{% extends 'AppBundle::page.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block titre %}Modification des membres du groupe <span style="font-variant-caps: small-caps;"> {{ group.cn }} </span> {% endblock %}
+{% block app_menu %}
+    {{ knp_menu_render('AppBundle:Builder:mainMenu') }}
+    <div class="clear"><hr /></div>
+{% endblock %}
 
 {% block body %}
-    
-    {% set hilightColor='#C7FE74' %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
+<link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
+<link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#memb').DataTable();
+    } );
+</script>
+<h1>Modification des membres du groupe <span style="font-variant-caps: small-caps;"> {{ group.cn }} </span></h1>
+{% set hilightColor='#C7FE74' %}
 
     {% if app.session.has('_saved') and app.session.get('_saved', 0) == 1 %}
         <div style="display: none;"> {{ app.session.remove('_saved') }} </div>
@@ -22,15 +35,18 @@
         <br>
         <h3>Nombre de membres du groupe <b>{{ group.cn }}</b> : {{ nb_membres }}</h3>
         <br>
-        <div>
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" 
-         onclick="loadPage('{{ path('user_search', { 'opt': 'addprivate', 'cn' : group.cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/add-1.png')}}" />&nbsp;Ajouter un membre&nbsp;</button>       
+        <div class="buttons">
+            <a href="{{ path('user_search', { 'opt': 'addprivate', 'cn' : group.cn }) }}">
+                <img src="{{asset('bundles/amugroupie/images/add-1.png')}}" alt=""/>
+                &nbsp;Ajouter un membre&nbsp;
+            </a>
         </div>
+        <br>
         <br>
         <br> 
         {% if nb_membres > 0 %}
-        <form class="amuForms" id="_ajxFromModifier">
-            <table id="memb" class="ui-widget-content dataTable TabInfos" filter="25">
+            {{ form_start(form) }}
+            <table id="memb" class="display">
                 <thead>
                     <tr>
                         <th>uid</th>
@@ -59,34 +75,44 @@
                 </tbody>
             </table>
             <br>
-            <p>
-                <button type="button" id="button_val" class="ui-button ui-widget-content ui-corner-all" style="padding:5px; "><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/save-2.png')}}" />&nbsp;Valider les modifications de droits&nbsp;</button>
-                <span class="record_actions"></span>
-                <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
-            </p>
+            <div class="buttons">
+                <button type="submit" name="btValider"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/valid.png') }}" />&nbsp;Valider les changements de droits&nbsp;</button>
+                <a href="{{ path('homepage') }}" >
+                    <img src="{{asset('bundles/amugroupie/images/cancel.png')}}" alt=""/>
+                    &nbsp;Annuler&nbsp;
+                </a>
+            </div>
 
             {{ form_rest(form) }}
-            
-        </form>       
+            {{ form_end(form) }}
        {% endif %} 
         <br>
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-                onclick="loadPage('{{path('private_group') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes privés&nbsp;
-        </button>
+        <br>
+        <br>
+        <div class="buttons">
+            <a href="{{ path('private_group') }}" >
+                <img src="{{asset('bundles/amugroupie/images/prev-green.png')}}" alt=""/>
+                &nbsp;Retour à la liste des groupes privés&nbsp;
+            </a>
+        </div>
+
     {% else %}
                
         <br>
         <h3>Nombre de membres du groupe <b>{{ group.cn }}</b> : {{ nb_membres }}</h3>
         <br>
-        <div>
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" 
-         onclick="loadPage('{{ path('user_search', { 'opt': 'addprivate', 'cn' : group.cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/add-1.png')}}" />&nbsp;Ajouter un membre&nbsp;</button>       
+        <div class="buttons">
+            <a href="{{ path('user_search', { 'opt': 'addprivate', 'cn' : group.cn }) }}">
+                <img src="{{asset('bundles/amugroupie/images/add-1.png')}}" alt=""/>
+                &nbsp;Ajouter un membre&nbsp;
+            </a>
         </div>
         <br>
         <br>
+        <br>
         {% if nb_membres > 0 %}
-        <form class="amuForms" id="_ajxFromModifier">
-            <table id="memb" class="ui-widget-content dataTable TabInfos" filter="25">
+            {{ form_start(form) }}
+            <table id="memb" class="display">
                 <thead>
                     <tr>
                         <th>uid</th>
@@ -110,40 +136,32 @@
                 </tbody>
             </table>
             <br>
-            <p>
-                <button type="button" id="button_val" class="ui-button ui-widget-content ui-corner-all" style="padding:5px; "  
-                ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/save-2.png')}}" />&nbsp;Valider les modifications de droits&nbsp;</button>
-                <span class="record_actions"></span>
-                <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/cancel.png')}}" />&nbsp;Annuler&nbsp;</button>
-            </p>
+            <div class="buttons">
+                <button type="submit" name="btValider"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/valid.png') }}" />&nbsp;Valider les changements de droits&nbsp;</button>
+                <a href="{{ path('homepage') }}" >
+                        <img src="{{asset('bundles/amugroupie/images/cancel.png')}}" alt=""/>&nbsp;Annuler&nbsp;
+                </a>
+            </div>
 
             {{ form_rest(form) }}
-        </form>
+            {{ form_end(form) }}
                 
         {% endif %}
         
         <br>
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-                onclick="loadPage('{{path('private_group') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la liste des groupes privés&nbsp;
-        </button>
+        <br>
+        <br>
+        <div class="buttons">
+            <a href="{{ path('private_group') }}" >
+                <img src="{{asset('bundles/amugroupie/images/prev-green.png')}}" alt=""/>
+                &nbsp;Retour à la liste des groupes privés&nbsp;
+            </a>
+        </div>
 
     {% endif %}
 
     <br>
-    
-   
 
-    {# Ajout d'une fonction javascript pour gérer les lignes cachées de la datatable #}
-    <script type="text/javascript" src="http://cdn.datatables.net/plug-ins/1.10.7/api/fnGetHiddenNodes.js"/>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#button_val').click( function () {
-                oTable = $('#memb').dataTable();
-                $(oTable.fnGetHiddenNodes()).appendTo(this);
-                loadPage('{{ path('private_group_update', { 'cn': group.cn }) }}', $('#_ajxFromModifier').serializeArray());
-            } );
-        } );
-    </script>
 {% endblock %}
 
 
