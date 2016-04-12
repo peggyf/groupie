@@ -51,7 +51,7 @@
         <br>
         <br>
         {% if nb_membres > 0 %}
-        <form>
+            {{ form_start(form) }}
             <table id="memb" class="display">
                 <thead>
                     <tr>
@@ -96,8 +96,8 @@
             </div>
 
             {{ form_rest(form) }}
-            
-        </form>
+
+            {{ form_end(form) }}
 
         <br>
         <br>
@@ -142,7 +142,7 @@
         <br>
         <br>
         {% if nb_membres > 0 %}
-        <form>
+            {{ form_start(form) }}
             <table id="memb" class="display">
                 <thead>
                     <tr>
@@ -179,7 +179,7 @@
             </div>
 
             {{ form_rest(form) }}
-        </form>
+            {{ form_end(form) }}
         <br>
         <br>
         <br>
@@ -205,7 +205,6 @@
             oTable = $('#memb').dataTable();
             $('#groupedit').submit(function () {
                 $(oTable.fnGetHiddenNodes()).appendTo(this);
-                alert(oTable.length + ' nodes were returned');
             });
         });
     </script>

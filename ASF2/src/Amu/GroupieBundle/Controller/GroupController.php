@@ -1685,7 +1685,7 @@ class GroupController extends Controller {
                 {
                     // si l'admin n'est pas membre du groupe, il faut aller récupérer ses infos dans le LDAP
                     $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $narAdmins[0]["amugroupadmin"][$j]);
-                    $result = $ldapfonctions->getInfosUsers($uid);
+                    $result = $ldapfonctions->getInfosUser($uid);
 
                     $nmemb = new Member();
                     $nmemb->setUid($result[0]["uid"][0]);
