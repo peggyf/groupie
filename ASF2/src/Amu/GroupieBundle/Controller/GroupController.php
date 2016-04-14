@@ -424,10 +424,13 @@ class GroupController extends Controller {
      * @Template("AmuGroupieBundle:Group:groupsearchadd.html.twig")
      */
     public function addAction(Request $request, $cn_search='', $uid='', $flag_cn=0) {
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
         // Dans le cas d'un gestionnaire
         if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
             // Recup des groupes dont l'utilisateur courant (logué) est admin
-            $arDataAdminLogin = $this->getLdap()->arDatasFilter("amuGroupAdmin=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+            $arDataAdminLogin = $ldapfonctions->recherche("amuGroupAdmin=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"), "cn");
             for($i=0;$i<$arDataAdminLogin["count"];$i++) 
                 $tab_cn_admin_login[$i] = $arDataAdminLogin[$i]["cn"][0];
         }
@@ -436,7 +439,7 @@ class GroupController extends Controller {
         $user = new User();
         $user->setUid($uid);
         // Récup infos utilisateur dans le LDAP
-        $arDataUser=$this->getLdap()->arDatasFilter("uid=".$uid, array('displayname', 'memberof'));
+        $arDataUser=$ldapfonctions->recherche("uid=".$uid, array('displayname', 'memberof'), "uid");
         $user->setDisplayname($arDataUser[0]['displayname'][0]);
         
         // Utilisateur initial pour détecter les modifications
@@ -451,7 +454,7 @@ class GroupController extends Controller {
             $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:._-]{1,}))(,ou=groups.*)/", "$3", $dn);
         }
         // Récupération des groupes dont l'utilisateur recherché est admin
-        $arDataAdmin=$this->getLdap()->arDatasFilter("amuGroupAdmin=uid=".$uid.",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+        $arDataAdmin=$ldapfonctions->recherche("amuGroupAdmin=uid=".$uid.",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"), "cn");
         $tab_cn_admin = array();
         for($i=0;$i<$arDataAdmin["count"];$i++) {
             $tab_cn_admin[$i] = $arDataAdmin[$i]["cn"][0];
@@ -466,11 +469,11 @@ class GroupController extends Controller {
             }
             
             // Recherche exacte sur le cn sélectionné dans le LDAP
-            $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=" . $cn_search . "))",array("cn","description","amuGroupFilter"));
+            $arData=$ldapfonctions->recherche("(&(objectClass=groupofNames)(cn=" . $cn_search . "))",array("cn","description","amuGroupFilter"), "cn");
         }
         else {
             // Recherche avec * dans le LDAP
-            $arData=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=*" . $cn_search . "*))",array("cn","description","amuGroupFilter"));             
+            $arData=$ldapfonctions->recherche("(&(objectClass=groupofNames)(cn=*" . $cn_search . "*))",array("cn","description","amuGroupFilter"), "cn");
         }
         
         // Récupération des groupes publics issus de la recherche
@@ -574,7 +577,7 @@ class GroupController extends Controller {
                 if ($memb->getMemberof() != $membershipsini[$i]->getMemberof()) {
                     if ($memb->getMemberof()) {
                         // Ajout utilisateur dans groupe
-                        $r = $this->getLdap()->addMemberGroup($dn_group, array($uid));
+                        $r = $ldapfonctions->addMemberGroup($dn_group, array($uid));
                         // Log des modifications
                         if ($r==true) 
                             syslog(LOG_INFO, "add_member by $adm : group : $gr, user : $uid ");
@@ -583,7 +586,7 @@ class GroupController extends Controller {
                     }
                     else {
                         // Suppression utilisateur du groupe
-                        $r = $this->getLdap()->delMemberGroup($dn_group, array($uid));
+                        $r = $ldapfonctions->delMemberGroup($dn_group, array($uid));
                         if ($r)
                             syslog(LOG_INFO, "del_member by $adm : group : $gr, user : $uid ");
                         else 
@@ -595,7 +598,7 @@ class GroupController extends Controller {
                 if ($memb->getAdminof() != $membershipsini[$i]->getAdminof()) {
                     if ($memb->getAdminof()) {
                         // Ajout admin dans le groupe
-                        $r = $this->getLdap()->addAdminGroup($dn_group, array($uid));
+                        $r = $ldapfonctions->addAdminGroup($dn_group, array($uid));
                         if ($r)
                             syslog(LOG_INFO, "add_admin by $adm : group : $gr, user : $uid ");
                         else 
@@ -603,7 +606,7 @@ class GroupController extends Controller {
                     }
                     else {
                         // Suppression admin du groupe
-                        $r = $this->getLdap()->delAdminGroup($dn_group, array($uid)); 
+                        $r = $ldapfonctions->delAdminGroup($dn_group, array($uid));
                         if ($r)
                             syslog(LOG_INFO, "del_admin by $adm : group : $gr, user : $uid ");
                         else
