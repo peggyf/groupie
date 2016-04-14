@@ -1,11 +1,22 @@
-{% extends 'AppBundle::page.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block titre %}Aide groupie {% endblock %}
+{% block app_menu %}
+    {{ knp_menu_render('AppBundle:Builder:mainMenu') }}
+    <div class="clear"><hr /></div>
+{% endblock %}
 
 {% block body %}
+    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
+    <link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <h1>Aide groupie</h1>
     <br>
     <h3> Vous pouvez consulter le document d'aide ici :  </h3>
-    <br>
-    <br><span class="ui-state-default ui-corner-all" ><small><a class="ui-button jqtip" onclick="this.blur();"  target="_blank" href="bundles/amucligrouper/Aide_groupie_2.pdf" style="padding:2px;"  title="Cliquez ici pour afficher l'aide de l'application" ><img src="{{ asset('bundles/app/images/ico/32/pdf.png') }}" align="absmiddle" />&nbsp;Document d'aide...</a></small></span>
-
+    <div class="buttons">
+        <a href="{{asset('bundles/amugroupie/Aide_groupie_2.pdf')}}" target="_blank" style="padding:2px;"  title="Cliquez ici pour afficher l'aide de l'application">
+            <img src="{{asset('bundles/amugroupie/images/pdf.png')}}" alt=""/>
+            &nbsp;Document d'aide&nbsp;
+        </a>
+    </div>
+    <br><br>
 {% endblock %}
