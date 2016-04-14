@@ -31,207 +31,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * 
  */
 class GroupController extends Controller {
-    /**
-     * Récupération des infos d'un user
-     */
-    public function getInfosUser($uid) {
-        $filtre = "uid=" . $uid;
-        $restriction = array("uid", "displayName", "mail", "telephonenumber", "sn");
-        $baseDN = $this->get('amu.ldap')->getBaseDN();
-        $resource = $this->get('amu.ldap')->connect();
-        if ($resource) {
-            $result = $resource->search($baseDN, $filtre, $restriction);
-            return $result;
-        }
-        else
-            return false;
-    }
-  
-    /**
-    * Récupération des membres d'un groupe + infos des membres
-    */
-    public function getMembersGroup($groupName) {
-        $filtre = "(&(objectclass=*)(memberOf=cn=" . $groupName . ", ou=groups, dc=univ-amu, dc=fr))";
-        $restriction = array("uid", "displayName", "mail", "telephonenumber", "sn");
-        $baseDN = $this->get('amu.ldap')->getBaseDN();
-        $resource = $this->get('amu.ldap')->connect();
-        if ($resource) {
-            $result = $resource->search($baseDN, $filtre, $restriction);
-            return $result;
-        }
-        else
-            return false;
-  }
-  
-   /**
-    * Récupération des admins d'un groupe + infos des membres
-    */
-    public function getAdminsGroup($groupName) {
-       $filtre = "cn=". $groupName ;
-       $restriction = array("amuGroupAdmin");
-       $baseDN = $this->get('amu.ldap')->getBaseDN();
-        $resource = $this->get('amu.ldap')->connect();
-        if ($resource) {
-            $result = $resource->search($baseDN, $filtre, $restriction);
-            return $result;
-        }
-        else
-            return false;
-     }
-  
-    /**
-   * Ajouter un membre dans un groupe
-   * @return  \Amu\AppBundle\Service\Ldap
-   */
-   public function addMemberGroup($dn_group, $arUserUid) {
 
-      foreach ($arUserUid as $uid)
-      {
-          $groupinfo['member'][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
-      }
-      $this->connect();
-
-      if ($this->r) {
-          $sr = ldap_mod_add($this->ds, $dn_group, $groupinfo);      
-
-           if(ldap_error($this->ds) == "Success")
-              return true;
-          else
-              return false;
-      }
-
-      if ($debug)
-        echo "<hr>DEBUG " . __CLASS__ . "::" . __FUNCTION__ . " arUserUid <PRE>" . print_r($groupinfo, true) . "</PRE>";
-
-      return false;
-    }
-  
-    /**
-   * Supprimer un membre d'un groupe
-   * @return  \Amu\AppBundle\Service\Ldap
-   */
-   public function delMemberGroup($dn_group, $arUserUid) {
-
-      foreach ($arUserUid as $uid)
-      {
-          $groupinfo['member'][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
-      }
-      $this->connect();
-      if ($this->r) {
-          $sr = ldap_mod_del($this->ds, $dn_group, $groupinfo);     
-          //echo "<hr>DEBUG " . __CLASS__ . "::" . __FUNCTION__ . " Infos groupe <PRE>" . print_r($groupinfo, true) . "</PRE>";
-           if(ldap_error($this->ds) == "Success")
-              return true;
-          else
-              return false;
-      }
-
-      if ($debug)
-        echo "<hr>DEBUG " . __CLASS__ . "::" . __FUNCTION__ . " arUserUid <PRE>" . print_r($groupinfo, true) . "</PRE>";
-
-      return false;
-    }
-  
-    /**
-    * Ajouter un administrateur dans un groupe
-    * @return  \Amu\AppBundle\Service\Ldap
-    */
-    public function addAdminGroup($dn_group, $arUserUid) {
-
-       foreach ($arUserUid as $uid)
-       {
-           $groupinfo['amuGroupAdmin'][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
-       }
-       $this->connect();
-       if ($this->r) {
-           $sr = ldap_mod_add($this->ds, $dn_group, $groupinfo);      
-           if(ldap_error($this->ds) == "Success")
-               return true;
-           else
-               return false;
-       }
-
-       if ($debug)
-         echo "<hr>DEBUG " . __CLASS__ . "::" . __FUNCTION__ . " arUserUid <PRE>" . print_r($groupinfo, true) . "</PRE>";
-
-       return false;
-     }
-
-      /**
-    * Supprimer un membre d'un groupe
-    * @return  \Amu\AppBundle\Service\Ldap
-    */
-    public function delAdminGroup($dn_group, $arUserUid) {
-
-       foreach ($arUserUid as $uid)
-       {
-           $groupinfo['amuGroupAdmin'][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
-       }
-       $this->connect();
-       if ($this->r) {
-           $sr = ldap_mod_del($this->ds, $dn_group, $groupinfo);     
-           if(ldap_error($this->ds) == "Success")
-               return true;
-           else
-               return false;
-       }
-
-       if ($debug)
-         echo "<hr>DEBUG " . __CLASS__ . "::" . __FUNCTION__ . " arUserUid <PRE>" . print_r($groupinfo, true) . "</PRE>";
-
-       return false;
-     }
-
-     /**
-    * Supprimer le amugroupfilter d'un groupe
-    * @return  \Amu\AppBundle\Service\Ldap
-    */
-    public function delAmuGroupFilter($dn_group, $filter) {
-
-       $groupinfo['amuGroupFilter'] = $filter;
-
-       $this->connect();
-       if ($this->r) {
-           $sr = ldap_mod_del($this->ds, $dn_group, $groupinfo);      
-            if(ldap_error($this->ds) == "Success")
-               return true;
-           else
-               return false;
-       }
-
-       if ($debug)
-         echo "<hr>DEBUG " . __CLASS__ . "::" . __FUNCTION__ . " arUserUid <PRE>" . print_r($groupinfo, true) . "</PRE>";
-
-       return false;
-     }  
-
-     /**
-    * Récupérer le amugroupfilter d'un groupe
-    * @return  \Amu\AppBundle\Service\Ldap
-    */
-    public function getAmuGroupFilter($cn_group) {
-
-       $filtre = "cn=" . $cn_group;
-       $AllInfos = array();
-       $AllInfosBrutes = array();
-       $this->connect();
-       if ($this->r) {
-         $sr = ldap_search($this->ds, $this->LDAP_racine, $filtre, array("amugroupfilter")); 
-         $infos = ldap_get_entries($this->ds, $sr);
-         if ($infos[0][0]=="amugroupfilter")
-               return $infos[0]["amugroupfilter"][0];
-         else
-             return false;
-       }
-
-       if ($debug)
-         echo "<hr>DEBUG " . __CLASS__ . "::" . __FUNCTION__ . " arUserUid <PRE>" . print_r($groupinfo, true) . "</PRE>";
-
-       return false;
-     }  
-     
-
-     
 /**********************************************************************************************************************************************************************************************************************************/
 /* METHODES PUBLIQUES DU CONTROLLER                                                                                                                                                                                               */
 /**********************************************************************************************************************************************************************************************************************************/     
@@ -959,7 +759,10 @@ class GroupController extends Controller {
         $groups = array();
         
         // Création du formulaire de création de groupe
-        $form = $this->createForm(new GroupCreateType(), new Group());
+        $form = $this->createForm(new GroupCreateType(),
+            new Group(),
+            array('action' => $this->generateUrl('group_create'),
+                'method' => 'GET'));
         $form->handleRequest($request);
         if ($form->isValid()) {
             // Récupération des données
@@ -971,7 +774,10 @@ class GroupController extends Controller {
                 
             // Création du groupe dans le LDAP
             $infogroup = $group->infosGroupeLdap();
-            $b = $this->getLdap()->createGroupeLdap($infogroup['dn'], $infogroup['infos']);
+            // On récupère le service ldapfonctions
+            $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+            $ldapfonctions->SetLdap($this->get('amu.ldap'));
+            $b =$ldapfonctions->createGroupeLdap($infogroup['dn'], $infogroup['infos']);
             if ($b==true) {          
                 // affichage groupe créé
                 $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été créé');
@@ -982,7 +788,7 @@ class GroupController extends Controller {
                 syslog(LOG_INFO, "create_group by $adm : group : $cn");
                
                 // Affichage via fichier twig
-                return $this->render('AmuGroupieBundle:Group:creategroup.html.twig',array('groups' => $groups));
+                return $this->render('AmuGroupieBundle:Group:create.html.twig',array('groups' => $groups));
             }
             else {
                 // affichage erreur
@@ -994,7 +800,7 @@ class GroupController extends Controller {
                 syslog(LOG_ERR, "LDAP ERREUR : create_group by $adm : group : $cn");
                 
                 // Retour à la page contenant le formulaire de création de groupe
-                return $this->render('AmuCliGrouperBundle:Group:group.html.twig', array('form' => $form->createView()));
+                return $this->render('AmuGroupieBundle:Group:group.html.twig', array('form' => $form->createView()));
             }
             
             // Ferme le fichier de log
@@ -1002,7 +808,7 @@ class GroupController extends Controller {
         }
         
         // Affichage formulaire de création de groupe
-        return $this->render('AmuCliGrouperBundle:Group:group.html.twig', array('form' => $form->createView()));
+        return $this->render('AmuGroupieBundle:Group:group.html.twig', array('form' => $form->createView()));
     }
     
     /**
@@ -1101,7 +907,10 @@ class GroupController extends Controller {
         $adm = $request->getSession()->get('phpCAS_user');
         
         //Suppression du groupe dans le LDAP
-        $b = $this->getLdap()->deleteGroupeLdap($cn);
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $b = $ldapfonctions->deleteGroupeLdap($cn);
         if ($b==true) {
             //Le groupe a bien été supprimé
             $this->get('session')->getFlashBag()->add('flash-notice', 'Le groupe a bien été supprimé');
@@ -1495,8 +1304,10 @@ class GroupController extends Controller {
         // Recherche des admins dans le LDAP
         $arAdmins = $ldapfonctions->getAdminsGroup($cn);
         $flagMembers = array();
-        for($i=0;$i<$arAdmins[0]["amugroupadmin"]["count"];$i++)
-            $flagMembers[] = FALSE;
+        if (isset($arAdmins[0]["amugroupadmin"]["count"])) {
+            for ($i = 0; $i < $arAdmins[0]["amugroupadmin"]["count"]; $i++)
+                $flagMembers[] = FALSE;
+        }
         
         // Affichage des membres  
         for ($i=0; $i<$arUsers["count"]; $i++) {                     
@@ -1518,42 +1329,46 @@ class GroupController extends Controller {
             $membersini[$i]->setAdmin(FALSE);
             
             // on teste si le membre est aussi admin
-            for ($j=0; $j<$arAdmins[0]["amugroupadmin"]["count"]; $j++) {
-                $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$j]);
-                if ($uid==$arUsers[$i]["uid"][0]) {
-                    $members[$i]->setAdmin(TRUE);
-                    $membersini[$i]->setAdmin(TRUE);
-                    $flagMembers[$j] = TRUE;
-                    break;
+            if (isset($arAdmins[0]["amugroupadmin"]["count"])) {
+                for ($j = 0; $j < $arAdmins[0]["amugroupadmin"]["count"]; $j++) {
+                    $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$j]);
+                    if ($uid == $arUsers[$i]["uid"][0]) {
+                        $members[$i]->setAdmin(TRUE);
+                        $membersini[$i]->setAdmin(TRUE);
+                        $flagMembers[$j] = TRUE;
+                        break;
+                    }
                 }
-            }           
+            }
         }
                 
         // Affichage des admins qui ne sont pas membres
-        for ($j=0; $j<$arAdmins[0]["amugroupadmin"]["count"]; $j++) {       
-            if ($flagMembers[$j]==FALSE) {
-                // si l'admin n'est pas membre du groupe, il faut aller récupérer ses infos dans le LDAP
-                $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$j]);
-                $result = $ldapfonctions->getInfosUser($uid);
+        if (isset($arAdmins[0]["amugroupadmin"]["count"])) {
+            for ($j = 0; $j < $arAdmins[0]["amugroupadmin"]["count"]; $j++) {
+                if ($flagMembers[$j] == FALSE) {
+                    // si l'admin n'est pas membre du groupe, il faut aller récupérer ses infos dans le LDAP
+                    $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$j]);
+                    $result = $ldapfonctions->getInfosUser($uid);
 
-                $memb = new Member();
-                $memb->setUid($result[0]["uid"][0]);
-                $memb->setDisplayname($result[0]["displayname"][0]);
-                $memb->setMail($result[0]["mail"][0]);
-                $memb->setTel($result[0]["telephonenumber"][0]);
-                $memb->setMember(FALSE);
-                $memb->setAdmin(TRUE);
-                $members[] = $memb;
-                
-                // Idem pour groupini
-                $membini = new Member();
-                $membini->setUid($result[0]["uid"][0]);
-                $membini->setDisplayname($result[0]["displayname"][0]);
-                $membini->setMail($result[0]["mail"][0]);
-                $membini->setTel($result[0]["telephonenumber"][0]);
-                $membini->setMember(FALSE);
-                $membini->setAdmin(TRUE);
-                $membersini[] = $membini;
+                    $memb = new Member();
+                    $memb->setUid($result[0]["uid"][0]);
+                    $memb->setDisplayname($result[0]["displayname"][0]);
+                    $memb->setMail($result[0]["mail"][0]);
+                    $memb->setTel($result[0]["telephonenumber"][0]);
+                    $memb->setMember(FALSE);
+                    $memb->setAdmin(TRUE);
+                    $members[] = $memb;
+
+                    // Idem pour groupini
+                    $membini = new Member();
+                    $membini->setUid($result[0]["uid"][0]);
+                    $membini->setDisplayname($result[0]["displayname"][0]);
+                    $membini->setMail($result[0]["mail"][0]);
+                    $membini->setTel($result[0]["telephonenumber"][0]);
+                    $membini->setMember(FALSE);
+                    $membini->setAdmin(TRUE);
+                    $membersini[] = $membini;
+                }
             }
         }
         
@@ -1680,21 +1495,22 @@ class GroupController extends Controller {
                 }
             }
             // Affichage des admins qui ne sont pas membres
-            for ($j=0; $j<$narAdmins[0]["amugroupadmin"]["count"]; $j++) {       
-                if ($nflagMembers[$j]==FALSE)
-                {
-                    // si l'admin n'est pas membre du groupe, il faut aller récupérer ses infos dans le LDAP
-                    $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $narAdmins[0]["amugroupadmin"][$j]);
-                    $result = $ldapfonctions->getInfosUser($uid);
+            if (isset($narAdmins[0]["amugroupadmin"]["count"])) {
+                for ($j = 0; $j < $narAdmins[0]["amugroupadmin"]["count"]; $j++) {
+                    if ($nflagMembers[$j] == FALSE) {
+                        // si l'admin n'est pas membre du groupe, il faut aller récupérer ses infos dans le LDAP
+                        $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $narAdmins[0]["amugroupadmin"][$j]);
+                        $result = $ldapfonctions->getInfosUser($uid);
 
-                    $nmemb = new Member();
-                    $nmemb->setUid($result[0]["uid"][0]);
-                    $nmemb->setDisplayname($result[0]["displayname"][0]);
-                    $nmemb->setMail($result[0]["mail"][0]);
-                    $nmemb->setTel($result[0]["telephonenumber"][0]);
-                    $nmemb->setMember(FALSE);
-                    $nmemb->setAdmin(TRUE);
-                    $newmembers[] = $nmemb;
+                        $nmemb = new Member();
+                        $nmemb->setUid($result[0]["uid"][0]);
+                        $nmemb->setDisplayname($result[0]["displayname"][0]);
+                        $nmemb->setMail($result[0]["mail"][0]);
+                        $nmemb->setTel($result[0]["telephonenumber"][0]);
+                        $nmemb->setMember(FALSE);
+                        $nmemb->setAdmin(TRUE);
+                        $newmembers[] = $nmemb;
+                    }
                 }
             }
                             

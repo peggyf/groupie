@@ -419,17 +419,19 @@ class UserController extends Controller {
                 }
             }
             // Droits "admin"
-            for ($j=0; $j<$arAdmins[0]["amugroupadmin"]["count"]; $j++) {       
-                // récupération des uid des admin du groupe
-                $uid_admins = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$j]);
-                if ($uid == $uid_admins) {
-                    $membership->setAdminof(TRUE);
-                    $membershipini->setAdminof(TRUE);
-                    break;
-                }
-                else {
-                    $membership->setAdminof(FALSE);
-                    $membershipini->setAdminof(FALSE);
+            if (isset($arAdmins[0]["amugroupadmin"]["count"])){
+                for ($j=0; $j<$arAdmins[0]["amugroupadmin"]["count"]; $j++) {
+                    // récupération des uid des admin du groupe
+                    $uid_admins = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$j]);
+                    if ($uid == $uid_admins) {
+                        $membership->setAdminof(TRUE);
+                        $membershipini->setAdminof(TRUE);
+                        break;
+                    }
+                    else {
+                        $membership->setAdminof(FALSE);
+                        $membershipini->setAdminof(FALSE);
+                    }
                 }
             }
             $memberships[0] = $membership;
@@ -529,9 +531,10 @@ class UserController extends Controller {
                 // Recherche des admins dans le LDAP
                 $narAdmins = $ldapfonctions->getAdminsGroup($cn);
                 $nflagMembers = array();
-                for($i=0;$i<$narAdmins[0]["amugroupadmin"]["count"];$i++)
-                    $nflagMembers[] = FALSE;
-                
+                if (isset($narAdmins[0]["amugroupadmin"]["count"])) {
+                    for ($i = 0; $i < $narAdmins[0]["amugroupadmin"]["count"]; $i++)
+                        $nflagMembers[] = FALSE;
+                }
                 // Affichage des membres  
                 for ($i=0; $i<$narUsers["count"]; $i++) {                     
                     $newmembers[$i] = new Member();
@@ -543,30 +546,34 @@ class UserController extends Controller {
                     $newmembers[$i]->setAdmin(FALSE);
 
                     // on teste si le membre est aussi admin
-                    for ($j=0; $j<$narAdmins[0]["amugroupadmin"]["count"]; $j++) {
-                        $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $narAdmins[0]["amugroupadmin"][$j]);
-                        if ($uid==$narUsers[$i]["uid"][0]) {
-                            $newmembers[$i]->setAdmin(TRUE);
-                            $nflagMembers[$j] = TRUE;
-                            break;
+                    if (isset($arAdmins[0]["amugroupadmin"]["count"])) {
+                        for ($j = 0; $j < $narAdmins[0]["amugroupadmin"]["count"]; $j++) {
+                            $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $narAdmins[0]["amugroupadmin"][$j]);
+                            if ($uid == $narUsers[$i]["uid"][0]) {
+                                $newmembers[$i]->setAdmin(TRUE);
+                                $nflagMembers[$j] = TRUE;
+                                break;
+                            }
                         }
                     }
                 }
                 // Affichage des admins qui ne sont pas membres
-                for ($j=0; $j<$narAdmins[0]["amugroupadmin"]["count"]; $j++) {       
-                    if ($nflagMembers[$j]==FALSE)  {
-                        // si l'admin n'est pas membre du groupe, il faut aller récupérer ses infos dans le LDAP
-                        $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $narAdmins[0]["amugroupadmin"][$j]);
-                        $result = $ldapfonctions->getInfosUser($uid);
+                if (isset($arAdmins[0]["amugroupadmin"]["count"])) {
+                    for ($j = 0; $j < $narAdmins[0]["amugroupadmin"]["count"]; $j++) {
+                        if ($nflagMembers[$j] == FALSE) {
+                            // si l'admin n'est pas membre du groupe, il faut aller récupérer ses infos dans le LDAP
+                            $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $narAdmins[0]["amugroupadmin"][$j]);
+                            $result = $ldapfonctions->getInfosUser($uid);
 
-                        $nmemb = new Member();
-                        $nmemb->setUid($result[0]["uid"][0]);
-                        $nmemb->setDisplayname($result[0]["displayname"][0]);
-                        $nmemb->setMail($result[0]["mail"][0]);
-                        $nmemb->setTel($result[0]["telephonenumber"][0]);
-                        $nmemb->setMember(FALSE);
-                        $nmemb->setAdmin(TRUE);
-                        $newmembers[] = $nmemb;
+                            $nmemb = new Member();
+                            $nmemb->setUid($result[0]["uid"][0]);
+                            $nmemb->setDisplayname($result[0]["displayname"][0]);
+                            $nmemb->setMail($result[0]["mail"][0]);
+                            $nmemb->setTel($result[0]["telephonenumber"][0]);
+                            $nmemb->setMember(FALSE);
+                            $nmemb->setAdmin(TRUE);
+                            $newmembers[] = $nmemb;
+                        }
                     }
                 }
 

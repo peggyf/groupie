@@ -1,9 +1,17 @@
-{% extends 'AppBundle::page.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block titre %}Le groupe a été supprimé{% endblock %}
+{% block app_menu %}
+    {{ knp_menu_render('AppBundle:Builder:mainMenu') }}
+    <div class="clear"><hr /></div>
+{% endblock %}
 
 {% block body %}
-    
+    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
+    <link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <h1>Le groupe a été supprimé</h1>
+
     {% if app.session.flashbag.has('flash-notice') %}
   <center>
   <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
@@ -15,5 +23,10 @@
 {% endif %}   
 
     <br>
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/home.png')}}" />&nbsp;Retour à l'accueil&nbsp;</button> 
+    <div class="buttons">
+        <a href="{{ path('homepage') }}" >
+            <img src="{{asset('bundles/amugroupie/images/home.png')}}" alt=""/>
+            &nbsp;Retour à l'accueil&nbsp;
+        </a>
+    </div>
 {% endblock %}

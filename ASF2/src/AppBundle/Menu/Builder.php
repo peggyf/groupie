@@ -32,8 +32,8 @@ class Builder extends ContainerAware
         $menu['Groupes privés']->addChild('Tous les groupes (DOSI)', array('route' => 'all_private_groups', 'roles' => ["ROLE_DOSI"]));
 
         // Sous-menus pour Gestion des groupes
-        $menu['Gestion des groupes']->addChild('Créer un groupe', array('route' => 'homepage', 'roles' => ["ROLE_ADMIN"]));
-        $menu['Gestion des groupes']->addChild('Supprimer un groupe', array('route' => 'homepage', 'roles' => ["ROLE_ADMIN"]));
+        $menu['Gestion des groupes']->addChild('Créer un groupe', array('route' => 'group_create', 'roles' => ["ROLE_ADMIN"]));
+        $menu['Gestion des groupes']->addChild('Supprimer un groupe', array('route' => 'group_search_del', 'roles' => ["ROLE_ADMIN"]));
         
         // Sous-menus pour Aide
         $menu['Aide']->addChild('Aide groupes institutionnels', array('route' => 'help', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
