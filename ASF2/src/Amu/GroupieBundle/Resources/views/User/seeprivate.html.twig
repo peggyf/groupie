@@ -1,9 +1,26 @@
-{% extends 'AppBundle::page.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block titre %}Liste des groupes privés de l'utilisateur {{ uid }} {% endblock %}
+{% block app_menu %}
+    {{ knp_menu_render('AppBundle:Builder:mainMenu') }}
+    <div class="clear"><hr /></div>
+{% endblock %}
+
 
 {% block body %}
-    
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
+    <link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#groups').DataTable();
+            $('#groups2').DataTable();
+        } );
+    </script>
+
+    <h1>Liste des groupes privés de l'utilisateur {{ uid }} </h1>
+
  {% if nb_grp_prop == 0 %}
      <h3>   L'utilisateur n'est propriétaire d'aucun groupe privé. </h3>
     <br>
@@ -12,7 +29,7 @@
     <h3>   Nombre de groupes privés dont l'utilisateur est propriétaire : {{ nb_grp_prop }} </h3>
     <br>
 
-<table class="ui-widget-content dataTable TabInfos" filter="25">
+    <table id="groups" class="display">
     <thead>
         <tr>
             <th>cn</th>
@@ -39,7 +56,7 @@
     <h3>   Nombre de groupes privés dont l'utilisateur est membre : {{ nb_grp_membres }} </h3>
     <br>
 
-<table class="ui-widget-content dataTable TabInfos" filter="25">
+    <table id="groups2" class="display">
     <thead>
         <tr>
             <th>cn</th>
@@ -60,8 +77,8 @@
 
 <br>
 
-<button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-	onclick="loadPage('{{ path('user_search', { 'opt': 'searchprivate' }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la recherche&nbsp;
-</button>
+    <div class="buttons">
+        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la recherche &nbsp;</button>
+    </div>
         
 {% endblock %}

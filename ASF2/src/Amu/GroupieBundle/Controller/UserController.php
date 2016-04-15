@@ -635,9 +635,12 @@ class UserController extends Controller {
     {
         $membersof = array();
         $adminsof = array();
-        
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+
         // Recherche des groupes dont l'utilisateur est membre 
-        $arData=$this->getLdap()->arDatasFilter("member=uid=".$uid.",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+        $arData = $ldapfonctions->recherche("member=uid=".$uid.",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"), "cn");
         for ($i=0; $i<$arData["count"]; $i++) {
             // on ne récupere que les groupes publics
             if (!strstr($arData[$i]["dn"], "ou=private")) {
@@ -676,9 +679,13 @@ class UserController extends Controller {
     {
         $membersof = array();
         $propof = array();
-        
+
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+
         // Recherche des groupes dont l'utilisateur est membre 
-        $arData=$this->getLdap()->arDatasFilter("member=uid=".$uid.",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"));
+        $arData=$ldapfonctions->recherche("member=uid=".$uid.",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"), "cn");
         $nb_grp_memb = 0;
 
         for ($i=0; $i<$arData["count"]; $i++) {
@@ -693,7 +700,7 @@ class UserController extends Controller {
         }
                 
         // Récupération des groupes dont l'utilisateur est propriétaire
-        $arDataProp=$this->getLdap()->arDatasFilter("(&(objectClass=groupofNames)(cn=".$uid.":*))",array("cn","description"));
+        $arDataProp=$ldapfonctions->recherche("(&(objectClass=groupofNames)(cn=amu:perso:".$uid.":*))",array("cn","description"), "cn");
 
         for ($i=0; $i<$arDataProp["count"]; $i++) {
             $gr_prop = new Group();
