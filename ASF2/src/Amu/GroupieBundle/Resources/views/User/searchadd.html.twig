@@ -19,21 +19,9 @@
             $('#memb').DataTable();
         } );
     </script>
-
-    {% if app.session.has('_saved') and app.session.get('_saved', 0) == 1 %}
-        <div style="display: none;"> {{ app.session.remove('_saved') }} </div>
- 
-        {% if app.session.flashbag.has('flash-notice') %}
-            <center>
-                <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
-                    {% for flashMessage in app.session.flashbag.get('flash-notice') %}
-                        <p>{{ flashMessage }}</p>
-                    {% endfor %}
-                </div>
-            </center>
-        {% endif %}
-  
-        <br>    
+       
+    {{ form_start(form) }}
+        <br>
         <h3>Droits sur le groupe : {{ cn }}</h3>
         <br>
         <table id="memb" class="display">
@@ -47,75 +35,38 @@
             </thead>
             <tbody>
                 {# itère sur chaque membership existant et affiche les champs : name, memberof et adminof #}
-                {% for m in user.memberships  %}
-                    <tr> 
+                {% for m in form.memberships  %}
+                    <tr>
                         <td style="vertical-align: middle;">{{user.uid}}</td>
                         <td style="vertical-align: middle;">{{user.displayname}}</td>
-                        <td style="vertical-align: middle;"> <input type = 'checkbox' disabled="disabled" {% if m.memberof == 1 %} checked='checked' {% endif %} /> </td>
-                        <td style="vertical-align: middle;"> <input type = 'checkbox' disabled="disabled" {% if m.adminof ==1 %} checked='checked' {% endif %} /> </td>
-                    </tr>  
+                        <td style="vertical-align: middle;"> {{ form_widget(m.memberof) }} </td>
+                        <td style="vertical-align: middle;"> {{ form_widget(m.adminof) }} </td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>
-        
-        <br>
-    
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-	onclick="loadPage('{{ path('user_search', { 'opt': 'add', 'cn' : cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/add-1.png')}}" />&nbsp;Ajouter un autre membre&nbsp;</button>
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('see_group', { 'cn': cn, 'mail': 'true', 'liste': 'rechercheuseradd' }) }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/view-page.png')}}" />&nbsp;Voir les membres&nbsp;</button>
-    
-        <br>
-        <br>
-        <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;" onclick="loadPage('{{ path('accueil') }}');" ><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/home.png')}}" />&nbsp;Retour à l'accueil&nbsp;</button>
-       
-    {% else %}
-        <form class="amuForms" id="_ajxFromModifier">
-            <br>    
-            <h3>Droits sur le groupe : {{ cn }}</h3>
-            <br>
-            <table id="memb" class="display">
-                <thead>
-                    <tr>
-                        <th>uid</th>
-                        <th>DisplayName</th>
-                        <th>Membre</th>
-                        <th>Administrateur</th>
-                    </tr>
-                </thead>
-                <tbody>          
-                    {# itère sur chaque membership existant et affiche les champs : name, memberof et adminof #}
-                    {% for m in form.memberships  %}
-                        <tr> 
-                            <td style="vertical-align: middle;">{{user.uid}}</td>
-                            <td style="vertical-align: middle;">{{user.displayname}}</td>
-                            <td style="vertical-align: middle;"> {{ form_widget(m.memberof) }} </td>
-                            <td style="vertical-align: middle;"> {{ form_widget(m.adminof) }} </td>
-                        </tr>  
-                    {% endfor %}
-                </tbody>
-            </table>
-    
-            <br>
 
-            <div class="buttons">
-                <button type="submit" name="btAjouter"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/user-add.png') }}" />&nbsp;Ajouter les droits&nbsp;</button>
-                <a href="{{ path('homepage') }}" >
-                    <img src="{{asset('bundles/amugroupie/images/cancel.png')}}" alt=""/>
-                    &nbsp;Annuler&nbsp;
-                </a>
-            </div>
-    
-            {{ form_rest(form) }}
-            {# ... #}
-        </form>
-            <br>
-            <br>
-            <br>
+        <br>
+
         <div class="buttons">
-            <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour&nbsp;</button>
+            <button type="submit" name="btAjouter"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/user-add.png') }}" />&nbsp;Ajouter les droits&nbsp;</button>
+            <a href="{{ path('homepage') }}" >
+                <img src="{{asset('bundles/amugroupie/images/cancel.png')}}" alt=""/>
+                &nbsp;Annuler&nbsp;
+            </a>
         </div>
+    
+        {{ form_rest(form) }}
 
-    {% endif %}
+    {{ form_end(form) }}
+    <br>
+    <br>
+    <br>
+    <div class="buttons">
+        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour&nbsp;</button>
+    </div>
+
+
 {% endblock %}
 
 

@@ -46,7 +46,7 @@
     <br>
     <br>
 
-    <form class="amuForms" id="_ajxFromModifier">    
+    {{ form_start(form) }}
         <table id="memb" class="display">
             <thead>
                 <tr>
@@ -92,7 +92,7 @@
         
         <div style="display: none;"> {{ form_rest(form) }}</div> 
         {# ... #}
-    </form>
+    {{ form_end(form) }}
     <br>
     <br>
     <br>

@@ -1,86 +1,116 @@
-{% extends 'AppBundle::page.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block titre %}Utilisateur{% endblock %}
+{% block app_menu %}
+    {{ knp_menu_render('AppBundle:Builder:mainMenu') }}
+    <div class="clear"><hr /></div>
+{% endblock %}
+
 
 {% block body %}
-    
-<table class="ui-widget-content dataTable TabInfos" filter="25">
-    <thead>
-        <tr>
-            <th>uid</th>
-	    <th>DisplayName</th>
-            <th>Mail</th>
-            <th>Tel</th>
-            <th>Composante</th>
-            <th>Service</th>
-            {% if opt == 'add' %}
-            <th> Groupe </th>
-            <th> Ajouter </th>
-            {% endif %}
-            {% if opt == 'addprivate' %}
-            <th> Groupe </th>
-            <th> Ajouter </th>
-            {% endif %}
-            {% if opt == 'search' %}
-            <th> Voir </th>
-            {% endif %}
-            {% if opt == 'searchprivate' %}
-            <th> Voir </th>
-            {% endif %}
-        </tr>
-    </thead>
-    <tbody>
-    {% for user in users %}
-	<tr > 
-	  <td style="vertical-align: middle;">{{user.uid}}</td>
-          <td style="vertical-align: middle;">{{user.displayname}}</td>
-          <td style="vertical-align: middle;"> <a href="mailto:{{user.mail}}"> {{user.mail}}</td>
-          <td style="vertical-align: middle;">{{user.tel}}</td>
-          <td style="vertical-align: middle;">{{user.comp}}</td>
-          <td style="vertical-align: middle;">{{user.aff}}</td>
-          {% if opt == 'add' %}
-              <td style="vertical-align: middle;">{{cn}}</td>
-              <td style="vertical-align: middle;"> 
-              <img class="jqtip ui-button" align="absmiddle" src="{{ asset('bundles/app/images/ico/16/user-add.png') }}" title="Ajouter des droits" class="ui-button" onclick='loadPage("{{ path('user_add', { 'uid': user.uid, 'cn': cn, 'liste': liste }) }}");' />
-            </td>  
-          {% else %}
-            {% if opt == 'addprivate' %}
-                <td style="vertical-align: middle;">{{cn}}</td>
-                <td style="vertical-align: middle;"> 
-                <img class="jqtip ui-button" align="absmiddle" src="{{ asset('bundles/app/images/ico/16/user-add.png') }}" title="Ajouter des droits" class="ui-button" onclick='loadPage("{{ path('user_add_private', { 'uid': user.uid, 'cn': cn, 'opt': 'liste' }) }}");' />
-                </td>  
-            {% else %}
-              {% if opt == 'search' %}
-                    <td style="vertical-align: middle;"> 
-                        <img class="jqtip ui-button" align="absmiddle" src="{{ asset('bundles/app/images/ico/16/modif.png') }}" title="Modifier des droits" class="ui-button" onclick='loadPage("{{ path('user_update', { 'uid': user.uid }) }}");' />
-                    </td>  
-              {% else %}
-                  {% if opt == 'searchprivate' %}
-                      {# {% if droits == 'Voir' %} #}
-                        <td style="vertical-align: middle;">   
-                            <img class="jqtip ui-button" align="absmiddle" src="{{ asset('bundles/app/images/ico/16/view-page.png') }}" title="Voir les droits sur les groupes privés" class="ui-button" onclick='loadPage("{{ path('voir_user_private', { 'uid': user.uid }) }}");' />
-                        </td>
-                      {# {% endif %}    #}
-                  {% endif %}
-              {% endif %}
-            {% endif %}   
-          {% endif %}
-        </tr>
-   {% endfor %}
-    </tbody>
-</table>
 
-<br>
-    
-{% if opt == 'add' %}
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-                onclick="loadPage('{{path('group_update', { 'cn': cn, 'liste': liste }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la gestion du groupe&nbsp;   
-    </button>
-{% endif %}  
-{% if opt == 'search' %}
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-                onclick="loadPage('{{path('user_search') }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à la recherche&nbsp;
-    </button>
-{% endif %}       
+    <h1>Utilisateur</h1>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#memb').DataTable();
+        } );
+    </script>
+
+    <table id="memb" class="display">
+        <thead>
+            <tr>
+                <th>uid</th>
+                <th>DisplayName</th>
+                <th>Mail</th>
+                <th>Tel</th>
+                <th>Composante</th>
+                <th>Service</th>
+                {% if opt == 'add' %}
+                    <th> Groupe </th>
+                    <th> Ajouter </th>
+                {% endif %}
+                {% if opt == 'addprivate' %}
+                    <th> Groupe </th>
+                    <th> Ajouter </th>
+                {% endif %}
+                {% if opt == 'search' %}
+                    <th> Voir </th>
+                {% endif %}
+                {% if opt == 'searchprivate' %}
+                    <th> Voir </th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr >
+                <td style="vertical-align: middle;">{{user.uid}}</td>
+                <td style="vertical-align: middle;">{{user.displayname}}</td>
+                <td style="vertical-align: middle;"> <a href="mailto:{{user.mail}}"> {{user.mail}}</td>
+                <td style="vertical-align: middle;">{{user.tel}}</td>
+                <td style="vertical-align: middle;">{{user.comp}}</td>
+                <td style="vertical-align: middle;">{{user.aff}}</td>
+                {% if opt == 'add' %}
+                    <td style="vertical-align: middle;">{{cn}}</td>
+                    <td style="vertical-align: middle;">
+                        <a href="{{path('user_add', { 'uid': user.uid, 'cn': cn, 'liste': liste })}}">
+                            <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/amugroupie/images/user-add.png") }}" title="Ajouter des droits "/>
+                        </a>
+                    </td>
+                {% else %}
+                    {% if opt == 'addprivate' %}
+                        <td style="vertical-align: middle;">{{cn}}</td>
+                        <td style="vertical-align: middle;">
+                            <a href="{{path('user_add_private', { 'uid': user.uid, 'cn': cn, 'liste': liste })}}">
+                                <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/amugroupie/images/user-add.png") }}" title="Ajouter des droits "/>
+                            </a>
+                        </td>
+                    {% else %}
+                        {% if opt == 'search' %}
+                            <td style="vertical-align: middle;">
+                                <a href="{{path('user_update', { 'uid': user.uid })}}">
+                                    <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/amugroupie/images/modif.png") }}" title="Modifier des droits "/>
+                                </a>
+                            </td>
+                        {% else %}
+                            {% if opt == 'searchprivate' %}
+                                {# {% if droits == 'Voir' %} #}
+                                <td style="vertical-align: middle;">
+                                    <a href="{{path('voir_user_private', { 'uid': user.uid })}}">
+                                        <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/amugroupie/images/view-page.png") }}" title="Voir les droits sur les groupes privés "/>
+                                    </a>
+                                </td>
+                                {# {% endif %}    #}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            </tr>
+           {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+
+    {% if opt == 'add' %}
+        <div class="buttons">
+            <a href="{{ path('group_update', { 'cn': cn, 'liste': liste }) }}" >
+                <img src="{{asset('bundles/amugroupie/images/prev-green.png')}}" alt=""/>
+                &nbsp;Retour à la gestion du groupe&nbsp;
+            </a>
+        </div>
+    {% endif %}
+    {% if opt == 'search' %}
+        <div class="buttons">
+            <a href="{{ path('user_search') }}" >
+                <img src="{{asset('bundles/amugroupie/images/prev-green.png')}}" alt=""/>
+                &nbsp;Retour à la recherche&nbsp;
+            </a>
+        </div>
+    {% endif %}
         
 {% endblock %}

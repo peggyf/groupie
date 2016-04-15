@@ -99,7 +99,7 @@ class UserController extends Controller {
      * Edite les droits d'un utilisateur issu du LDAP.
      *
      * @Route("/update/{uid}", name="user_update")
-     * @Template("AmuGroupieBundle:User:edit.html.twig")
+     * @Template("AmuGroupieBundle:User:update.html.twig")
      */
     public function updateAction(Request $request, $uid)
     {
@@ -341,13 +341,9 @@ class UserController extends Controller {
             
             // Afiichage du message de notification
             $this->get('session')->getFlashBag()->add('flash-notice', 'Les modifications ont bien été enregistrées');
-            $this->getRequest()->getSession()->set('_saved',1);
             
             // Retour à l'affichage user_update
             return $this->redirect($this->generateUrl('user_update', array('uid'=>$uid)));
-        }
-        else {
-            $this->getRequest()->getSession()->set('_saved',0);
         }
 
         return array(
@@ -518,74 +514,9 @@ class UserController extends Controller {
 
                 // Affichage notification
                 $this->get('session')->getFlashBag()->add('flash-notice', 'Les droits ont bien été ajoutés');
-                $this->getRequest()->getSession()->set('_saved',1);
-                
-                // Récupération du nouveau groupe modifié pour affichage
-                $newgroup = new Group();
-                $newgroup->setCn($cn);
-                $newmembers = new ArrayCollection();
 
-                // Recherche des membres dans le LDAP
-                $narUsers = $ldapfonctions->getMembersGroup($cn);
-
-                // Recherche des admins dans le LDAP
-                $narAdmins = $ldapfonctions->getAdminsGroup($cn);
-                $nflagMembers = array();
-                if (isset($narAdmins[0]["amugroupadmin"]["count"])) {
-                    for ($i = 0; $i < $narAdmins[0]["amugroupadmin"]["count"]; $i++)
-                        $nflagMembers[] = FALSE;
-                }
-                // Affichage des membres  
-                for ($i=0; $i<$narUsers["count"]; $i++) {                     
-                    $newmembers[$i] = new Member();
-                    $newmembers[$i]->setUid($narUsers[$i]["uid"][0]);
-                    $newmembers[$i]->setDisplayname($narUsers[$i]["displayname"][0]);
-                    $newmembers[$i]->setMail($narUsers[$i]["mail"][0]);
-                    $newmembers[$i]->setTel($narUsers[$i]["telephonenumber"][0]);
-                    $newmembers[$i]->setMember(TRUE); 
-                    $newmembers[$i]->setAdmin(FALSE);
-
-                    // on teste si le membre est aussi admin
-                    if (isset($arAdmins[0]["amugroupadmin"]["count"])) {
-                        for ($j = 0; $j < $narAdmins[0]["amugroupadmin"]["count"]; $j++) {
-                            $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $narAdmins[0]["amugroupadmin"][$j]);
-                            if ($uid == $narUsers[$i]["uid"][0]) {
-                                $newmembers[$i]->setAdmin(TRUE);
-                                $nflagMembers[$j] = TRUE;
-                                break;
-                            }
-                        }
-                    }
-                }
-                // Affichage des admins qui ne sont pas membres
-                if (isset($arAdmins[0]["amugroupadmin"]["count"])) {
-                    for ($j = 0; $j < $narAdmins[0]["amugroupadmin"]["count"]; $j++) {
-                        if ($nflagMembers[$j] == FALSE) {
-                            // si l'admin n'est pas membre du groupe, il faut aller récupérer ses infos dans le LDAP
-                            $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $narAdmins[0]["amugroupadmin"][$j]);
-                            $result = $ldapfonctions->getInfosUser($uid);
-
-                            $nmemb = new Member();
-                            $nmemb->setUid($result[0]["uid"][0]);
-                            $nmemb->setDisplayname($result[0]["displayname"][0]);
-                            $nmemb->setMail($result[0]["mail"][0]);
-                            $nmemb->setTel($result[0]["telephonenumber"][0]);
-                            $nmemb->setMember(FALSE);
-                            $nmemb->setAdmin(TRUE);
-                            $newmembers[] = $nmemb;
-                        }
-                    }
-                }
-
-                $newgroup ->setMembers($newmembers);
-
-                // Création formulaire de mise à jour de l'utilisateur
-                $editForm = $this->createForm(new GroupEditType(), $newgroup);
-                
-                return $this->render('AmuGroupieBundle:Group:update.html.twig', array('group' => $newgroup, 'nb_membres' => $narUsers["count"], 'form' => $editForm->createView(), 'liste' => $liste));
-            }
-            else { 
-                $this->getRequest()->getSession()->set('_saved',0);
+                // Retour à la page update d'un utilisateur
+                return $this->redirect($this->generateUrl('group_update', array('cn'=>$cn)));
             }
         }
         
@@ -805,17 +736,15 @@ class UserController extends Controller {
             // Récupération des données du formulaire
             $usersearch = $form->getData();
 
-
-            
             // On teste si on a qqchose dans le champ uid
             if ($usersearch->getUid()=='') {
                 // si on a rien, on teste le nom
                 // On teste si on fait une recherche exacte ou non
                 if ($usersearch->getExacte()) {
-                    $arData=$ldapfonctions->recherche("(&(sn=".$usersearch->getSn().")(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))", array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'amuComposante', 'supannEntiteAffectation', 'memberof'));
+                    $arData=$ldapfonctions->recherche("(&(sn=".$usersearch->getSn().")(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))", array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'amuComposante', 'supannEntiteAffectation', 'memberof'), "uid");
                 }
                 else {
-                    $arData=$ldapfonctions->recherche("(&(sn=".$usersearch->getSn()."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))", array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'amuComposante', 'supannEntiteAffectation', 'memberof'));
+                    $arData=$ldapfonctions->recherche("(&(sn=".$usersearch->getSn()."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))", array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'amuComposante', 'supannEntiteAffectation', 'memberof'), "uid");
                 }
                 
                 // on récupère la liste des uilisateurs renvoyés par la recherche
@@ -825,12 +754,15 @@ class UserController extends Controller {
                         
                     $user = new User();
                     $user->setUid($data['uid'][0]);
-                    $user->setDisplayname($data['displayname'][0]); 
-                    $user->setMail($data['mail'][0]);
+                    $user->setDisplayname($data['displayname'][0]);
+                    if (isset($data['mail'][0]))
+                        $user->setMail($data['mail'][0]);
                     $user->setSn($data['sn'][0]);
-                    $user->setTel($data['telephonenumber'][0]);
+                    if (isset($data['telephonenumber'][0]))
+                        $user->setTel($data['telephonenumber'][0]);
                     $user->setComp($data['amucomposante'][0]);
-                    $user->setAff($data['supannentiteaffectation'][0]);
+                    if (isset($data['supannentiteaffectation'][0]))
+                        $user->setAff($data['supannentiteaffectation'][0]);
                     $users[] = $user; 
                     $nb++;    
                 }
@@ -865,9 +797,8 @@ class UserController extends Controller {
                 $arData=$ldapfonctions->recherche("uid=".$usersearch->getUid(), array('uid', 'sn','displayname', 'mail', 'telephonenumber','amucomposante', 'supannentiteaffectation', 'memberof'), "uid");
                 
                 // Test de la validité de l'uid
-                if ($arData[0]['uid'][0] == '') {
+                if (!isset($arData[0]['uid'][0])) {
                     $this->get('session')->getFlashBag()->add('flash-notice', 'L\'uid n\'est pas valide');
-                    $this->getRequest()->getSession()->set('_saved', 0);    
                 }
                 else {
                     $user = new User();
@@ -966,7 +897,7 @@ class UserController extends Controller {
                 
             // Log ajout sur le groupe
             openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-            $adm = $request->getSession()->get('login');
+            $adm = $request->getSession()->get('phpCAS_user');
                 
             // Boucle sur la liste
             foreach($tabLignes as $l) {

@@ -1,26 +1,41 @@
-{% extends 'AppBundle::page.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block titre %}Modification des droits d'un utilisateur{% endblock %}
+{% block app_menu %}
+    {{ knp_menu_render('AppBundle:Builder:mainMenu') }}
+    <div class="clear"><hr /></div>
+{% endblock %}
 
 {% block body %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
+<link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
+<link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#groups').DataTable();
+    } );
+</script>
+
+    <h1>Modification des droits d'un utilisateur</h1>
 
     {% set hilightColor='#C7FE74' %}
-   
-    <form class="amuForms" id="_ajxFromModifier">
-        {% if app.session.flashbag.has('flash-notice') %}
-            <center>
-                <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+
+    {% if app.session.flashbag.has('flash-notice') %}
+        <center>
+            <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
                 {% for flashMessage in app.session.flashbag.get('flash-notice') %}
                     <p>{{ flashMessage }}</p>
                 {% endfor %}
-                </div>
-            </center>
-        {% endif %}
+            </div>
+        </center>
+    {% endif %}
 
-        <br>    
-        <h3>Modifications pour l'utilisateur : {{user.displayname}}, uid = {{user.uid}}</h3>
-        <br>
-        <table class="ui-widget-content dataTable TabInfos" filter="25">
+    <br>
+    <h3>Modifications pour l'utilisateur : {{user.displayname}}, uid = {{user.uid}}</h3>
+    <br>
+    {{ form_start(form) }}
+        <table id="groups" class="display">
             <thead>
                 <tr>
                     <th>Nom du groupe</th>
@@ -46,18 +61,26 @@
             </tbody>
         </table>
         <br>
-        <p>
-            <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-                onclick="loadPage('{{ path('group_add', { 'cn_search': cn_search, 'uid': user.uid, 'flag_cn': flag_cn }) }}', $('#_ajxFromModifier').serializeArray());"><img align="absmiddle" src="{{asset('bundles/app/images/ico/16/save-2.png')}}" />&nbsp;Enregistrer les modifications&nbsp;</button>
-            <span class="record_actions"></span>
-        </p>
+        <div class="buttons">
+            <button type="submit" name="btValider" id="submit"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/valid.png') }}" />&nbsp;Valider les changements de droit&nbsp;</button>
+            <a href="{{ path('homepage') }}" >
+                <img src="{{asset('bundles/amugroupie/images/cancel.png')}}" alt=""/>
+                &nbsp;Annuler&nbsp;
+            </a>
+        </div>
         {{ form_rest(form) }}
         {# ... #}
-    </form>
-      
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:5px;"  
-        onclick="loadPage('{{path('user_update', { 'uid' : user.uid }) }}');"><img align="absmiddle" src="{{ asset('bundles/app/images/ico/32/prev-green.png') }}" />&nbsp;Retour à l'utilisateur&nbsp;
-    </button>
+    {{ form_end(form) }}
+
+    <br>
+    <br>
+    <br>
+    <div class="buttons">
+        <a href="{{ path('user_update', {'uid': user.uid}) }}" >
+            <img src="{{asset('bundles/amugroupie/images/prev-green.png')}}" alt=""/>
+            &nbsp;Retour à l'utilisateur&nbsp;
+        </a>
+    </div>
 
     
 {% endblock %}

@@ -421,7 +421,7 @@ class GroupController extends Controller {
      * Ajout de personnes dans un groupe
      *
      * @Route("/add/{cn_search}/{uid}/{flag_cn}",name="group_add")
-     * @Template("AmuGroupieBundle:Group:groupsearchadd.html.twig")
+     * @Template("AmuGroupieBundle:Group:searchadd.html.twig")
      */
     public function addAction(Request $request, $cn_search='', $uid='', $flag_cn=0) {
         // On récupère le service ldapfonctions
@@ -430,7 +430,7 @@ class GroupController extends Controller {
         // Dans le cas d'un gestionnaire
         if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
             // Recup des groupes dont l'utilisateur courant (logué) est admin
-            $arDataAdminLogin = $ldapfonctions->recherche("amuGroupAdmin=uid=".$request->getSession()->get('login').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"), "cn");
+            $arDataAdminLogin = $ldapfonctions->recherche("amuGroupAdmin=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", "amugroupfilter"), "cn");
             for($i=0;$i<$arDataAdminLogin["count"];$i++) 
                 $tab_cn_admin_login[$i] = $arDataAdminLogin[$i]["cn"][0];
         }
@@ -550,7 +550,7 @@ class GroupController extends Controller {
         // Formulaire
         $editForm = $this->createForm(new UserEditType(), $user, array(
             'action' => $this->generateUrl('group_add', array('cn_search'=> $cn_search, 'uid' => $uid, 'flag_cn' => $flag_cn)),
-            'method' => 'POST',
+            'method' => 'GET',
         ));
         $editForm->handleRequest($request);
         if ($editForm->isValid()) {
@@ -564,7 +564,7 @@ class GroupController extends Controller {
             
             // Log Mise à jour des membres du groupe
             openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
-            $adm = $request->getSession()->get('login');
+            $adm = $request->getSession()->get('phpCAS_user');
             
             // Pour chaque appartenance
             for ($i=0; $i<sizeof($m_update); $i++) {
@@ -773,7 +773,7 @@ class GroupController extends Controller {
             
             // Log création de groupe
             openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
-            $adm = $request->getSession()->get('login');
+            $adm = $request->getSession()->get('phpCAS_user');
                 
             // Création du groupe dans le LDAP
             $infogroup = $group->infosGroupeLdap();
@@ -1303,13 +1303,17 @@ class GroupController extends Controller {
                
         // Recherche des membres dans le LDAP
         $arUsers = $ldapfonctions->getMembersGroup($cn);
+        $nb_members = $arUsers["count"];
         
         // Recherche des admins dans le LDAP
+        $nb_admins = 0;
         $arAdmins = $ldapfonctions->getAdminsGroup($cn);
         $flagMembers = array();
         if (isset($arAdmins[0]["amugroupadmin"]["count"])) {
-            for ($i = 0; $i < $arAdmins[0]["amugroupadmin"]["count"]; $i++)
-                $flagMembers[] = FALSE;
+            $nb_admins = $arAdmins[0]["amugroupadmin"]["count"];
+            for ($i = 0; $i < $arAdmins[0]["amugroupadmin"]["count"]; $i++) {
+                $flagMembers[$i] = FALSE;
+            }
         }
         
         // Affichage des membres  
@@ -1352,7 +1356,6 @@ class GroupController extends Controller {
                     // si l'admin n'est pas membre du groupe, il faut aller récupérer ses infos dans le LDAP
                     $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$j]);
                     $result = $ldapfonctions->getInfosUser($uid);
-
                     $memb = new Member();
                     $memb->setUid($result[0]["uid"][0]);
                     $memb->setDisplayname($result[0]["displayname"][0]);
@@ -1391,7 +1394,7 @@ class GroupController extends Controller {
             
             // Log Mise à jour des membres du groupe
             openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
-            $adm = $request->getSession()->get('login');
+            $adm = $request->getSession()->get('phpCAS_user');
             
             $m_update = new ArrayCollection();      
             $m_update = $groupupdate->getMembers();
@@ -1461,84 +1464,19 @@ class GroupController extends Controller {
             closelog();
             
             $this->get('session')->getFlashBag()->add('flash-notice', 'Les modifications ont bien été enregistrées');       
-            $this->getRequest()->getSession()->set('_saved',1);
-            
-            // Récupération du nouveau groupe modifié pour affichage
-            $newgroup = new Group();
-            $newgroup->setCn($cn);
-            $newmembers = new ArrayCollection();
 
-            // Recherche des membres dans le LDAP
-            $narUsers = $ldapfonctions->getMembersGroup($cn);
-            
-            // Recherche des admins dans le LDAP
-            $narAdmins = $ldapfonctions->getAdminsGroup($cn);
-            $nflagMembers = array();
-            for($i=0;$i<$narAdmins[0]["amugroupadmin"]["count"];$i++)
-                $nflagMembers[] = FALSE;
-
-            // Affichage des membres  
-            for ($i=0; $i<$narUsers["count"]; $i++) {                     
-                $newmembers[$i] = new Member();
-                $newmembers[$i]->setUid($narUsers[$i]["uid"][0]);
-                $newmembers[$i]->setDisplayname($narUsers[$i]["displayname"][0]);
-                $newmembers[$i]->setMail($narUsers[$i]["mail"][0]);
-                $newmembers[$i]->setTel($narUsers[$i]["telephonenumber"][0]);
-                $newmembers[$i]->setMember(TRUE); 
-                $newmembers[$i]->setAdmin(FALSE);
-                
-                // on teste si le membre est aussi admin
-                for ($j=0; $j<$narAdmins[0]["amugroupadmin"]["count"]; $j++) {
-                    $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $narAdmins[0]["amugroupadmin"][$j]);
-                    if ($uid==$narUsers[$i]["uid"][0]) {
-                        $newmembers[$i]->setAdmin(TRUE);
-                        $nflagMembers[$j] = TRUE;
-                        break;
-                    }
-                }
-            }
-            // Affichage des admins qui ne sont pas membres
-            if (isset($narAdmins[0]["amugroupadmin"]["count"])) {
-                for ($j = 0; $j < $narAdmins[0]["amugroupadmin"]["count"]; $j++) {
-                    if ($nflagMembers[$j] == FALSE) {
-                        // si l'admin n'est pas membre du groupe, il faut aller récupérer ses infos dans le LDAP
-                        $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $narAdmins[0]["amugroupadmin"][$j]);
-                        $result = $ldapfonctions->getInfosUser($uid);
-
-                        $nmemb = new Member();
-                        $nmemb->setUid($result[0]["uid"][0]);
-                        $nmemb->setDisplayname($result[0]["displayname"][0]);
-                        $nmemb->setMail($result[0]["mail"][0]);
-                        $nmemb->setTel($result[0]["telephonenumber"][0]);
-                        $nmemb->setMember(FALSE);
-                        $nmemb->setAdmin(TRUE);
-                        $newmembers[] = $nmemb;
-                    }
-                }
-            }
-                            
-            $newgroup ->setMembers($newmembers);
-            
-            // Création du formulaire de mise à jour du groupe
-            $editForm = $this->createForm(new GroupEditType(), $newgroup);
-            
-            return array(
-            'group'      => $newgroup,
-            'nb_membres' => $narUsers["count"],
-            'form'   => $editForm->createView(),
-            'liste' => $liste    
-            );
+            // Retour à l'affichage group_update
+            return $this->redirect($this->generateUrl('group_update', array('cn'=>$cn, 'liste'=>$liste)));
         }
-        else {
-           $this->getRequest()->getSession()->set('_saved',0);
-            
-            return array(
-            'group'      => $group,
+
+        return array(
+            'group' => $group,
             'nb_membres' => $arUsers["count"],
-            'form'   => $editForm->createView(),
+            'nb_admins' => $nb_admins,
+            'form' => $editForm->createView(),
             'liste' => $liste
             );
-        }
+
     }
     
     /** 
