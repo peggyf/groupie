@@ -52,7 +52,7 @@ class GroupController extends Controller {
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->get('amu.ldap');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
 
         // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
         $arData = $ldapfonctions->recherche("(objectClass=groupofNames)", array("cn", "description", "amugroupfilter"), "cn");
@@ -110,7 +110,7 @@ class GroupController extends Controller {
     public function allprivateAction() {
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->get('amu.ldap');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
         // Récupération tous les groupes du LDAP
         $arData = $ldapfonctions->recherche("(objectClass=groupofNames)", array("cn", "description", "amugroupfilter"), "cn");
          

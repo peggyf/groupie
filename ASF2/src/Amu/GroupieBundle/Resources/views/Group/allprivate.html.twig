@@ -6,15 +6,29 @@
 {% endblock %}
 
 {% block body %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
+    <link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#groups').DataTable();
+        } );
+    </script>
 
     <h1>Liste de tous les groupes privés</h1>
 
-    <button type="button" class="ui-button ui-widget-content ui-corner-all" style="padding:10px; " onclick="loadPage('{{ path('user_search', { 'opt': 'searchprivate' }) }}');" ><img align="absmiddle" src="{{asset('bundles/amugroupie/images/user-search.png')}}" />&nbsp;Voir les groupes privés d'un utilisateur &nbsp;</button>
-    
+    <div class="buttons">
+        <a href="{{  path('user_search', { 'opt': 'searchprivate' }) }}">
+            <img src="{{asset('bundles/amugroupie/images/user-search.png')}}" alt=""/>
+            &nbsp;Voir les groupes privés d'un utilisateur&nbsp;
+        </a>
+    </div>
     <br>
     <br>
-    
-    <table>
+    <br>
+    <table id="groups" class="display">
         <thead>
             <tr>
                 <th>Nom</th>
@@ -28,7 +42,9 @@
                 <td style="vertical-align: middle;">{{group.cn}}</td>
                 <td style="vertical-align: middle;">{{group.description}}</td>
                 <td style="vertical-align: middle;">
-                    <img align="absmiddle" src="{{ asset("bundles/amugroupie/images/view-page.png") }}" title="Gérer le groupe" class="ui-button" onclick="loadPage('{{ path('see_private_group', { 'cn': group.cn, 'opt': 'tous' }) }}');" />
+                    <a href="{{path('see_private_group', { 'cn': group.cn, 'opt': 'tous' })}}">
+                        <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/amugroupie/images/view-page.png") }}" title="Voir les membres de {{ group.cn }} "/>
+                    </a>
                 </td>
             </tr> 
         {% endfor %}
