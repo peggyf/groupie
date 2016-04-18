@@ -12,10 +12,11 @@
     <link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="{{ asset('bundles/amugroupie/js/initdatatable.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#groups').DataTable();
-            $('#groups2').DataTable();
+            initdatatable('#groups');
+            initdatatable('#groups2');
         } );
     </script>
 
@@ -30,20 +31,21 @@
     <br>
 
     <table id="groups" class="display">
-    <thead>
-        <tr>
-            <th>cn</th>
-	    <th>Description</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for grp in grp_prop %}
-	<tr > 
-	  <td style="vertical-align: middle;">{{grp.cn }}</td>
-          <td style="vertical-align: middle;">{{grp.description }}</td>
-        </tr>
-   {% endfor %}
-    </tbody>
+        <thead>
+            <tr>
+                <th>cn</th>
+            <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for grp in grp_prop %}
+        <tr >
+          <td style="vertical-align: middle;">{{grp.cn }}</td>
+              <td style="vertical-align: middle;">{{grp.description }}</td>
+            </tr>
+       {% endfor %}
+        </tbody>
+   </table>
 {% endif %}      
 {% if nb_grp_membres == 0 %}       
     <h3>   L'utilisateur n'est membre d'aucun groupe privé. </h3>
@@ -72,7 +74,7 @@
    {% endfor %}
     </tbody>
       
-</table>
+    </table>
 {% endif %}   
 
 <br>

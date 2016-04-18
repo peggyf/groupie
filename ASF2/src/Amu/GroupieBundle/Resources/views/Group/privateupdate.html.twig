@@ -11,11 +11,13 @@
 <link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
 <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#memb').DataTable();
-    } );
-</script>
+    <script type="text/javascript" src="{{ asset('bundles/amugroupie/js/initdatatable.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            initdatatable('#memb');
+        } );
+    </script>
+
 <h1>Modification des membres du groupe <span style="font-variant-caps: small-caps;"> {{ group.cn }} </span></h1>
 {% set hilightColor='#C7FE74' %}
 
