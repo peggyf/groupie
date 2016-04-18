@@ -28,7 +28,13 @@
 function initdatatable(elt) {
     $(elt).DataTable({
         "language": {
-            "lengthMenu": "Afficher _MENU_ éléments",
+            "lengthMenu": 'Afficher <select>'+
+            '<option value="10">10</option>'+
+            '<option value="25">25</option>'+
+            '<option value="50">50</option>'+
+            '<option value="100">100</option>'+
+            '<option value="-1">Tous</option>'+
+            '</select> éléments',
             "zeroRecords": "Aucune entrée trouvée",
             "info": "Affichage éléments _START_ à _END_ sur _TOTAL_ éléments",
             "infoEmpty": "Pas d'entrée disponible",
