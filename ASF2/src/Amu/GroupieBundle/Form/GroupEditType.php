@@ -5,6 +5,7 @@ namespace Amu\GroupieBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class GroupEditType extends AbstractType
 {
@@ -12,8 +13,7 @@ class GroupEditType extends AbstractType
     {
                 
         $builder
-                 ->add('members', 'collection', array('type' => new MemberType())
-                 );
+                 ->add('members', 'collection', array('type' => new MemberType()));
 
     }
     public function setDefaultOptions(OptionsResolverInterface $resolver)

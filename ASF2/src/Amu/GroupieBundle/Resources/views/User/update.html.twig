@@ -83,16 +83,14 @@
         <br>
         <p>
         <div class="buttons">
-            <button type="submit" name="btValider" id="button_val"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/valid.png') }}" />&nbsp;Valider les changements de droits&nbsp;</button>
+            <button type="submit" name="btValider" id="submit"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/valid.png') }}" />&nbsp;Valider les changements de droits&nbsp;</button>
             <a href="{{ path('homepage') }}">
                 <img src="{{asset('bundles/amugroupie/images/cancel.png')}}" alt=""/>
                 &nbsp;Annuler&nbsp;
             </a>
         </div>
         </p>
-        
-        <div style="display: none;"> {{ form_rest(form) }}</div> 
-        {# ... #}
+
     {{ form_end(form) }}
     <br>
     <br>
@@ -100,16 +98,13 @@
     <div class="buttons">
         <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la recherche&nbsp;</button>
     </div>
-  
+
     {# Ajout d'une fonction javascript pour gérer les lignes cachées de la datatable #}
-    <script type="text/javascript" src="http://cdn.datatables.net/plug-ins/1.10.7/api/fnGetHiddenNodes.js"/>
+    <script type="text/javascript" src="http://cdn.datatables.net/plug-ins/1.10.7/api/fnGetHiddenNodes.js"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
-            $('#useredit').submit( function() {
-                oTable = $('#members').dataTable();
-                $(oTable.fnGetHiddenNodes()).appendTo(this);
-                var sData = $('input', oTable.fnGetNodes()).serialize();
-            } );
+        $('#useredit').submit( function() {
+            oTable = $('#memb').dataTable();
+            $(oTable.fnGetHiddenNodes()).css("display", "none").appendTo(this);
         } );
     </script>
    

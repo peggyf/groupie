@@ -265,7 +265,9 @@ class UserController extends Controller {
         $userini->setMemberships($membershipsini);
                                 
         // Création du formulaire de mise à jour de l'utilisateur
-        $editForm = $this->createForm(new UserEditType(), $user);
+        $editForm = $this->createForm(new UserEditType(), $user, array(
+            'action' => $this->generateUrl('user_update', array('uid'=> $uid)),
+            'method' => 'POST',));
         $editForm->handleRequest($request);
         if ($editForm->isValid()) {
             $userupdate = new User();
@@ -273,7 +275,7 @@ class UserController extends Controller {
             $userupdate = $editForm->getData();
              
             // Log modif de groupe
-            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+            openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
             $adm = $request->getSession()->get('phpCAS_user');
             
             // Traitement des données issues de la récup du formulaire
@@ -289,7 +291,7 @@ class UserController extends Controller {
                     // Si changement, on modifie dans le ldap
                     if ($memb->getMemberof() != $membershipsini[$i]->getMemberof()) {
                         if ($memb->getMemberof()) {
-                            $r = $this->getLdap()->addMemberGroup($dn_group, array($uid));
+                            $r = $ldapfonctions->addMemberGroup($dn_group, array($uid));
                             if ($r) {
                                 // Log modif
                                 syslog(LOG_INFO, "add_member by $adm : group : $c, user : $uid");
@@ -300,7 +302,7 @@ class UserController extends Controller {
                             }              
                         }
                         else {
-                            $r = $this->getLdap()->delMemberGroup($dn_group, array($uid));
+                            $r = $ldapfonctions->delMemberGroup($dn_group, array($uid));
                             if ($r) {
                                 // Log modif
                                 syslog(LOG_INFO, "del_member by $adm : group : $c, user : $uid");
@@ -314,7 +316,7 @@ class UserController extends Controller {
                     // Idem si changement des droits
                     if ($memb->getAdminof() != $membershipsini[$i]->getAdminof()) {
                         if ($memb->getAdminof()) {
-                            $r = $this->getLdap()->addAdminGroup($dn_group, array($uid));
+                            $r = $ldapfonctions->addAdminGroup($dn_group, array($uid));
                             if ($r) {
                                 // Log modif
                                 syslog(LOG_INFO, "add_admin by $adm : group : $c, user : $uid");
@@ -324,7 +326,7 @@ class UserController extends Controller {
                             }
                         }
                         else {
-                            $r = $this->getLdap()->delAdminGroup($dn_group, array($uid));
+                            $r = $ldapfonctions->delAdminGroup($dn_group, array($uid));
                             if ($r) {
                                 // Log modif
                                 syslog(LOG_INFO, "del_admin by $adm : group : $c, user : $uid");
@@ -612,7 +614,7 @@ class UserController extends Controller {
 
                 $editForm = $this->createForm(new PrivateGroupEditType(), $newgroup, array(
                     'action' => $this->generateUrl('private_group_update', array('cn'=> $cn)),
-                    'method' => 'GET',));
+                    'method' => 'POST',));
                 
                 return $this->render('AmuGroupieBundle:Group:privateupdate.html.twig', array('group' => $newgroup, 'nb_membres' => $narUsers["count"], 'form' => $editForm->createView()));
                 
@@ -903,7 +905,7 @@ class UserController extends Controller {
             $tabLignes = explode("\n", $liste_ident);
                 
             // Log ajout sur le groupe
-            openlog("groupie", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+            openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
             $adm = $request->getSession()->get('phpCAS_user');
                 
             // Boucle sur la liste

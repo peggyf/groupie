@@ -550,7 +550,7 @@ class GroupController extends Controller {
         // Formulaire
         $editForm = $this->createForm(new UserEditType(), $user, array(
             'action' => $this->generateUrl('group_add', array('cn_search'=> $cn_search, 'uid' => $uid, 'flag_cn' => $flag_cn)),
-            'method' => 'GET',
+            'method' => 'POST',
         ));
         $editForm->handleRequest($request);
         if ($editForm->isValid()) {
@@ -685,7 +685,10 @@ class GroupController extends Controller {
             $admins[$i]->setUid($result[0]["uid"][0]);
             $admins[$i]->setSn($result[0]["sn"][0]);
             $admins[$i]->setDisplayname($result[0]["displayname"][0]);
-            $admins[$i]->setMail($result[0]["mail"][0]);
+            if (isset($result[0]["mail"][0]))
+                $admins[$i]->setMail($result[0]["mail"][0]);
+            else
+                $admins[$i]->setMail("");
             if (isset($result[0]["telephonenumber"][0]))
                 $admins[$i]->setTel($result[0]["telephonenumber"][0]);
             else 
@@ -1173,7 +1176,7 @@ class GroupController extends Controller {
         // Création du formulaire de mise à jour
         $editForm = $this->createForm(new PrivateGroupEditType(), $group, array(
             'action' => $this->generateUrl('private_group_update', array('cn'=> $cn)),
-            'method' => 'GET',));
+            'method' => 'POST',));
 
         $editForm->handleRequest($request);
         if ($editForm->isValid()) {
@@ -1256,7 +1259,7 @@ class GroupController extends Controller {
             // Nouveau formulaire avec les infos mises à jour
             $editForm = $this->createForm(new PrivateGroupEditType(), $newgroup, array(
                 'action' => $this->generateUrl('private_group_update', array('cn'=> $cn)),
-                'method' => 'GET'));
+                'method' => 'POST'));
             
             return array(
             'group'      => $newgroup,
@@ -1321,8 +1324,14 @@ class GroupController extends Controller {
             $members[$i] = new Member();
             $members[$i]->setUid($arUsers[$i]["uid"][0]);
             $members[$i]->setDisplayname($arUsers[$i]["displayname"][0]);
-            $members[$i]->setMail($arUsers[$i]["mail"][0]);
-            $members[$i]->setTel($arUsers[$i]["telephonenumber"][0]);
+            if (isset($arUsers[$i]["mail"][0]))
+                $members[$i]->setMail($arUsers[$i]["mail"][0]);
+            else
+                $members[$i]->setMail("");
+            if (isset($arUsers[$i]["telephonenumber"][0]))
+                $members[$i]->setTel($arUsers[$i]["telephonenumber"][0]);
+            else
+                $members[$i]->setTel("");
             $members[$i]->setMember(TRUE);
             $members[$i]->setAdmin(FALSE);
            
@@ -1330,8 +1339,14 @@ class GroupController extends Controller {
             $membersini[$i] = new Member();
             $membersini[$i]->setUid($arUsers[$i]["uid"][0]);
             $membersini[$i]->setDisplayname($arUsers[$i]["displayname"][0]);
-            $membersini[$i]->setMail($arUsers[$i]["mail"][0]);
-            $membersini[$i]->setTel($arUsers[$i]["telephonenumber"][0]);
+            if (isset($arUsers[$i]["mail"][0]))
+                $membersini[$i]->setMail($arUsers[$i]["mail"][0]);
+            else
+                $membersini[$i]->setMail("");
+            if (isset($arUsers[$i]["telephonenumber"][0]))
+                $membersini[$i]->setTel($arUsers[$i]["telephonenumber"][0]);
+            else
+                $membersini[$i]->setTel("");
             $membersini[$i]->setMember(TRUE);
             $membersini[$i]->setAdmin(FALSE);
             
@@ -1359,8 +1374,14 @@ class GroupController extends Controller {
                     $memb = new Member();
                     $memb->setUid($result[0]["uid"][0]);
                     $memb->setDisplayname($result[0]["displayname"][0]);
-                    $memb->setMail($result[0]["mail"][0]);
-                    $memb->setTel($result[0]["telephonenumber"][0]);
+                    if (isset($result[0]["mail"][0]))
+                        $memb->setMail($result[0]["mail"][0]);
+                    else
+                        $memb->setMail("");
+                    if (isset($result[0]["telephonenumber"][0]))
+                        $memb->setTel($result[0]["telephonenumber"][0]);
+                    else
+                        $memb->setTel("");
                     $memb->setMember(FALSE);
                     $memb->setAdmin(TRUE);
                     $members[] = $memb;
@@ -1369,8 +1390,14 @@ class GroupController extends Controller {
                     $membini = new Member();
                     $membini->setUid($result[0]["uid"][0]);
                     $membini->setDisplayname($result[0]["displayname"][0]);
-                    $membini->setMail($result[0]["mail"][0]);
-                    $membini->setTel($result[0]["telephonenumber"][0]);
+                    if (isset($result[0]["mail"][0]))
+                        $membini->setMail($result[0]["mail"][0]);
+                    else
+                        $membini->setMail("");
+                    if (isset($result[0]["telephonenumber"][0]))
+                        $membini->setTel($result[0]["telephonenumber"][0]);
+                    else
+                        $membini->setTel("");
                     $membini->setMember(FALSE);
                     $membini->setAdmin(TRUE);
                     $membersini[] = $membini;
@@ -1384,7 +1411,7 @@ class GroupController extends Controller {
         // Création du formulaire de mise à jour du groupe
         $editForm = $this->createForm(new GroupEditType(), $group,array(
             'action' => $this->generateUrl('group_update', array('cn'=> $cn)),
-            'method' => 'GET',));
+            'method' => 'POST',));
 
         $editForm->handleRequest($request);
         if ($editForm->isValid()) {
