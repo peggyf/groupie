@@ -37,8 +37,9 @@ function initdatatable(elt) {
             '</select> éléments',
             "zeroRecords": "Aucune entrée trouvée",
             "info": "Affichage éléments _START_ à _END_ sur _TOTAL_ éléments",
-            "infoEmpty": "Pas d'entrée disponible",
+            "infoEmpty": "Pas d'élément disponible",
             "search":         "Recherche ",
+            "infoFiltered":   "(filtré sur un total de _MAX_ éléments)",
             "paginate": {
                 "first":      "Premier",
                 "last":       "Dernier",
