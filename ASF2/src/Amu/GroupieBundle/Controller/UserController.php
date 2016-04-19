@@ -375,7 +375,6 @@ class UserController extends Controller {
         // Test de la validité de l'uid
         if ($arDataUser[0]['uid'][0] == '') {
             $this->get('session')->getFlashBag()->add('flash-notice', 'L\'uid n\'est pas valide');
-            $this->getRequest()->getSession()->set('_saved', 0);
             return $this->redirect($this->generateUrl('user_search', array('opt' => 'add', 'cn'=>$cn)));
         }
         else {
@@ -407,14 +406,16 @@ class UserController extends Controller {
             // Droits "membre"
             foreach($tab_cn as $cn_g) {
                 if ($cn==$cn_g) {
-                    $membership->setMemberof(TRUE);
+                    //$membership->setMemberof(TRUE);
                     $membershipini->setMemberof(TRUE);
                     break;
                 }
                 else {
-                    $membership->setMemberof(FALSE);
+                    //$membership->setMemberof(FALSE);
                     $membershipini->setMemberof(FALSE);
                 }
+                // Par défaut, on présente la case membre cochée
+                $membership->setMemberof(TRUE);
             }
             // Droits "admin"
             if (isset($arAdmins[0]["amugroupadmin"]["count"])){
@@ -547,7 +548,6 @@ class UserController extends Controller {
         // Test de la validité de l'uid
         if ($arDataUser[0]['uid'][0] == '') {
             $this->get('session')->getFlashBag()->add('flash-notice', 'L\'uid n\'est pas valide');
-            $this->getRequest()->getSession()->set('_saved', 0);
             return $this->redirect($this->generateUrl('user_search', array('opt' => 'addprivate', 'cn'=>$cn)));
         }
         else {
@@ -589,7 +589,6 @@ class UserController extends Controller {
                 closelog();
 
                 $this->get('session')->getFlashBag()->add('flash-notice', 'Les droits ont bien été ajoutés');
-                $this->getRequest()->getSession()->set('_saved',1);
                 
                 // Récupération du nouveau groupe modifié pour affichage
                 $newgroup = new Group();
@@ -619,8 +618,7 @@ class UserController extends Controller {
                 return $this->render('AmuGroupieBundle:Group:privateupdate.html.twig', array('group' => $newgroup, 'nb_membres' => $narUsers["count"], 'form' => $editForm->createView()));
                 
             }
-            else { 
-                $this->getRequest()->getSession()->set('_saved',0);
+            else {
                 $this->get('session')->getFlashBag()->add('flash-notice', 'Cette personne est déjà membre du groupe');
                 return $this->redirect($this->generateUrl('user_search', array('opt' => 'addprivate', 'cn'=>$cn)));
             }
@@ -888,8 +886,15 @@ class UserController extends Controller {
     * @Template("AmuGroupieBundle:User:multiple.html.twig")
     */
     public function multipleAction(Request $request, $opt='search', $cn='', $liste='') {
+        // On récupère le service ldapfonctions
+        $ldapfonctions = $this->container->get('groupie.ldapfonctions');
+        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+
+        $tab = array();
         // Création du formulaire
-        $form = $this->createForm(new UserMultipleType());
+        $form = $this->createForm(new UserMultipleType(), $tab,
+            array('action' => $this->generateUrl('user_multiple', array('opt'=>$opt, 'cn'=>$cn, 'liste'=>$liste)),
+                'method' => 'GET'));
         $form->handleRequest($request);
         if ($form->isValid()) {
             // Initialisation des tableaux
@@ -916,7 +921,7 @@ class UserController extends Controller {
                 // test mail ou login
                 if (stripos($ligne , "@")>0) {
                     // C'est un mail
-                    $r = $this->getLdap()->getUidFromMail($ligne);
+                    $r = $ldapfonctions->getUidFromMail($ligne);
                         
                     // Si pb connexion ldap
                     if ($r==false) {
@@ -965,7 +970,7 @@ class UserController extends Controller {
                 }
                 else {
                     // C'est un login
-                    $r = $this->getLdap()->TestUid($ligne);
+                    $r = $ldapfonctions->TestUid($ligne);
                      
                     // Si pb connexion ldap
                     if ($r==false) {
@@ -1018,7 +1023,7 @@ class UserController extends Controller {
               
             // Ajout de la liste valide au groupe dans le LDAP
             $dn_group = "cn=" . $cn . ", ou=groups, dc=univ-amu, dc=fr";
-            $b = $this->getLdap()->addMemberGroup($dn_group, $tabUids);
+            $b = $ldapfonctions->addMemberGroup($dn_group, $tabUids);
                 
             if ($b) {
                 // Log modif

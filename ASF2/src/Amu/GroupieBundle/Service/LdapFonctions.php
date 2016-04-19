@@ -258,4 +258,20 @@ class LdapFonctions
         return(false);
 
     }
+
+    public function getUidFromMail($mail, $restriction = array("uid", "displayName", "sn", "mail", "telephonenumber", "memberof")) {
+        $filtre = "(mail=" . $mail . ")";
+        $AllInfos = array();
+        $AllInfos = $this->recherche($filtre, $restriction, "mail");
+
+        return $AllInfos;
+    }
+
+    public function TestUid($uid, $restriction = array("uid", "sn", "displayName", "mail", "telephonenumber", "memberof")) {
+        $filtre = "(uid=" . $uid . ")";
+        $AllInfos = array();
+        $AllInfos = $this->recherche($filtre, $restriction, "uid");
+
+        return $AllInfos;
+    }
 }

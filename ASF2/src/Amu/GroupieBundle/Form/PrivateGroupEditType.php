@@ -19,7 +19,8 @@ class PrivateGroupEditType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-                                     'data_class' => 'Amu\GroupieBundle\Entity\Group'
+                                     'data_class' => 'Amu\GroupieBundle\Entity\Group',
+                                     'attr' => ['id' => 'privategroupedit']
                                      ));
     }
     public function getName()

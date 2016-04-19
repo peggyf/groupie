@@ -657,7 +657,7 @@ class GroupController extends Controller {
         
         // Recherche des membres dans le LDAP
         //$arUsers = $this->getLdap()->getMembersGroup($cn);
-        $arUsers = $this->getMembersGroup($cn);
+        $arUsers = $ldapfonctions->getMembersGroup($cn);
         
         // on remplit le tableau d'entités
         for ($i=0; $i<$arUsers["count"]; $i++) {                     
@@ -674,13 +674,13 @@ class GroupController extends Controller {
         }
         
         // Recherche des administrateurs du groupe
-        $arAdmins = $this->getAdminsGroup($cn);
+        $arAdmins = $ldapfonctions->getAdminsGroup($cn);
         
         if (isset($arAdmins[0]["amugroupadmin"]["count"])) {
         // on remplit le tableau d'entités        
         for ($i=0; $i<$arAdmins[0]["amugroupadmin"]["count"]; $i++) {  
             $uid = preg_replace("/(uid=)(([A-Za-z0-9:._-]{1,}))(,ou=.*)/", "$3", $arAdmins[0]["amugroupadmin"][$i]);
-            $result = $this->getInfosUser($uid);
+            $result = $ldapfonctions->getInfosUser($uid);
             $admins[$i] = new User();
             $admins[$i]->setUid($result[0]["uid"][0]);
             $admins[$i]->setSn($result[0]["sn"][0]);
@@ -931,8 +931,8 @@ class GroupController extends Controller {
             syslog(LOG_ERR, "LDAP ERROR : delete_group by $adm : group : $cn");
             // affichage erreur
             $this->get('session')->getFlashBag()->add('flash-error', 'Erreur LDAP lors de la suppression du groupe');
-            // Retour page
-            return $this->render('AmuGroupieBundle:Group:search.html.twig', array('form' => $form->createView()));
+            // Retour page de recherche
+            return  $this->redirect($this->generateUrl('group_search_del'));
         }
         
         // Ferme fichier de log
@@ -998,21 +998,10 @@ class GroupController extends Controller {
         
         // Ferme fichier de log
         closelog();
-        
-        // Recup des infos pour affichage des groupes restants
-        $uid = $request->getSession()->get('phpCAS_user');
-        // Recherche des groupes dans le LDAP
-        $arData=$ldapfonctions->recherche("(&(objectClass=groupofNames)(cn=amu:perso:".$uid.":*))",array("cn","description"), "cn");
-    
-        $groups = new ArrayCollection();
-        for ($i=0; $i<$arData["count"]; $i++) {
-            $groups[$i] = new Group();
-            $groups[$i]->setCn($arData[$i]["cn"][0]);
-            $groups[$i]->setDescription($arData[$i]["description"][0]);
-            
-        }
-        
-        return $this->render('AmuGroupieBundle:Group:deleteprivate.html.twig', array('groups' => $groups));
+
+        // Retour page de gestion des groupes privés
+        return  $this->redirect($this->generateUrl('private_group'));
+
     }
     
     /**
@@ -1234,48 +1223,17 @@ class GroupController extends Controller {
             
             // Message de notification
             $this->get('session')->getFlashBag()->add('flash-notice', 'Les modifications ont bien été enregistrées');
-            $this->getRequest()->getSession()->set('_saved',1);
-            
-            // Récupération du nouveau groupe modifié pour affichage
-            $newgroup = new Group();
-            $newgroup->setCn($cn);
-            $newmembers = new ArrayCollection();
 
-            // Recherche des membres dans le LDAP
-            $narUsers = $ldapfonctions->getMembersGroup($cn.",ou=private");
-
-            // Affichage des membres  
-            for ($i=0; $i<$narUsers["count"]; $i++) {                     
-                $newmembers[$i] = new Member();
-                $newmembers[$i]->setUid($narUsers[$i]["uid"][0]);
-                $newmembers[$i]->setDisplayname($narUsers[$i]["displayname"][0]);
-                $newmembers[$i]->setMail($narUsers[$i]["mail"][0]);
-                $newmembers[$i]->setTel($narUsers[$i]["telephonenumber"][0]);
-                $newmembers[$i]->setMember(TRUE); 
-                $newmembers[$i]->setAdmin(FALSE);
-            }               
-            $newgroup ->setMembers($newmembers);
-            
-            // Nouveau formulaire avec les infos mises à jour
-            $editForm = $this->createForm(new PrivateGroupEditType(), $newgroup, array(
-                'action' => $this->generateUrl('private_group_update', array('cn'=> $cn)),
-                'method' => 'POST'));
-            
-            return array(
-            'group'      => $newgroup,
-            'nb_membres' => $narUsers["count"],
-            'form'   => $editForm->createView()
-            );
+            // Retour à l'affichage group_update
+            return $this->redirect($this->generateUrl('private_group_update', array('cn'=>$cn)));
         }
-        else {
-            $this->getRequest()->getSession()->set('_saved',0);
-            
-            return array(
+
+        return array(
             'group'      => $group,
             'nb_membres' => $arUsers["count"],
             'form'   => $editForm->createView()
             ); 
-        }
+
     }
     
     /**

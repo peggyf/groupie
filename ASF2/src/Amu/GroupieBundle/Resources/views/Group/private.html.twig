@@ -21,6 +21,16 @@
 
     <h1>Gérer mes groupes privés</h1>
     <br>
+    {% if app.session.flashbag.has('flash-notice') %}
+        <center>
+            <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+                {% for flashMessage in app.session.flashbag.get('flash-notice') %}
+                    <p>{{ flashMessage }}</p>
+                {% endfor %}
+            </div>
+        </center>
+    {% endif %}
+
     <div class="buttons">
         <a href="{{ path('private_group_create', { 'nb_groups': nb_groups }) }}">
             <img src="{{asset('bundles/amugroupie/images/add-2.png')}}" alt=""/>
