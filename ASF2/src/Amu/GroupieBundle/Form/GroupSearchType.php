@@ -14,6 +14,8 @@ class GroupSearchType extends AbstractType
              ->add('cn', 'text', array('label' => 'cn ',
                                          'required' => true
                                          ))
+            ->add('flag', 'hidden', array(
+                  'data' => '0'))
             ->getForm();
 
     }

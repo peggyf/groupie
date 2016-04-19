@@ -19,6 +19,7 @@ class Group {
   protected $amugroupadmin;
   protected $amugroupfilter;
   protected $droits;
+  protected $flag;
   
 public function __construct()
   {
@@ -96,6 +97,12 @@ public function __construct()
  {
     $this->lastnbetages = $lastnbetages;
  }
+
+public function setFlag($flag)
+{
+    $this->flag = $flag;
+}
+
  /**
   * Set cn
   *
@@ -158,7 +165,11 @@ public function __construct()
  {
     return($this->lastnbetages);
  }
- 
+
+public function getFlag()
+{
+    return($this->flag);
+}
   /**
 
  * @return  \Amu\AppBundle\Service\Ldap

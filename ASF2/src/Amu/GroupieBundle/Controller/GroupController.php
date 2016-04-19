@@ -282,10 +282,10 @@ class GroupController extends Controller {
     /**
      * Recherche de groupes
      *
-     * @Route("/search/{opt}/{cn}/{uid}",name="group_search")
+     * @Route("/search/{opt}/{uid}",name="group_search")
      * @Template()
      */
-    public function searchAction(Request $request, $opt='search', $uid='', $cn=0) {
+    public function searchAction(Request $request, $opt='search', $uid='') {
         // Déclaration variables
         $groupsearch = new Group();
         $groups = array();
@@ -293,7 +293,7 @@ class GroupController extends Controller {
         // Création du formulaire de recherche de groupe
         $form = $this->createForm(new GroupSearchType(),
             new Group(),
-            array('action' => $this->generateUrl('group_search', array('opt'=>$opt, 'uid'=>$uid, 'cn'=>$cn)),
+            array('action' => $this->generateUrl('group_search', array('opt'=>$opt, 'uid'=>$uid)),
                   'method' => 'GET'));
         $form->handleRequest($request);
 
@@ -308,11 +308,11 @@ class GroupController extends Controller {
             // Suivant l'option d'où on vient
             if (($opt=='search')||($opt=='mod')||($opt=='del')){
                 // si on a sélectionné un proposition de la liste d'autocomplétion
-                if ($cn==true) {
+                if ($groupsearch->getFlag() == '1') {
                     // On teste si on est sur le message "... Résultat partiel ..."
                     if ($groupsearch->getCn() == "... Résultat partiel ...") {
                         $this->get('session')->getFlashBag()->add('flash-notice', 'Le nom du groupe est invalide');
-                        return $this->redirect($this->generateUrl('group_search', array('opt'=>$opt, 'uid'=>$uid, 'cn'=>$cn)));
+                        return $this->redirect($this->generateUrl('group_search', array('opt'=>$opt, 'uid'=>$uid)));
                     }
                     // Recherche exacte des groupes dans le LDAP
                     $arData=$ldapfonctions->recherche("(&(objectClass=groupofNames)(cn=" . $groupsearch->getCn() . "))", array("cn", "description", "amugroupfilter"), "cn");
@@ -388,7 +388,7 @@ class GroupController extends Controller {
             else {
                 if ($opt=='add') {
                     // Renvoi vers le fonction group_add
-                    return $this->redirect($this->generateUrl('group_add', array('cn_search'=>$groupsearch->getCn(), 'uid'=>$uid, 'flag_cn'=> $cn)));
+                    return $this->redirect($this->generateUrl('group_add', array('cn_search'=>$groupsearch->getCn(), 'uid'=>$uid, 'flag_cn'=> $groupsearch->getFlag())));
                 }
             }
         }
@@ -461,7 +461,7 @@ class GroupController extends Controller {
         }
         
         // Si on a sélectionné une proposition dans la liste d'autocomplétion
-        if ($flag_cn==true) {
+        if ($flag_cn=='1') {
             // On teste si on est sur le message "... Résultat partiel ..."
             if ($cn_search == "... Résultat partiel ...") {
                 $this->get('session')->getFlashBag()->add('flash-notice', 'Le nom du groupe est invalide');                        

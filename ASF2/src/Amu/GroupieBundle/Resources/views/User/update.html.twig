@@ -96,7 +96,10 @@
     <br>
     <br>
     <div class="buttons">
-        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la recherche&nbsp;</button>
+        <a href="{{ path('user_search') }}">
+            <img src="{{asset('bundles/amugroupie/images/prev-green.png')}}" alt=""/>
+            &nbsp;Retour à la recherche&nbsp;
+        </a>
     </div>
 
     {# Ajout d'une fonction javascript pour gérer les lignes cachées de la datatable #}

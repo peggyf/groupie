@@ -100,6 +100,7 @@
         select: function (event, ui) {
             {# $('#groupsearch_cn').val(ui.item.value); #}
             $(event.target).val(ui.item.value);
+            $('#groupsearch_flag').val('1');
             $('#groupsearch').closest("form").submit();
             {# $('#groupsearch').submit(); #}
             return false;
