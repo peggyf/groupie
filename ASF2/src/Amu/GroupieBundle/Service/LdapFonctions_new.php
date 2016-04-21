@@ -12,20 +12,14 @@ namespace Amu\GroupieBundle\Service;
 
 use Amu\LdapBundle\Ldap\Client;
 
-class LdapFonctions
+class LdapFonctions extends Client
 {
-    private $ldap;
-
-    public function setLdap($ldap)
-    {
-        $this->ldap = $ldap;
-    }
 
     public function recherche($filtre, $restriction, $tri)
     {
         // Connexion au LDAP
-        $baseDN = $this->ldap->getBaseDN();
-        $resource = $this->ldap->connect();
+        $baseDN = $this->getBaseDN();
+        $resource = $this->connect();
         // Recherche avec les filtres et restrictions demandés
         if ($resource) {
             $arData = $resource->search($baseDN, $filtre, $restriction);
@@ -108,13 +102,13 @@ class LdapFonctions
         }
 
         // Connexion au LDAP
-        $baseDN = $this->ldap->getBaseDN();
-        $resource = $this->ldap->connect();
+        $baseDN = $this->getBaseDN();
+        $resource = $this->connect();
 
         if ($resource) {
-            $sr = ldap_mod_add($this->ldap->link, $dn_group, $groupinfo);
+            $sr = ldap_mod_add($this->link, $dn_group, $groupinfo);
 
-            if(ldap_error($this->ldap->link) == "Success")
+            if(ldap_error($this->link) == "Success")
                 return true;
             else
                 return false;
