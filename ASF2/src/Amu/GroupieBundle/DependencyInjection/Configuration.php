@@ -24,6 +24,29 @@ class Configuration implements ConfigurationInterface
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
 
+        $rootNode
+            ->children()
+                ->arrayNode('groups')
+                    ->isRequired()
+                    ->children()
+                        ->scalarNode('object_class')->defaultValue('groupofnames')->end()
+                        ->scalarNode('group_branch')->defaultValue('ou=groups')->end()
+                        ->scalarNode('member')->defaultValue('member')->end()
+                        ->scalarNode('memberof')->defaultValue('memberof')->end()
+                        ->scalarNode('groupfilter')->isRequired()->end()
+                        ->scalarNode('groupadmin')->isRequired()->end()
+                    ->end()
+                ->end()
+                ->arrayNode('private')
+                    ->isRequired()
+                    ->children()
+                        ->scalarNode('private_branch')->isRequired()->end()
+                        ->scalarNode('prefix')->isRequired()->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+
         return $treeBuilder;
     }
 }

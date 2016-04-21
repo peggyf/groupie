@@ -30,71 +30,7 @@ use Amu\GroupieBundle\Controller\GroupController;
  * 
  */
 class UserController extends Controller {
-    
 
-     /**
-     * Affiche l'utilisateur courant.
-     *
-     * @Route("/", name="user")
-     * @Template()
-     */
-    public function indexAction(Request $request)
-    {
-        $searchForm = $this->createForm(
-            new UserSearchType(), null, array(
-                                                  'action' => $this->generateUrl('user'),
-                                                  'method' => 'POST',
-                                                  )
-        );
-        
-        $userSearchForm = $request->get('usersearch');
-        $uid = $userSearchForm['uid'];
-        
-        $users = array();
-                   
-        $searchForm->handleRequest($request);
-
-        if ($searchForm->isSubmitted()) {
-
-            // Recherche des utilisateurs dans le LDAP
-            $arData=$this->getLdap()->arDatasFilter("uid=".$uid, array('uid', 'sn','displayname', 'mail', 'telephonenumber', 'memberof'));
-            
-            // Test de la validité de l'uid
-            if ($arData[0]['uid'][0] == '') {
-                $this->get('session')->getFlashBag()->add('flash-notice', 'L\'uid n\'est pas valide');
-                $this->getRequest()->getSession()->set('_saved', 0);
-            }
-            else {
-                $user = new User();
-                $user->setUid($arData[0]['uid'][0]);
-                $user->setDisplayname($arData[0]['displayname'][0]);
-                $user->setMail($arData[0]['mail'][0]);
-                $user->setSn($arData[0]['sn'][0]);
-                $user->setTel($arData[0]['telephonenumber'][0]);
-                // Récupération du cn des groupes (memberof)
-                $tab = array_splice($arData[0]['memberof'], 1);
-                $tab_cn = array();
-                foreach($tab as $dn)
-                    $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:_-]{1,}))(,ou=.*)/", "$3", $dn);
-                
-                $user->setMemberof($tab_cn); 
-        
-                $users[] = $user;
-            
-                $this->getRequest()->getSession()->set('_saved',1);
-            }
-        }
-        else {
-            $this->getRequest()->getSession()->set('_saved', 0);
-            
-        }
-        
-        return array(
-            'users' => $users,
-            'form' => $searchForm->createView()
-             );
-    }
-        
     /**
      * Edite les droits d'un utilisateur issu du LDAP.
      *
@@ -518,7 +454,7 @@ class UserController extends Controller {
                 // Affichage notification
                 $this->get('session')->getFlashBag()->add('flash-notice', 'Les droits ont bien été ajoutés');
 
-                // Retour à la page update d'un utilisateur
+                // Retour à la page update d'un groupe
                 return $this->redirect($this->generateUrl('group_update', array('cn'=>$cn)));
             }
         }
@@ -589,34 +525,9 @@ class UserController extends Controller {
                 closelog();
 
                 $this->get('session')->getFlashBag()->add('flash-notice', 'Les droits ont bien été ajoutés');
-                
-                // Récupération du nouveau groupe modifié pour affichage
-                $newgroup = new Group();
-                $newgroup->setCn($cn);
-                $newmembers = new ArrayCollection();
 
-                // Recherche des membres dans le LDAP
-                $narUsers = $ldapfonctions->getMembersGroup($cn.",ou=private");
-
-                // Affichage des membres  
-                for ($i=0; $i<$narUsers["count"]; $i++) {                     
-                    $newmembers[$i] = new Member();
-                    $newmembers[$i]->setUid($narUsers[$i]["uid"][0]);
-                    $newmembers[$i]->setDisplayname($narUsers[$i]["displayname"][0]);
-                    $newmembers[$i]->setMail($narUsers[$i]["mail"][0]);
-                    $newmembers[$i]->setTel($narUsers[$i]["telephonenumber"][0]);
-                    $newmembers[$i]->setMember(TRUE); 
-                    $newmembers[$i]->setAdmin(FALSE);
-                }
-                
-                $newgroup ->setMembers($newmembers);
-
-                $editForm = $this->createForm(new PrivateGroupEditType(), $newgroup, array(
-                    'action' => $this->generateUrl('private_group_update', array('cn'=> $cn)),
-                    'method' => 'POST',));
-                
-                return $this->render('AmuGroupieBundle:Group:privateupdate.html.twig', array('group' => $newgroup, 'nb_membres' => $narUsers["count"], 'form' => $editForm->createView()));
-                
+                // Retour à la page update d'un groupe
+                return $this->redirect($this->generateUrl('private_group_update', array('cn'=>$cn)));
             }
             else {
                 $this->get('session')->getFlashBag()->add('flash-notice', 'Cette personne est déjà membre du groupe');
@@ -858,28 +769,6 @@ class UserController extends Controller {
     }
 
     /**
-    * Affichage d'une liste d'utilisateurs en session
-    *
-    * @Route("/display/{opt}/{cn}/{liste}",name="user_display")
-    */
-    public function displayAction(Request $request, $opt='search', $cn='', $liste='') {
-        // Récupération des utilisateurs mis en session
-        $users = $this->container->get('request')->getSession()->get('users');
-
-        // Gestion des droits
-        $droits = 'Aucun';
-        // Droits DOSI seulement en visu
-        if (true === $this->get('security.context')->isGranted('ROLE_DOSI')) {
-            $droits = 'Voir';
-        }
-        if ((true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) || (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))) {
-            $droits = 'Modifier';
-        }
-                        
-        return $this->render('AmuGroupieBundle:User:search.html.twig',array('users' => $users, 'opt' => $opt, 'droits' => $droits, 'cn' => $cn, 'liste' => $liste));
-    }
-   
-    /**
     * Formulaire pour l'ajout d'utilisateurs en masse
     *
     * @Route("/multiple/{opt}/{cn}/{liste}",name="user_multiple")
@@ -919,8 +808,7 @@ class UserController extends Controller {
                 $ligne = trim($l);
                 
                 // test mail ou login
-                if (stripos($ligne , "@")>0) {
-                    // C'est un mail
+                if (stripos($ligne , "@")>0) {                   // C'est un mail
                     $r = $ldapfonctions->getUidFromMail($ligne);
                         
                     // Si pb connexion ldap

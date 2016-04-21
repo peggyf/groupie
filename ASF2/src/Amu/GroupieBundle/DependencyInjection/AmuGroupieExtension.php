@@ -24,5 +24,10 @@ class AmuGroupieExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+
+        // Set parameters
+        $container->setParameter('amu.groupie.groups', $config['groups']);
+        $container->setParameter('amu.groupie.private', $config['private']);
     }
+
 }
