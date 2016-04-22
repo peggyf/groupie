@@ -84,7 +84,7 @@ class LdapFonctions
      * Récupération des membres d'un groupe + infos des membres
      */
     public function getMembersGroup($groupName) {
-        $filtre = $this->config_groups['memberof']."=cn=" . $groupName . ", ".$this->config_groups['group_branch'].", dc=univ-amu, dc=fr";
+        $filtre = $this->config_groups['memberof']."=cn=" . $groupName . ", ".$this->config_groups['group_branch'].", ".$this->ldap->getBaseDN();
         $restriction = array("uid", "displayName", "mail", "telephonenumber", "sn");
         $result = $this->recherche($filtre, $restriction, "uid");
         return $result;
@@ -108,7 +108,7 @@ class LdapFonctions
 
         foreach ($arUserUid as $uid)
         {
-            $groupinfo[$this->config_groups['member']][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
+            $groupinfo[$this->config_groups['member']][] = "uid=".$uid.",ou=people,".$this->ldap->getBaseDN();
         }
 
         // Connexion au LDAP
@@ -135,7 +135,7 @@ class LdapFonctions
 
         foreach ($arUserUid as $uid)
         {
-            $groupinfo[$this->config_groups['member']][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
+            $groupinfo[$this->config_groups['member']][] = "uid=".$uid.",ou=people,".$this->ldap->getBaseDN();
         }
         // Connexion au LDAP
         $baseDN = $this->ldap->getBaseDN();
@@ -161,7 +161,7 @@ class LdapFonctions
 
         foreach ($arUserUid as $uid)
         {
-            $groupinfo[$this->config_groups['groupadmin']] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
+            $groupinfo[$this->config_groups['groupadmin']] = "uid=".$uid.",ou=people,".$this->ldap->getBaseDN();
         }
         // Connexion au LDAP
         $baseDN = $this->ldap->getBaseDN();
@@ -185,7 +185,7 @@ class LdapFonctions
 
         foreach ($arUserUid as $uid)
         {
-            $groupinfo[$this->config_groups['groupadmin']][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
+            $groupinfo[$this->config_groups['groupadmin']][] = "uid=".$uid.",ou=people,".$this->ldap->getBaseDN();
         }
         // Connexion au LDAP
         $baseDN = $this->ldap->getBaseDN();
@@ -251,7 +251,7 @@ class LdapFonctions
 
     public function deleteGroupeLdap($cn)
     {
-        $dn = "cn=".$cn.",".$this->config_groups['group_branch'].",dc=univ-amu,dc=fr";
+        $dn = "cn=".$cn.",".$this->config_groups['group_branch'].",".$this->ldap->getBaseDN();
         // Connexion au LDAP
         $baseDN = $this->ldap->getBaseDN();
         $resource = $this->ldap->connect();

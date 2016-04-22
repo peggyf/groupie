@@ -43,6 +43,7 @@ class GroupController extends Controller {
      * @var array un array contenant la config liée aux groupes privés
      */
     protected $config_private;
+    protected $base;
 
     protected function init_config()
     {
@@ -50,6 +51,12 @@ class GroupController extends Controller {
             $this->config_groups = $this->container->getParameter('amu.groupie.groups');
         if (!isset($this->config_private))
             $this->config_private = $this->container->getParameter('amu.groupie.private');
+        if (!isset($this->base)) {
+            $profil_name = $this->container->getParameter('amu.ldap.default_profil');
+            $profils = $this->container->getParameter('amu.ldap.profils');
+            $profil = $profils[$profil_name];
+            $this->base = $profil['base_dn'];
+        }
     }
 
 /**********************************************************************************************************************************************************************************************************************************/
@@ -170,7 +177,7 @@ class GroupController extends Controller {
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
 
         // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
-        $arData = $ldapfonctions->recherche($this->config_groups['groupadmin']."=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description", $this->config_groups['groupfilter']), "cn");
+        $arData = $ldapfonctions->recherche($this->config_groups['groupadmin']."=uid=".$request->getSession()->get('phpCAS_user').",ou=people,".$this->base, array("cn", "description", $this->config_groups['groupfilter']), "cn");
 
         // Initialisation tableau des entités Group
         $groups = new ArrayCollection();
@@ -233,7 +240,7 @@ class GroupController extends Controller {
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
 
         // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
-        $result = $ldapfonctions->recherche($this->config_groups['member']."=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description", $this->config_groups['groupfilter']), "cn");
+        $result = $ldapfonctions->recherche($this->config_groups['member']."=uid=".$request->getSession()->get('phpCAS_user').",ou=people,".$this->base, array("cn", "description", $this->config_groups['groupfilter']), "cn");
         
         // Initialisation du tableau d'entités Group
         $groups = new ArrayCollection();
@@ -287,7 +294,7 @@ class GroupController extends Controller {
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
-        $result = $ldapfonctions->recherche($this->config_groups['member']."=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description"), "cn");
+        $result = $ldapfonctions->recherche($this->config_groups['member']."=uid=".$request->getSession()->get('phpCAS_user').",ou=people,".$this->base, array("cn", "description"), "cn");
         
         // Initialisation du tableau d'entités Group
         $groups = new ArrayCollection();
@@ -353,7 +360,7 @@ class GroupController extends Controller {
                 $tab_cn_admin = array();
                 if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
                     // Recup des groupes dont l'utilisateur est admin
-                    $arDataAdmin = $ldapfonctions->recherche($this->config_groups['groupadmin']."=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", $this->config_groups['groupfilter']), "cn");
+                    $arDataAdmin = $ldapfonctions->recherche($this->config_groups['groupadmin']."=uid=".$request->getSession()->get('phpCAS_user').",ou=people,".$this->base,array("cn", "description", $this->config_groups['groupfilter']), "cn");
                     for($i=0;$i<$arDataAdmin["count"];$i++)
                         $tab_cn_admin[$i] = $arDataAdmin[$i]["cn"][0];
                 }
@@ -458,7 +465,7 @@ class GroupController extends Controller {
         // Dans le cas d'un gestionnaire
         if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
             // Recup des groupes dont l'utilisateur courant (logué) est admin
-            $arDataAdminLogin = $ldapfonctions->recherche($this->config_groups['groupadmin']."=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr",array("cn", "description", $this->config_groups['groupfilter']), "cn");
+            $arDataAdminLogin = $ldapfonctions->recherche($this->config_groups['groupadmin']."=uid=".$request->getSession()->get('phpCAS_user').",ou=people,".$this->base,array("cn", "description", $this->config_groups['groupfilter']), "cn");
             for($i=0;$i<$arDataAdminLogin["count"];$i++) 
                 $tab_cn_admin_login[$i] = $arDataAdminLogin[$i]["cn"][0];
         }
@@ -482,7 +489,7 @@ class GroupController extends Controller {
             $tab_cn[] = preg_replace("/(cn=)(([A-Za-z0-9:._-]{1,}))(,".$this->config_groups['group_branch'].".*)/", "$3", $dn);
         }
         // Récupération des groupes dont l'utilisateur recherché est admin
-        $arDataAdmin=$ldapfonctions->recherche($this->config_groups['groupadmin']."=uid=".$uid.",ou=people,dc=univ-amu,dc=fr",array("cn", "description", $this->config_groups['groupfilter']), "cn");
+        $arDataAdmin=$ldapfonctions->recherche($this->config_groups['groupadmin']."=uid=".$uid.",ou=people,".$this->base,array("cn", "description", $this->config_groups['groupfilter']), "cn");
         $tab_cn_admin = array();
         for($i=0;$i<$arDataAdmin["count"];$i++) {
             $tab_cn_admin[$i] = $arDataAdmin[$i]["cn"][0];
@@ -597,7 +604,7 @@ class GroupController extends Controller {
             // Pour chaque appartenance
             for ($i=0; $i<sizeof($m_update); $i++) {
                 $memb = $m_update[$i];
-                $dn_group = "cn=" . $memb->getGroupname() . ", ".$this->config_groups['group_branch'].", dc=univ-amu, dc=fr";
+                $dn_group = "cn=" . $memb->getGroupname() . ", ".$this->config_groups['group_branch'].", ".$this->base;
                 $gr = $memb->getGroupname();
                 
                 // Traitement des membres  
@@ -1050,7 +1057,7 @@ class GroupController extends Controller {
         $group = new Group();
         $groups = array();
         
-        $dn = "cn=".$cn.", ".$this->config_groups['group_branch'].", dc=univ-amu, dc=fr";
+        $dn = "cn=".$cn.", ".$this->config_groups['group_branch'].", ".$this->base;
         
         // Pré-remplir le formulaire avec les valeurs actuelles du groupe
         $group->setCn($cn);
@@ -1225,7 +1232,7 @@ class GroupController extends Controller {
             for ($i=0; $i<sizeof($m_update); $i++){
                 $memb = $m_update[$i];
                 $membi = $membersini[$i];
-                $dn_group = "cn=" . $cn . ", ".$this->config_private['private_branch'].", ".$this->config_groups['group_branch'].", dc=univ-amu, dc=fr";
+                $dn_group = "cn=" . $cn . ", ".$this->config_private['private_branch'].", ".$this->config_groups['group_branch'].", ".$this->base;
                 $u = $memb->getUid();
                 
                 // Traitement des membres
@@ -1429,7 +1436,7 @@ class GroupController extends Controller {
             {
                 $memb = $m_update[$i];
                 $membi = $membersini[$i];
-                $dn_group = "cn=" . $cn . ", ".$this->config_groups['group_branch'].", dc=univ-amu, dc=fr";
+                $dn_group = "cn=" . $cn . ", ".$this->config_groups['group_branch'].", ".$this->base;
                 $u = $memb->getUid();
 
                 // Traitement des membres
