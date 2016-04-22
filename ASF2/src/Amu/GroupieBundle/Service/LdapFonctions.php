@@ -15,10 +15,14 @@ use Amu\LdapBundle\Ldap\Client;
 class LdapFonctions
 {
     private $ldap;
+    protected $config_groups;
+    protected $config_private;
 
-    public function setLdap($ldap)
+    public function setLdap($ldap, $config_groups, $config_private)
     {
         $this->ldap = $ldap;
+        $this->config_groups = $config_groups;
+        $this->config_private = $config_private;
     }
 
     public function recherche($filtre, $restriction, $tri)
@@ -80,7 +84,7 @@ class LdapFonctions
      * Récupération des membres d'un groupe + infos des membres
      */
     public function getMembersGroup($groupName) {
-        $filtre = "(&(objectclass=*)(memberOf=cn=" . $groupName . ", ou=groups, dc=univ-amu, dc=fr))";
+        $filtre = $this->config_groups['memberof']."=cn=" . $groupName . ", ".$this->config_groups['group_branch'].", dc=univ-amu, dc=fr";
         $restriction = array("uid", "displayName", "mail", "telephonenumber", "sn");
         $result = $this->recherche($filtre, $restriction, "uid");
         return $result;
@@ -91,7 +95,7 @@ class LdapFonctions
      */
     public function getAdminsGroup($groupName) {
         $filtre = "cn=". $groupName ;
-        $restriction = array("amuGroupAdmin");
+        $restriction = array($this->config_groups['groupadmin']);
         $result = $this->recherche($filtre, $restriction, "uid");
         return $result;
     }
@@ -104,7 +108,7 @@ class LdapFonctions
 
         foreach ($arUserUid as $uid)
         {
-            $groupinfo['member'][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
+            $groupinfo[$this->config_groups['member']][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
         }
 
         // Connexion au LDAP
@@ -131,7 +135,7 @@ class LdapFonctions
 
         foreach ($arUserUid as $uid)
         {
-            $groupinfo['member'][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
+            $groupinfo[$this->config_groups['member']][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
         }
         // Connexion au LDAP
         $baseDN = $this->ldap->getBaseDN();
@@ -157,7 +161,7 @@ class LdapFonctions
 
         foreach ($arUserUid as $uid)
         {
-            $groupinfo['amuGroupAdmin'][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
+            $groupinfo[$this->config_groups['groupadmin']] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
         }
         // Connexion au LDAP
         $baseDN = $this->ldap->getBaseDN();
@@ -181,7 +185,7 @@ class LdapFonctions
 
         foreach ($arUserUid as $uid)
         {
-            $groupinfo['amuGroupAdmin'][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
+            $groupinfo[$this->config_groups['groupadmin']][] = "uid=".$uid.",ou=people,dc=univ-amu,dc=fr";
         }
         // Connexion au LDAP
         $baseDN = $this->ldap->getBaseDN();
@@ -203,7 +207,7 @@ class LdapFonctions
      */
     public function delAmuGroupFilter($dn_group, $filter) {
 
-        $groupinfo['amuGroupFilter'] = $filter;
+        $groupinfo[$this->config_groups['groupfilter']] = $filter;
 
         // Connexion au LDAP
         $baseDN = $this->ldap->getBaseDN();
@@ -226,7 +230,7 @@ class LdapFonctions
     public function getAmuGroupFilter($cn_group) {
 
         $filtre = "cn=" . $cn_group;
-        $result = $this->recherche($filtre, array("amugroupfilter"), "cn");
+        $result = $this->recherche($filtre, array($this->config_groups['groupfilter']), "cn");
         return $result;
     }
 
@@ -247,7 +251,7 @@ class LdapFonctions
 
     public function deleteGroupeLdap($cn)
     {
-        $dn = "cn=".$cn.",ou=groups,dc=univ-amu,dc=fr";
+        $dn = "cn=".$cn.",".$this->config_groups['group_branch'].",dc=univ-amu,dc=fr";
         // Connexion au LDAP
         $baseDN = $this->ldap->getBaseDN();
         $resource = $this->ldap->connect();

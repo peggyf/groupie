@@ -74,7 +74,7 @@ class GroupController extends Controller {
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
 
         // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
         $arData = $ldapfonctions->recherche("(objectClass=".$this->config_groups['object_class'].")", array("cn", "description", $this->config_groups['groupfilter']), "cn");
@@ -133,7 +133,7 @@ class GroupController extends Controller {
         $this->init_config();
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
         // Récupération tous les groupes du LDAP
         $arData = $ldapfonctions->recherche("(objectClass=".$this->config_groups['object_class'].")", array("cn", "description", $this->config_groups['groupfilter']), "cn");
          
@@ -167,7 +167,7 @@ class GroupController extends Controller {
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
 
         // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
         $arData = $ldapfonctions->recherche($this->config_groups['groupadmin']."=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description", $this->config_groups['groupfilter']), "cn");
@@ -230,7 +230,7 @@ class GroupController extends Controller {
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
 
         // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
         $result = $ldapfonctions->recherche($this->config_groups['member']."=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description", $this->config_groups['groupfilter']), "cn");
@@ -286,7 +286,7 @@ class GroupController extends Controller {
         // Récupération des groupes privés dont l'utilisateur courant est membre
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
         $result = $ldapfonctions->recherche($this->config_groups['member']."=uid=".$request->getSession()->get('phpCAS_user').",ou=people,dc=univ-amu,dc=fr", array("cn", "description"), "cn");
         
         // Initialisation du tableau d'entités Group
@@ -330,7 +330,7 @@ class GroupController extends Controller {
 
             // On récupère le service ldapfonctions
             $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-            $ldapfonctions->SetLdap($this->get('amu.ldap'));
+            $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
 
             // Suivant l'option d'où on vient
             if (($opt=='search')||($opt=='mod')||($opt=='del')){
@@ -454,7 +454,7 @@ class GroupController extends Controller {
         $this->init_config();
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
         // Dans le cas d'un gestionnaire
         if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
             // Recup des groupes dont l'utilisateur courant (logué) est admin
@@ -675,7 +675,7 @@ class GroupController extends Controller {
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
 
         // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
         $result = $ldapfonctions->recherche("(&(objectClass=".$this->config_groups['object_class'].")(cn=" . $cn . "))", array("cn", "description", $this->config_groups['groupfilter']), "cn");
@@ -751,7 +751,7 @@ class GroupController extends Controller {
         $users = array();
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
         // Récupération du propriétaire du groupe
         $cn_perso = substr($cn, strlen($this->config_private['prefix'])+1); // on retire le préfixe amu:perso:
         $uid_prop = strstr($cn_perso, ":", TRUE);
@@ -813,7 +813,7 @@ class GroupController extends Controller {
             $infogroup = $group->infosGroupeLdap();
             // On récupère le service ldapfonctions
             $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-            $ldapfonctions->SetLdap($this->get('amu.ldap'));
+            $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
             $b =$ldapfonctions->createGroupeLdap($infogroup['dn'], $infogroup['infos']);
             if ($b==true) {          
                 // affichage groupe créé
@@ -886,7 +886,7 @@ class GroupController extends Controller {
 
                 // On récupère le service ldapfonctions/create
                 $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-                $ldapfonctions->SetLdap($this->get('amu.ldap'));
+                $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
 
                 // Création du groupe dans le LDAP
                 $infogroup = $group->infosGroupePriveLdap($adm);
@@ -948,7 +948,7 @@ class GroupController extends Controller {
         //Suppression du groupe dans le LDAP
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
         $b = $ldapfonctions->deleteGroupeLdap($cn);
         if ($b==true) {
             //Le groupe a bien été supprimé
@@ -984,7 +984,7 @@ class GroupController extends Controller {
         // Recherche des groupes dans le LDAP
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
 
         $arData = $ldapfonctions->recherche("(&(objectClass=".$this->config_groups['object_class'].")(cn=".$this->config_private['prefix'].":".$uid.":*))",array("cn","description"), "cn");
     
@@ -1014,7 +1014,7 @@ class GroupController extends Controller {
         // Suppression du groupe dans le LDAP
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
         $b = $ldapfonctions->deleteGroupeLdap($cn.",".$this->config_private['private_branch']);
         if ($b==true) {
             //Le groupe a bien été supprimé
@@ -1136,7 +1136,7 @@ class GroupController extends Controller {
         $uid = $request->getSession()->get('phpCAS_user');
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
         // Recherche des groupes dans le LDAP
         $result = $ldapfonctions->recherche("(&(objectClass=".$this->config_groups['object_class'].")(cn=".$this->config_private['prefix'].":".$uid.":*))", array("cn", "description"), "cn");
     
@@ -1171,7 +1171,7 @@ class GroupController extends Controller {
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
 
         // Recherche des membres dans le LDAP
         $arUsers = $ldapfonctions->getMembersGroup($cn.",".$this->config_private['private_branch']);
@@ -1293,7 +1293,7 @@ class GroupController extends Controller {
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
 
         // Récup du filtre amugroupfilter pour affichage
         $amugroupfilter = $ldapfonctions->getAmuGroupFilter($cn);

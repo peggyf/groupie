@@ -17,6 +17,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class AjaxController extends Controller
 {
+    protected $config_groups;
+    protected $config_private;
+
+    protected function init_config()
+    {
+        if (!isset($this->config_groups))
+            $this->config_groups = $this->container->getParameter('amu.groupie.groups');
+        if (!isset($this->config_private))
+            $this->config_private = $this->container->getParameter('amu.groupie.private');
+    }
+
     /**
      * Retourne la liste des groupes du LDAP (autocomplétion)
      *
@@ -26,7 +37,7 @@ class AjaxController extends Controller
      */
     public function GroupCompletListAction()
     {
-    
+        $this->init_config();
         $request = $this->get('request');
         
         $term = $request->request->get('motcle');
@@ -46,14 +57,14 @@ class AjaxController extends Controller
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
 
         // Récupération des groupes (on ne récupère que les groupes publics)
-        $arData = $ldapfonctions->recherche("(&(objectClass=groupofNames)(cn=*".$term."*))", array("cn"), "cn");
+        $arData = $ldapfonctions->recherche("(&(objectClass=".$this->config_groups['object_class'].")(cn=*".$term."*))", array("cn"), "cn");
 
         // on ne garde que les groupes publics
         for ($i=0; $i<$arData["count"]; $i++) {
-            if (!strstr($arData[$i]["dn"], "ou=private")) {
+            if (!strstr($arData[$i]["dn"], $this->config_private['private_branch'])) {
                 $arDataPub[$cptPub] = $arData[$i];
                 $cptPub++;
             }
@@ -94,7 +105,7 @@ class AjaxController extends Controller
      */
     public function UidCompletListAction()
     {
-    
+        $this->init_config();
         $request = $this->get('request');
         
         $term = $request->request->get('motcle');
@@ -111,7 +122,7 @@ class AjaxController extends Controller
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
 
 
         // Récupération des uid
@@ -150,7 +161,8 @@ class AjaxController extends Controller
      */
     public function SnCompletListAction()
     {
-    
+        $this->init_config();
+
         $request = $this->get('request');
         
         $term = $request->request->get('motcle');
@@ -168,7 +180,7 @@ class AjaxController extends Controller
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'));
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
         
         if ($term2==1)
         {
