@@ -17,11 +17,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class AjaxController extends Controller
 {
+    protected $config_users;
     protected $config_groups;
     protected $config_private;
 
     protected function init_config()
     {
+        if (!isset($this->config_users))
+            $this->config_users = $this->container->getParameter('amu.groupie.users');
         if (!isset($this->config_groups))
             $this->config_groups = $this->container->getParameter('amu.groupie.groups');
         if (!isset($this->config_private))
@@ -57,10 +60,10 @@ class AjaxController extends Controller
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
 
         // Récupération des groupes (on ne récupère que les groupes publics)
-        $arData = $ldapfonctions->recherche("(&(objectClass=".$this->config_groups['object_class'].")(cn=*".$term."*))", array("cn"), "cn");
+        $arData = $ldapfonctions->recherche("(&(objectClass=".$this->config_groups['object_class'].")(".$this->config_groups['cn']."=*".$term."*))", array($this->config_groups['cn']), $this->config_groups['cn']);
 
         // on ne garde que les groupes publics
         for ($i=0; $i<$arData["count"]; $i++) {
@@ -86,7 +89,7 @@ class AjaxController extends Controller
         } else {
             for($Cpt=0;$Cpt < $NbEnreg ;$Cpt++)             
             {                
-                $arrayGroups[$Cpt+1]['label']  = $arDataPub[$Cpt]['cn'][0];
+                $arrayGroups[$Cpt+1]['label']  = $arDataPub[$Cpt][$this->config_groups['cn']][0];
             }
         }
 
@@ -122,11 +125,11 @@ class AjaxController extends Controller
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
 
 
         // Récupération des uid
-        $arData = $ldapfonctions->recherche("(&(uid=".$term."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))", array("uid"), "uid");
+        $arData = $ldapfonctions->recherche("(&(".$this->config_users['uid']."=".$term."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))", array($this->config_users['uid']), $this->config_users['uid']);
 
         $NbEnreg = $arData['count'];
         // si on a plus de 20 entrées, on affiche que le résultat partiel
@@ -180,21 +183,21 @@ class AjaxController extends Controller
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
-        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_groups, $this->config_private);
+        $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
         
         if ($term2==1)
         {
             $arData = $ldapfonctions->recherche(
-            "(&(sn=".$term.")(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))",
-            array("sn", "givenname", "uid"),
-            "sn"    );
+            "(&(".$this->config_users['name']."=".$term.")(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))",
+            array($this->config_users['name'], $this->config_users['givenname'], $this->config_users['uid']),
+                $this->config_users['name']    );
         }
         else
         {
             $arData = $ldapfonctions->recherche(
-            "(&(sn=".$term."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))",
-            array("sn", "givenname", "uid"),
-            "sn"    );
+            "(&(".$this->config_users['name']."=".$term."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))",
+            array($this->config_users['name'], $this->config_users['givenname'], $this->config_users['uid']),
+                $this->config_users['name']    );
         }
        
         $NbEnreg = $arData['count'];
@@ -214,9 +217,9 @@ class AjaxController extends Controller
         } else {
             for($Cpt=0;$Cpt < $NbEnreg ;$Cpt++)             
             {                
-                $arrayUsers[$Cpt+1]['label']  = $arData[$Cpt]['sn'][0] ." ". $arData[$Cpt]['givenname'][0];
-                $arrayUsers[$Cpt+1]['value']  = $arData[$Cpt]['sn'][0];
-                $arrayUsers[$Cpt+1]['uid'] = $arData[$Cpt]['uid'][0];
+                $arrayUsers[$Cpt+1]['label']  = $arData[$Cpt][$this->config_users['name']][0] ." ". $arData[$Cpt][$this->config_users['givenname']][0];
+                $arrayUsers[$Cpt+1]['value']  = $arData[$Cpt][$this->config_users['name']][0];
+                $arrayUsers[$Cpt+1]['uid'] = $arData[$Cpt][$this->config_users['uid']][0];
             }
         }
 
