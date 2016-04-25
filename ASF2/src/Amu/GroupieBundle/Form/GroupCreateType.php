@@ -12,6 +12,7 @@ class GroupCreateType extends AbstractType
     {
         $builder
              ->add('cn', 'text', array(
+                                        'label' => 'Nom',
                                          'required' => true
                                          ))
 
@@ -20,6 +21,7 @@ class GroupCreateType extends AbstractType
                                              ))
 
             ->add('amugroupfilter', 'text', array(
+                                                'label' => 'Filtre',
                                                 'required' => false
                                                 ))
             ->getForm()

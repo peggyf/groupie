@@ -5,7 +5,7 @@ parameters:
     amu_chartegraphique_title: "Groupie"
     amu_chartegraphique_auteur: "DOSI"
     amu_chartegraphique_apptitle: "Groupie"
-    amu_chartegraphique_appslogan: "Gestion des groupes dans le LDAP"
+    amu_chartegraphique_appslogan: "Gestion des groupes"
     amu_chartegraphique_appcontact: "Contact"
 
 twig:

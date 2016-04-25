@@ -12,6 +12,7 @@ class GroupModifType extends AbstractType
     {
         $builder
              ->add('cn', 'text', array(
+                                        'label' => 'Nom',
                                          'required' => true,
                                          'disabled' =>true
                                          ))
