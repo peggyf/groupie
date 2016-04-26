@@ -405,7 +405,7 @@ class GroupController extends Controller {
                         }
 
                         if ($groups[0]->getDroits()=='Voir') {
-                           return $this->redirect($this->generateUrl('voir_groupe', array('cn'=>$groups[0]->getCn(), 'mail' => true, 'liste' => 'recherchegroupe')));
+                           return $this->redirect($this->generateUrl('see_group', array('cn'=>$groups[0]->getCn(), 'mail' => true, 'liste' => 'recherchegroupe')));
                         }
                     }
                 }

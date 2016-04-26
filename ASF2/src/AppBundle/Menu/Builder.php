@@ -11,33 +11,63 @@ class Builder extends ContainerAware
     {
         $menu = $factory->createItem('root');
 
-        $menu->addChild('Accueil');
-        $menu->addChild('Recherche', array('roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
-        $menu->addChild('Groupes privés', array('roles' => ["ROLE_MEMBRE"]));
-        $menu->addChild('Gestion des groupes', array('roles' => ["ROLE_ADMIN"]));
-        $menu->addChild('Aide', array('roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
-    
-        // Sous-menus pour Accueil
-        $menu['Accueil']->addChild('Voir mes appartenances', array('route' => 'memberships', 'roles' => ["ROLE_MEMBRE", "ROLE_GESTIONNAIRE", "ROLE_ADMIN"]));
-        $menu['Accueil']->addChild('Gérer mes groupes', array('route' => 'my_groups', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_ADMIN"]));
-        $menu['Accueil']->addChild('Voir tous les groupes', array('route' => 'all_groups', 'roles' => ["ROLE_DOSI", "ROLE_ADMIN"]));
-                
-        // Sous-menus pour Recherche
-        $menu['Recherche']->addChild('Rechercher un groupe', array('route' => 'group_search', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
-        $menu['Recherche']->addChild('Rechercher une personne', array('route' => 'user_search', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
-        
-        // Sous-menus pour Groupes privés
-        $menu['Groupes privés']->addChild('Voir mes appartenances', array('route' => 'private_memberships', 'roles' => ["ROLE_MEMBRE"]));
-        $menu['Groupes privés']->addChild('Gérer mes groupes', array('route' => 'private_group', 'roles' => ["ROLE_MEMBRE"]));
-        $menu['Groupes privés']->addChild('Tous les groupes (DOSI)', array('route' => 'all_private_groups', 'roles' => ["ROLE_DOSI"]));
+        // ONGLET ACCUEIL visible pour tout le personnel
+        if ((true === $this->container->get('security.authorization_checker')->isGranted('ROLE_MEMBRE'))) {
+            $menu->addChild('Accueil', array('route' => 'homepage'));
+            // Sous-menus pour Accueil
+            $menu['Accueil']->addChild('Voir mes appartenances', array('route' => 'memberships'));
+            if ((true === $this->container->get('security.authorization_checker')->isGranted('ROLE_GESTIONNAIRE')) ||
+                (true === $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))
+            ) {
+                $menu['Accueil']->addChild('Gérer mes groupes', array('route' => 'my_groups'));
+            }
+            if ((true === $this->container->get('security.authorization_checker')->isGranted('ROLE_DOSI')) ||
+                (true === $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))
+            ) {
+                $menu['Accueil']->addChild('Voir tous les groupes', array('route' => 'all_groups', 'roles' => ["ROLE_DOSI", "ROLE_ADMIN"]));
+            }
+        }
 
-        // Sous-menus pour Gestion des groupes
-        $menu['Gestion des groupes']->addChild('Créer un groupe', array('route' => 'group_create', 'roles' => ["ROLE_ADMIN"]));
-        $menu['Gestion des groupes']->addChild('Supprimer un groupe', array('route' => 'group_search_del', 'roles' => ["ROLE_ADMIN"]));
-        
-        // Sous-menus pour Aide
-        $menu['Aide']->addChild('Aide groupes institutionnels', array('route' => 'help', 'roles' => ["ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
-        $menu['Aide']->addChild('Aide groupes privés', array('route' => 'private_help', 'roles' => ["ROLE_MEMBRE", "ROLE_GESTIONNAIRE", "ROLE_DOSI", "ROLE_ADMIN"]));
+        // ONGLET RECHERCHE
+        if ((true === $this->container->get('security.authorization_checker')->isGranted('ROLE_GESTIONNAIRE'))||
+            (true === $this->container->get('security.authorization_checker')->isGranted('ROLE_DOSI'))||
+            (true === $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))) {
+            $menu->addChild('Recherche');
+            // Sous-menus pour Recherche
+            $menu['Recherche']->addChild('Rechercher un groupe', array('route' => 'group_search'));
+            $menu['Recherche']->addChild('Rechercher une personne', array('route' => 'user_search'));
+        }
+
+        // ONGLET GROUPES PRIVES visible pour tout le personnel
+        if ((true === $this->container->get('security.authorization_checker')->isGranted('ROLE_MEMBRE'))) {
+            $menu->addChild('Groupes privés');
+            // Sous-menus pour Groupes privés
+            $menu['Groupes privés']->addChild('Voir mes appartenances', array('route' => 'private_memberships'));
+            $menu['Groupes privés']->addChild('Gérer mes groupes', array('route' => 'private_group'));
+            if ((true === $this->container->get('security.authorization_checker')->isGranted('ROLE_DOSI'))) {
+                $menu['Groupes privés']->addChild('Tous les groupes (DOSI)', array('route' => 'all_private_groups'));
+            }
+        }
+
+        // ONGLET GESTION DES GROUPES pour les administrateurs
+        if ((true === $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))) {
+            $menu->addChild('Gestion des groupes');
+            // Sous-menus pour Gestion des groupes
+            $menu['Gestion des groupes']->addChild('Créer un groupe', array('route' => 'group_create'));
+            $menu['Gestion des groupes']->addChild('Supprimer un groupe', array('route' => 'group_search_del'));
+        }
+
+        // ONGLET AIDE pour tout le personnel
+        if ((true === $this->container->get('security.authorization_checker')->isGranted('ROLE_MEMBRE'))) {
+            $menu->addChild('Aide');
+            // Sous-menus pour Aide
+            if ((true === $this->container->get('security.authorization_checker')->isGranted('ROLE_GESTIONNAIRE'))||
+                (true === $this->container->get('security.authorization_checker')->isGranted('ROLE_DOSI'))||
+                (true === $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))) {
+                $menu['Aide']->addChild('Aide groupes institutionnels', array('route' => 'help'));
+            }
+            $menu['Aide']->addChild('Aide groupes privés', array('route' => 'private_help'));
+        }
 
         return $menu;
     }

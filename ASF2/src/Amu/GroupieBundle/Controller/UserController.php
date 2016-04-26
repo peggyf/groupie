@@ -222,7 +222,7 @@ class UserController extends Controller {
         
         $user->setMemberships($memberships);
         $userini->setMemberships($membershipsini);
-                                
+
         // Création du formulaire de mise à jour de l'utilisateur
         $editForm = $this->createForm(new UserEditType(), $user, array(
             'action' => $this->generateUrl('user_update', array('uid'=> $uid)),
