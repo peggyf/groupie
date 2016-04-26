@@ -13,7 +13,7 @@
     <h1>Bienvenue sur Groupie </h1>
 
     <br><br>
-
+    <div style="text-align: center">
     {% if (is_granted("ROLE_ADMIN") or (is_granted("ROLE_GESTIONNAIRE") and is_granted("ROLE_DOSI"))) %}
         <div class="buttons-2">
             <a href="{{ path('memberships') }}">
@@ -59,6 +59,7 @@
             </a>
         </div>
     {% endif %}
+    </div>
 
     <br><br><br><br><br><br><br><br>
 

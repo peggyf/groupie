@@ -38,10 +38,13 @@
 }
 
 /* BUTTONS */
+.buttons-2{
+    display: inline-block;
+}
 .buttons-2 a, .buttons-2 button{
     display:block;
     float:left;
-    margin:0 7px 0 2%;
+    margin:0 10px 0 ;
     background-color:#f5f5f5;
     border:1px solid #dedede;
     border-top:1px solid #eee;
