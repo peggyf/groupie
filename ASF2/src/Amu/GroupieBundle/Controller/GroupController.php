@@ -677,7 +677,7 @@ class GroupController extends Controller {
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
 
-        // Récupération des groupes dont l'utilisateur courant est administrateur (on ne récupère que les groupes publics)
+        // Récupération du groupe recherché
         $result = $ldapfonctions->recherche("(&(objectClass=".$this->config_groups['object_class'].")(".$this->config_groups['cn']."=" . $cn . "))", array($this->config_groups['cn'], $this->config_groups['desc'], $this->config_groups['groupfilter']), $this->config_groups['cn']);
         if (isset($result[0][$this->config_groups['groupfilter']]))
             $amugroupfilter = $result[0][$this->config_groups['groupfilter']][0];

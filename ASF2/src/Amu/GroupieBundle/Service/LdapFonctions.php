@@ -36,34 +36,36 @@ class LdapFonctions
         if ($resource) {
             $arData = $resource->search($baseDN, $filtre, $restriction);
 
-            // Tri des résultats
-            if ($arData['count'] > 1) {
-                for ($i = 0; $i < $arData['count']; $i++) {
-                    $index = $arData[$i];
-                    $j = $i;
-                    $is_greater = true;
-                    while ($j > 0 && $is_greater) {
-                        //create comparison variables from attributes:
-                        $a = $b = null;
+            if ($tri!="no") {
+                // Tri des résultats
+                if ($arData['count'] > 1) {
+                    for ($i = 0; $i < $arData['count']; $i++) {
+                        $index = $arData[$i];
+                        $j = $i;
+                        $is_greater = true;
+                        while ($j > 0 && $is_greater) {
+                            //create comparison variables from attributes:
+                            $a = $b = null;
 
-                        $a .= strtolower($arData[$j - 1][$tri][0]);
-                        $b .= strtolower($index[$tri][0]);
-                        if (strlen($a) > strlen($b))
-                            $b .= str_repeat(" ", (strlen($a) - strlen($b)));
-                        if (strlen($b) > strlen($a))
-                            $a .= str_repeat(" ", (strlen($b) - strlen($a)));
+                            $a .= strtolower($arData[$j - 1][$tri][0]);
+                            $b .= strtolower($index[$tri][0]);
+                            if (strlen($a) > strlen($b))
+                                $b .= str_repeat(" ", (strlen($a) - strlen($b)));
+                            if (strlen($b) > strlen($a))
+                                $a .= str_repeat(" ", (strlen($b) - strlen($a)));
 
-                        // do the comparison
-                        if ($a > $b) {
-                            $is_greater = true;
-                            $arData[$j] = $arData[$j - 1];
-                            $j = $j - 1;
-                        } else {
-                            $is_greater = false;
+                            // do the comparison
+                            if ($a > $b) {
+                                $is_greater = true;
+                                $arData[$j] = $arData[$j - 1];
+                                $j = $j - 1;
+                            } else {
+                                $is_greater = false;
+                            }
                         }
-                    }
 
-                    $arData[$j] = $index;
+                        $arData[$j] = $index;
+                    }
                 }
             }
             return $arData;
@@ -88,7 +90,7 @@ class LdapFonctions
     public function getMembersGroup($groupName) {
         $filtre = $this->config_groups['memberof']."=".$this->config_groups['cn']."=" . $groupName . ", ".$this->config_groups['group_branch'].", ".$this->ldap->getBaseDN();
         $restriction = array($this->config_users['uid'], $this->config_users['displayname'], $this->config_users['mail'], $this->config_users['tel'], $this->config_users['name']);
-        $result = $this->recherche($filtre, $restriction, $this->config_users['uid']);
+        $result = $this->recherche($filtre, $restriction, "no");
         return $result;
     }
 
@@ -98,7 +100,7 @@ class LdapFonctions
     public function getAdminsGroup($groupName) {
         $filtre = $this->config_groups['cn']."=". $groupName ;
         $restriction = array($this->config_groups['groupadmin']);
-        $result = $this->recherche($filtre, $restriction, $this->config_users['uid']);
+        $result = $this->recherche($filtre, $restriction, "no");
         return $result;
     }
 
