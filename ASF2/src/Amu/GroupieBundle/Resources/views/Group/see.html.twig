@@ -29,7 +29,7 @@
         <br>
         <br>
     {% endif %}
-     
+
     {% if nb_admins == 0 %}
         <h3>   Le groupe n'a pas d'administrateur. </h3>
         <br>
@@ -74,7 +74,9 @@
                 <tr>
                     <th>Identifiant</th>
                     <th>Nom complet</th>
-                    <th>Mail</th>
+                    {%  if mail == 1 %}
+                        <th>Mail</th>
+                    {%  endif %}
                     <th>Téléphone</th>
                 </tr>
             </thead>
@@ -83,7 +85,9 @@
                 <tr >
                     <td style="vertical-align: middle;">{{user.uid }}</td>
                     <td style="vertical-align: middle;">{{user.displayname }}</td>
-                    <td style="vertical-align: middle;"><a href="mailto:{{user.mail}}">{{user.mail }}</td>
+                    {%  if mail == 1 %}
+                        <td style="vertical-align: middle;"><a href="mailto:{{user.mail}}">{{user.mail }}</td>
+                    {%  endif %}
                     <td style="vertical-align: middle;">{{user.tel }}</td>
                 </tr>
             {% endfor %}

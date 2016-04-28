@@ -736,6 +736,7 @@ class GroupController extends Controller {
                     'users' => $users,
                     'nb_admins' => $arAdmins[0][$this->config_groups['groupadmin']]["count"],
                     'admins' => $admins,
+                    'mail' => $mail,
                     'liste' => $liste);
     }
     
