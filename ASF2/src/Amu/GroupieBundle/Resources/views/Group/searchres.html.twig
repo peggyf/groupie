@@ -24,7 +24,6 @@
         <tr>
             <th>Nom</th>
 	        <th>Description</th>
-            <th>amuGroupFilter</th>
             {% if opt=='search' %}
                 <th>Accès</th>
             {% endif %}
@@ -45,7 +44,6 @@
 	<tr > 
 	  <td style="vertical-align: middle;">{{group.cn}}</td>
           <td style="vertical-align: middle;">{{group.description}}</td>
-          <td style="vertical-align: middle;">{{group.amugroupfilter}}</td>
           {% if opt=='search' %}
               {% if group.droits=='Aucun' %}
                   <td style="vertical-align: middle;">
