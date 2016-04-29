@@ -415,6 +415,7 @@ class GroupController extends Controller {
             else {
                 if ($opt=='add') {
                     // Renvoi vers le fonction group_add
+                    echo "Flag: ".$groupsearch->getFlag();
                     return $this->redirect($this->generateUrl('group_add', array('cn_search'=>$groupsearch->getCn(), 'uid'=>$uid, 'flag_cn'=> $groupsearch->getFlag())));
                 }
             }
@@ -481,19 +482,20 @@ class GroupController extends Controller {
         foreach($tab as $dn) {
             $tab_cn[] = preg_replace("/(".$this->config_groups['cn']."=)(([A-Za-z0-9:._-]{1,}))(,".$this->config_groups['group_branch'].".*)/", "$3", $dn);
         }
+
         // Récupération des groupes dont l'utilisateur recherché est admin
         $arDataAdmin=$ldapfonctions->recherche($this->config_groups['groupadmin']."=".$this->config_users['uid']."=".$uid.",".$this->config_users['people_branch'].",".$this->base,array($this->config_groups['cn'], $this->config_groups['desc'], $this->config_groups['groupfilter']), $this->config_groups['cn']);
         $tab_cn_admin = array();
         for($i=0;$i<$arDataAdmin["count"];$i++) {
             $tab_cn_admin[$i] = $arDataAdmin[$i][$this->config_groups['cn']][0];
         }
-        
+        echo "cn_search: $cn_search, flag_cn: $flag_cn";
         // Si on a sélectionné une proposition dans la liste d'autocomplétion
         if ($flag_cn=='1') {
             // On teste si on est sur le message "... Résultat partiel ..."
             if ($cn_search == "... Résultat partiel ...") {
                 $this->get('session')->getFlashBag()->add('flash-notice', 'Le nom du groupe est invalide');                        
-                return $this->redirect($this->generateUrl('group_search', array('opt'=>'add', 'uid'=>$uid, 'cn'=>$cn)));
+                return $this->redirect($this->generateUrl('group_search', array('opt'=>'add', 'uid'=>$uid, 'cn'=> $cn_search)));
             }
             
             // Recherche exacte sur le cn sélectionné dans le LDAP
@@ -503,7 +505,7 @@ class GroupController extends Controller {
             // Recherche avec * dans le LDAP
             $arData=$ldapfonctions->recherche("(&(objectClass=".$this->config_groups['object_class'].")(".$this->config_groups['cn']."=*" . $cn_search . "*))",array($this->config_groups['cn'],$this->config_groups['desc'],$this->config_groups['groupfilter']), $this->config_groups['cn']);
         }
-        
+
         // Récupération des groupes publics issus de la recherche
         $cpt=0;
         for ($i=0; $i<$arData["count"]; $i++) {

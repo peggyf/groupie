@@ -687,12 +687,12 @@ class UserController extends Controller {
                 // si on a rien, on teste le nom
                 // On teste si on fait une recherche exacte ou non
                 if ($usersearch->getExacte()) {
-                    $arData=$ldapfonctions->recherche("(&(".$this->config_users['name']."=".$usersearch->getSn().")".$this->config_users['filter'], array($this->config_users['uid'], $this->config_users['name'],$this->config_users['displayname'], $this->config_users['mail'], $this->config_users['tel'], $this->config_users['comp'], $this->config_users['aff'], $this->config_groups['memberof']), $this->config_users['uid']);
+                    $arData=$ldapfonctions->recherche("(&(".$this->config_users['name']."=".$usersearch->getSn().")".$this->config_users['filter'].")", array($this->config_users['uid'], $this->config_users['name'],$this->config_users['displayname'], $this->config_users['mail'], $this->config_users['tel'], $this->config_users['comp'], $this->config_users['aff'], $this->config_groups['memberof']), $this->config_users['uid']);
                 }
                 else {
                     $arData=$ldapfonctions->recherche("(&(".$this->config_users['name']."=".$usersearch->getSn()."*)".$this->config_users['filter'], array($this->config_users['uid'], $this->config_users['name'],$this->config_users['displayname'], $this->config_users['mail'], $this->config_users['tel'], $this->config_users['comp'], $this->config_users['aff'], $this->config_groups['memberof']), $this->config_users['uid']);
                 }
-                
+
                 // on récupère la liste des uilisateurs renvoyés par la recherche
                 $nb=0;
                 for($i=0;$i<$arData['count'];$i++) {
