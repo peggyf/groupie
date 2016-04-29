@@ -11,10 +11,11 @@
 <link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
 <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.11/sorting/custom-data-source/dom-checkbox.js"></script>
     <script type="text/javascript" src="{{ asset('bundles/amugroupie/js/initdatatable.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            initdatatable('#groups');
+            initdatatable_userupdate('#groups');
         } );
     </script>
 
@@ -53,9 +54,16 @@
                             <td style="vertical-align: middle;"> {{ form_widget(m.memberof) }} </td>
                             <td style="vertical-align: middle;"> {{ form_widget(m.adminof) }} </td>
                         {% else %}
-                            <td style="vertical-align: middle;"> {{ user.memberships[loop.index0].groupname }} </td>
-                            <td style="vertical-align: middle;"> {{ form_widget(m.memberof, { 'attr': { 'disabled': 'true', } } ) }} </td>
-                            <td style="vertical-align: middle;"> {{ form_widget(m.adminof, { 'attr': { 'disabled': 'true', } } ) }} </td>
+                            {% if user.memberships[loop.index0].droits == 'Voir' %}
+                                <td style="vertical-align: middle;"> {{ user.memberships[loop.index0].groupname }} </td>
+                                <td style="vertical-align: middle;"> {{ form_widget(m.memberof, { 'attr': { 'disabled': 'true', } } ) }} </td>
+                                <td style="vertical-align: middle;"> {{ form_widget(m.adminof, { 'attr': { 'disabled': 'true', } } ) }} </td>
+                            {%  else  %}
+                                <div style="display:none">
+                                    {{ form_widget(m.memberof) }}
+                                    {{ form_widget(m.adminof) }}
+                                </div>
+                            {%  endif %}
                         {% endif %}
                     </tr>  
                 {% endfor %}
@@ -83,6 +91,14 @@
         </a>
     </div>
 
+    {# Ajout d'une fonction javascript pour gérer les lignes cachées de la datatable #}
+    <script type="text/javascript" src="http://cdn.datatables.net/plug-ins/1.10.7/api/fnGetHiddenNodes.js"></script>
+    <script type="text/javascript">
+        $('#useredit').submit( function() {
+            oTable = $('#groups').dataTable();
+            $(oTable.fnGetHiddenNodes()).css("display", "none").appendTo(this);
+        } );
+    </script>
     
 {% endblock %}
 

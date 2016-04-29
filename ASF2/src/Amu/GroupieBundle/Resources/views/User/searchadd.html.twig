@@ -14,10 +14,11 @@
     <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.11/sorting/custom-data-source/dom-checkbox.js"></script>
     <script type="text/javascript" src="{{ asset('bundles/amugroupie/js/initdatatable.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            initdatatable('#memb');
+            initdatatable_add('#memb');
         } );
     </script>
 
@@ -67,6 +68,14 @@
         <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour&nbsp;</button>
     </div>
 
+    {# Ajout d'une fonction javascript pour gérer les lignes cachées de la datatable #}
+    <script type="text/javascript" src="http://cdn.datatables.net/plug-ins/1.10.7/api/fnGetHiddenNodes.js"></script>
+    <script type="text/javascript">
+        $('#groupedit').submit( function() {
+            oTable = $('#memb').dataTable();
+            $(oTable.fnGetHiddenNodes()).css("display", "none").appendTo(this);
+        } );
+    </script>
 
 {% endblock %}
 
