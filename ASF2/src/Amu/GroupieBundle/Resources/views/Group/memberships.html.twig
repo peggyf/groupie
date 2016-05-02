@@ -51,7 +51,7 @@
                         {% endfor %}
                     {% endif %}
                     <dt>
-                        <div id="cl1"> {{ group.etages[group.nbetages-1] }} </div>
+                        <div id="cl1"> <a href="{{path('see_group', { 'cn': group.cn, 'mail': 'false', 'liste': 'mesappartenances'})}}" title="Voir les membres de {{ group.cn }} ">{{ group.etages[group.nbetages-1] }}</a> </div>
                         <div id="cl2"> {{ group.description }} </div>
                         <div id="cl3">
                             <a href="{{path('see_group', { 'cn': group.cn, 'mail': 'false', 'liste': 'mesappartenances'})}}">

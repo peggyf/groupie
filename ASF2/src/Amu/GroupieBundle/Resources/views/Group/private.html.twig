@@ -61,7 +61,7 @@
         <tbody> 
         {% for group in groups %}
             <tr > 
-                <td style="vertical-align: middle;">{{group.cn}}</td>
+                <td style="vertical-align: middle;"><a href="{{path('private_group_update', { 'cn': group.cn })}}" title="Gérer le groupe {{ group.cn }}"> {{group.cn}} </a> </td>
                 <td style="vertical-align: middle;">{{group.description}}</td>
                 <td style="vertical-align: middle;">
                     <a href="{{path('private_group_update', { 'cn': group.cn })}}">
