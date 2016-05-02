@@ -129,7 +129,7 @@ class AjaxController extends Controller
 
 
         // Récupération des uid
-        $arData = $ldapfonctions->recherche("(&(".$this->config_users['uid']."=".$term."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))", array($this->config_users['uid']), $this->config_users['uid']);
+        $arData = $ldapfonctions->recherche("(&(".$this->config_users['uid']."=".$term."*)".$this->config_users['filter'].")", array($this->config_users['uid']), $this->config_users['uid']);
 
         $NbEnreg = $arData['count'];
         // si on a plus de 20 entrées, on affiche que le résultat partiel
@@ -188,14 +188,14 @@ class AjaxController extends Controller
         if ($term2==1)
         {
             $arData = $ldapfonctions->recherche(
-            "(&(".$this->config_users['name']."=".$term.")(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))",
+            "(&(".$this->config_users['name']."=".$term.")".$this->config_users['filter'].")",
             array($this->config_users['name'], $this->config_users['givenname'], $this->config_users['uid']),
                 $this->config_users['name']    );
         }
         else
         {
             $arData = $ldapfonctions->recherche(
-            "(&(".$this->config_users['name']."=".$term."*)(&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))))",
+            "(&(".$this->config_users['name']."=".$term."*)".$this->config_users['filter'].")",
             array($this->config_users['name'], $this->config_users['givenname'], $this->config_users['uid']),
                 $this->config_users['name']    );
         }

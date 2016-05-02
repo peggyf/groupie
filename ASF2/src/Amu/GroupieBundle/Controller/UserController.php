@@ -82,9 +82,11 @@ class UserController extends Controller {
         $user = new User();
         $user->setUid($uid);
         $user->setDisplayname($arData[0][$this->config_users['displayname']][0]);
-        $user->setMail($arData[0][$this->config_users['mail']][0]);
+        if (isset($arData[0][$this->config_users['mail']][0]))
+            $user->setMail($arData[0][$this->config_users['mail']][0]);
         $user->setSn($arData[0][$this->config_users['name']][0]);
-        $user->setTel($arData[0][$this->config_users['tel']][0]);
+        if (isset($arData[0][$this->config_users['tel']][0]))
+            $user->setTel($arData[0][$this->config_users['tel']][0]);
         $tab = array_splice($arData[0][$this->config_groups['memberof']], 1);
         $tab_cn = array(); 
         $nb_public=0;
@@ -101,9 +103,11 @@ class UserController extends Controller {
         $userini = new User();
         $userini->setUid($uid);
         $userini->setDisplayname($arData[0][$this->config_users['displayname']][0]);
-        $userini->setMail($arData[0][$this->config_users['mail']][0]);
+        if (isset($arData[0][$this->config_users['mail']][0]))
+            $userini->setMail($arData[0][$this->config_users['mail']][0]);
         $userini->setSn($arData[0][$this->config_users['name']][0]);
-        $userini->setTel($arData[0][$this->config_users['tel']][0]);
+        if (isset($arData[0][$this->config_users['tel']][0]))
+            $userini->setTel($arData[0][$this->config_users['tel']][0]);
         $userini->setMemberof($tab_cn); 
         
         // Récupération des groupes dont l'utilisateur est admin
@@ -690,7 +694,7 @@ class UserController extends Controller {
                     $arData=$ldapfonctions->recherche("(&(".$this->config_users['name']."=".$usersearch->getSn().")".$this->config_users['filter'].")", array($this->config_users['uid'], $this->config_users['name'],$this->config_users['displayname'], $this->config_users['mail'], $this->config_users['tel'], $this->config_users['comp'], $this->config_users['aff'], $this->config_groups['memberof']), $this->config_users['uid']);
                 }
                 else {
-                    $arData=$ldapfonctions->recherche("(&(".$this->config_users['name']."=".$usersearch->getSn()."*)".$this->config_users['filter'], array($this->config_users['uid'], $this->config_users['name'],$this->config_users['displayname'], $this->config_users['mail'], $this->config_users['tel'], $this->config_users['comp'], $this->config_users['aff'], $this->config_groups['memberof']), $this->config_users['uid']);
+                    $arData=$ldapfonctions->recherche("(&(".$this->config_users['name']."=".$usersearch->getSn()."*)".$this->config_users['filter'].")", array($this->config_users['uid'], $this->config_users['name'],$this->config_users['displayname'], $this->config_users['mail'], $this->config_users['tel'], $this->config_users['comp'], $this->config_users['aff'], $this->config_groups['memberof']), $this->config_users['uid']);
                 }
 
                 // on récupère la liste des uilisateurs renvoyés par la recherche
@@ -741,7 +745,7 @@ class UserController extends Controller {
             }
             else {
                 // Recherche des utilisateurs dans le LDAP
-                $arData=$ldapfonctions->recherche($this->config_users['uid']."=".$usersearch->getUid(), array($this->config_users['uid'], $this->config_users['name'],$this->config_users['displayname'], $this->config_users['mail'], $this->config_users['tel'],$this->config_users['comp'], $this->config_users['aff'], $this->config_groups['memberof']), $this->config_users['uid']);
+                $arData=$ldapfonctions->recherche("(&(".$this->config_users['uid']."=".$usersearch->getUid().")".$this->config_users['filter'].")", array($this->config_users['uid'], $this->config_users['name'],$this->config_users['displayname'], $this->config_users['mail'], $this->config_users['tel'],$this->config_users['comp'], $this->config_users['aff'], $this->config_groups['memberof'], "amudatevalidation"), $this->config_users['uid']);
                 
                 // Test de la validité de l'uid
                 if (!isset($arData[0][$this->config_users['uid']][0])) {
@@ -751,12 +755,17 @@ class UserController extends Controller {
                     $user = new User();
                     $user->setUid($usersearch->getUid());
                     $user->setDisplayname($arData[0][$this->config_users['displayname']][0]);
-                    $user->setMail($arData[0][$this->config_users['mail']][0]);
+                    if (isset($ardata[0][$this->config_users['mail']][0]))
+                        $user->setMail($arData[0][$this->config_users['mail']][0]);
                     $user->setSn($arData[0][$this->config_users['name']][0]);
-                    $user->setTel($arData[0][$this->config_users['tel']][0]);
-                    $user->setComp($arData[0][$this->config_users['comp']][0]);
-                    $user->setAff($arData[0][$this->config_users['aff']][0]);
+                    if (isset($ardata[0][$this->config_users['tel']][0]))
+                        $user->setTel($arData[0][$this->config_users['tel']][0]);
+                    if (isset($ardata[0][$this->config_users['comp']][0]))
+                        $user->setComp($arData[0][$this->config_users['comp']][0]);
+                    if (isset($ardata[0][$this->config_users['aff']][0]))
+                        $user->setAff($arData[0][$this->config_users['aff']][0]);
                     // Récupération du cn des groupes (memberof)
+                    $tab = array();
                     $tab = array_splice($arData[0][$this->config_groups['memberof']], 1);
                     $tab_cn = array();
                     foreach($tab as $dn) 
@@ -875,8 +884,10 @@ class UserController extends Controller {
                                 $user->setUid($r[0][$this->config_users['uid']][0]);
                                 $user->setDisplayname($r[0][$this->config_users['displayname']][0]);
                                 $user->setSn($r[0][$this->config_users['name']][0]);
-                                $user->setMail($r[0][$this->config_users['mail']][0]);
-                                $user->setTel($r[0][$this->config_users['tel']][0]);
+                                if (isset($r[0][$this->config_users['mail']][0]))
+                                    $user->setMail($r[0][$this->config_users['mail']][0]);
+                                if (isset($r[0][$this->config_users['tel']][0]))
+                                    $user->setTel($r[0][$this->config_users['tel']][0]);
                                 $users[] = $user;
                             }
                             else {
@@ -926,9 +937,11 @@ class UserController extends Controller {
                                 $user->setUid($r[0][$this->config_users['uid']][0]);
                                 $user->setDisplayname($r[0][$this->config_users['displayname']][0]);
                                 $user->setSn($r[0][$this->config_users['name']][0]);
-                                $user->setMail($r[0][$this->config_users['mail']][0]);
-                                $user->setTel($r[0][$this->config_users['tel']][0]);
-                                $user->setTel($r[0][$this->config_users['tel']][0]);
+                                if (isset($r[0][$this->config_users['mail']][0]))
+                                    $user->setMail($r[0][$this->config_users['mail']][0]);
+                                if (isset($r[0][$this->config_users['mail']][0]))
+                                    $user->setTel($r[0][$this->config_users['tel']][0]);
+
                                 $users[] = $user;
                             }
                             else {

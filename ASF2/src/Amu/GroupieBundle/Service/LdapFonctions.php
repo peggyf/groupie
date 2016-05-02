@@ -33,6 +33,7 @@ class LdapFonctions
         $baseDN = $this->ldap->getBaseDN();
         $resource = $this->ldap->connect();
         // Recherche avec les filtres et restrictions demandés
+
         if ($resource) {
             $arData = $resource->search($baseDN, $filtre, $restriction);
 
