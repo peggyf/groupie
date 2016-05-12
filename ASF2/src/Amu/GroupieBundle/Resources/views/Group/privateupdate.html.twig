@@ -6,11 +6,11 @@
 {% endblock %}
 
 {% block body %}
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
-<link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
-<link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
-<script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
+    <link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="{{ asset('bundles/amugroupie/js/initdatatable.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
@@ -18,11 +18,18 @@
         } );
     </script>
 
+    {# Ajout d'une fonction javascript pour effacer automatiquement les messages flash après 5s #}
+    <script type="text/javascript">
+        setTimeout(function(){
+            $('#flash').remove();
+        },5000);
+    </script>
+
 <h1>Modification des membres du groupe <span style="font-variant: small-caps;"> {{ group.cn }} </span></h1>
 {% set hilightColor='#C7FE74' %}
     {% if app.session.flashbag.has('flash-notice') %}
         <center>
-            <div class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+            <div id="flash" class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
                 {% for flashMessage in app.session.flashbag.get('flash-notice') %}
                     <p>{{ flashMessage }}</p>
                 {% endfor %}
