@@ -13,7 +13,11 @@
     <script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" charset="utf8" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 
-    <h1>Recherche d'utilisateur</h1>
+    {% if opt=='add' or opt=='addprivate'%}
+        <h1>Ajout d'utilisateur au groupe <span style="font-variant-caps: small-caps;">{{ cn }}</span></h1>
+    {%  else %}
+        <h1>Recherche d'utilisateur</h1>
+    {%  endif %}
 
 {% if app.session.flashbag.has('flash-notice') %}
     <center>
@@ -24,10 +28,9 @@
         </div>
     </center>
 {% endif %}
-<div style="display:-moz-grid-line;">
-<div style="float:left;clear:left;width: 469px;">
-<form>
-    
+<div style="display:inline-block;text-align: left;width:100%">
+<div style="width: 50%;display: block; float:left;">
+
     <h2> Recherche individuelle </h2>
     <br>
     <h3> Veuillez indiquer l'identifiant ou le nom de la personne à rechercher. </h3>
@@ -73,14 +76,13 @@
     </p>
     
     {{ form_end(form) }}
-    
-</form>
+
 </div>   
 
 {% if opt=='add' %}   
-    <div style="float:right;clear:right;width: 469px;">
+    <div style="width: 50%;display: block; float:left;">
         <h2> Ajout de personnes en masse </h2>
-        <br>   
+        <br>
         <h3> Pour ajouter plusieurs membres en même temps, cliquez sur ce bouton. </h3>
         <br>    
         <br>
