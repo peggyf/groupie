@@ -238,7 +238,7 @@ class UserController extends Controller {
             $userupdate = $editForm->getData();
              
             // Log modif de groupe
-            openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+            openlog("groupie-v2", LOG_PID | LOG_PERROR, LOG_SYSLOG);
             $adm = $request->getSession()->get('phpCAS_user');
             
             // Traitement des données issues de la récup du formulaire
@@ -416,7 +416,7 @@ class UserController extends Controller {
                 $userupdate = $editForm->getData();
 
                 // Log modif de groupe
-                openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+                openlog("groupie-v2", LOG_PID | LOG_PERROR, LOG_SYSLOG);
                 $adm = $request->getSession()->get('phpCAS_user');
 
                 $m_update = new ArrayCollection();      
@@ -536,7 +536,7 @@ class UserController extends Controller {
                 // Si le user n'est pas membre, on le rajoute
 
                 // Log modif de groupe
-                openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+                openlog("groupie-2", LOG_PID | LOG_PERROR, LOG_SYSLOG);
                 $adm = $request->getSession()->get('phpCAS_user');
 
                 $dn_group = $this->config_groups['cn']."=" . $cn . ", ".$this->config_private['private_branch'].", ".$this->config_groups['group_branch'].",".$this->base;
@@ -838,7 +838,7 @@ class UserController extends Controller {
             $tabLignes = explode("\n", $liste_ident);
                 
             // Log ajout sur le groupe
-            openlog("groupie", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+            openlog("groupie-v2", LOG_PID | LOG_PERROR, LOG_SYSLOG);
             $adm = $request->getSession()->get('phpCAS_user');
                 
             // Boucle sur la liste
