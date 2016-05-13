@@ -31,7 +31,7 @@
 
     {% if app.session.flashbag.has('flash-notice') %}
         <center>
-            <div id="flash" class="flash-notice" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+            <div id="flash" class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
                 {% for flashMessage in app.session.flashbag.get('flash-notice') %}
                     <p>{{ flashMessage }}</p>
                 {% endfor %}
