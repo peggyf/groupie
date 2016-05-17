@@ -40,11 +40,7 @@
                     {% endif %}
                     {% if group.lastopen <= (group.nbetages-2) %}
                         {% for i in group.lastopen .. (group.nbetages-2) %}
-                            {% if i<3 %}
-                                <dd class="opened">
-                            {% else %}
-                                <dd class="last">
-                            {% endif %}
+                            <dd class="opened">
                             <p> {{ group.etages[i] }} </p>
                             <dl>
                         {% endfor %}
