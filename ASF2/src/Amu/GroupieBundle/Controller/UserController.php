@@ -31,6 +31,7 @@ use Amu\GroupieBundle\Controller\GroupController;
  */
 class UserController extends Controller {
 
+    protected $config_logs;
     protected $config_users;
     protected $config_groups;
     protected $config_private;
@@ -38,6 +39,8 @@ class UserController extends Controller {
 
     protected function init_config()
     {
+        if (!isset($this->config_logs))
+            $this->config_logs = $this->container->getParameter('amu.groupie.logs');
         if (!isset($this->config_users))
             $this->config_users = $this->container->getParameter('amu.groupie.users');
         if (!isset($this->config_groups))
@@ -238,7 +241,7 @@ class UserController extends Controller {
             $userupdate = $editForm->getData();
              
             // Log modif de groupe
-            openlog("groupie-v2", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+            openlog("groupie-v2", LOG_PID | LOG_PERROR, constant($this->config_logs['facility']));
             $adm = $request->getSession()->get('phpCAS_user');
             
             // Traitement des données issues de la récup du formulaire
@@ -416,7 +419,7 @@ class UserController extends Controller {
                 $userupdate = $editForm->getData();
 
                 // Log modif de groupe
-                openlog("groupie-v2", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+                openlog("groupie-v2", LOG_PID | LOG_PERROR, constant($this->config_logs['facility']));
                 $adm = $request->getSession()->get('phpCAS_user');
 
                 $m_update = new ArrayCollection();      
@@ -536,7 +539,7 @@ class UserController extends Controller {
                 // Si le user n'est pas membre, on le rajoute
 
                 // Log modif de groupe
-                openlog("groupie-2", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+                openlog("groupie-2", LOG_PID | LOG_PERROR, constant($this->config_logs['facility']));
                 $adm = $request->getSession()->get('phpCAS_user');
 
                 $dn_group = $this->config_groups['cn']."=" . $cn . ", ".$this->config_private['private_branch'].", ".$this->config_groups['group_branch'].",".$this->base;
@@ -838,7 +841,7 @@ class UserController extends Controller {
             $tabLignes = explode("\n", $liste_ident);
                 
             // Log ajout sur le groupe
-            openlog("groupie-v2", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+            openlog("groupie-v2", LOG_PID | LOG_PERROR, constant($this->config_logs['facility']));
             $adm = $request->getSession()->get('phpCAS_user');
                 
             // Boucle sur la liste

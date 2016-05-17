@@ -26,6 +26,13 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('logs')
+                    ->isRequired()
+                    ->children()
+                        ->scalarNode('facility')->defaultValue('LOG_LOCAL0')->end()
+                    ->end()
+                ->end()
+
                 ->arrayNode('users')
                     ->isRequired()
                     ->children()
@@ -41,6 +48,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('filter')->defaultValue('(!(edupersonprimaryaffiliation=student))')->end()
                     ->end()
                 ->end()
+
                 ->arrayNode('groups')
                     ->isRequired()
                     ->children()
@@ -54,6 +62,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('groupadmin')->isRequired()->end()
                     ->end()
                 ->end()
+
                 ->arrayNode('private')
                     ->isRequired()
                     ->children()

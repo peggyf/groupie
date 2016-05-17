@@ -26,6 +26,7 @@ class AmuGroupieExtension extends Extension
         $loader->load('services.xml');
 
         // Set parameters
+        $container->setParameter('amu.groupie.logs', $config['logs']);
         $container->setParameter('amu.groupie.users', $config['users']);
         $container->setParameter('amu.groupie.groups', $config['groups']);
         $container->setParameter('amu.groupie.private', $config['private']);

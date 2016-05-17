@@ -32,6 +32,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class GroupController extends Controller {
 
+    protected $config_logs;
     protected $config_users;
     protected $config_groups;
     protected $config_private;
@@ -39,6 +40,8 @@ class GroupController extends Controller {
 
     protected function init_config()
     {
+        if (!isset($this->config_logs))
+            $this->config_logs = $this->container->getParameter('amu.groupie.logs');
         if (!isset($this->config_users))
             $this->config_users = $this->container->getParameter('amu.groupie.users');
         if (!isset($this->config_groups))
@@ -593,7 +596,7 @@ class GroupController extends Controller {
             $m_update = $userupdate->getMemberships();
             
             // Log Mise à jour des membres du groupe
-            openlog("groupie-v2", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+            openlog("groupie-v2", LOG_PID | LOG_PERROR, constant($this->config_logs['facility']));
             $adm = $request->getSession()->get('phpCAS_user');
             
             // Pour chaque appartenance
@@ -809,7 +812,7 @@ class GroupController extends Controller {
             $group = $form->getData();
             
             // Log création de groupe
-            openlog("groupie-v2", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+            openlog("groupie-v2", LOG_PID | LOG_PERROR, constant($this->config_logs['facility']));
             $adm = $request->getSession()->get('phpCAS_user');
                 
             // Création du groupe dans le LDAP
@@ -884,7 +887,7 @@ class GroupController extends Controller {
             if ($test>0) {
                 // le nom du groupe est valide, on peut le créer
                 // Log création de groupe
-                openlog("groupie-v2", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+                openlog("groupie-v2", LOG_PID | LOG_PERROR, constant($this->config_logs['facility']));
                 $adm = $request->getSession()->get('phpCAS_user');
 
                 // On récupère le service ldapfonctions/create
@@ -945,7 +948,7 @@ class GroupController extends Controller {
     {
         $this->init_config();
         // Log suppression de groupe
-        openlog("groupie-v2", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+        openlog("groupie-v2", LOG_PID | LOG_PERROR, constant($this->config_logs['facility']));
         $adm = $request->getSession()->get('phpCAS_user');
         
         //Suppression du groupe dans le LDAP
@@ -1011,7 +1014,7 @@ class GroupController extends Controller {
     public function del1PrivateAction(Request $request, $cn) {
         $this->init_config();
         // Log suppression de groupe
-        openlog("groupie-v2", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+        openlog("groupie-v2", LOG_PID | LOG_PERROR, constant($this->config_logs['facility']));
         $adm = $request->getSession()->get('phpCAS_user');
         
         // Suppression du groupe dans le LDAP
@@ -1070,7 +1073,7 @@ class GroupController extends Controller {
             $groupmod = $form->getData();
             
             // Log modif de groupe
-            openlog("groupie-v2", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+            openlog("groupie-v2", LOG_PID | LOG_PERROR, constant($this->config_logs['facility']));
             $adm = $request->getSession()->get('phpCAS_user');
             
             // Cas particulier de la suppression amugroupfilter
@@ -1214,7 +1217,7 @@ class GroupController extends Controller {
             $groupupdate = $editForm->getData();
             
             // Log Mise à jour des membres du groupe
-            openlog("groupie-v2", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+            openlog("groupie-v2", LOG_PID | LOG_PERROR, constant($this->config_logs['facility']));
             $adm = $request->getSession()->get('phpCAS_user');
             
             // Récup des appartenances
@@ -1419,7 +1422,7 @@ class GroupController extends Controller {
             $groupupdate = $editForm->getData();
             
             // Log Mise à jour des membres du groupe
-            openlog("groupie-v2", LOG_PID | LOG_PERROR, LOG_SYSLOG);
+            openlog("groupie-v2", LOG_PID | LOG_PERROR, constant($this->config_logs['facility']));
             $adm = $request->getSession()->get('phpCAS_user');
             
             $m_update = new ArrayCollection();      
