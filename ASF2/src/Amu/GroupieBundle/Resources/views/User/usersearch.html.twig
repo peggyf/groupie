@@ -19,6 +19,8 @@
         },5000);
     </script>
 
+    <div style="padding: 30px">
+
     {% if opt=='add' or opt=='addprivate'%}
         <h1>Ajout d'utilisateur au groupe <span style="font-variant-caps: small-caps;">{{ cn }}</span></h1>
     {%  else %}
@@ -195,6 +197,6 @@ $('#usersearch_sn').autocomplete({
     } 
 }); 
     
-</script>   
-    
+</script>
+    </div>
 {% endblock %}
