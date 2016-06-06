@@ -180,7 +180,6 @@ class GroupController extends Controller {
         for ($i=0; $i<$arData["count"]; $i++) {
             $groups[$i] = new Group();
             $groups[$i]->setCn($arData[$i][$this->config_groups['cn']][0]);
-        
             $groups[$i]->setDescription($arData[$i][$this->config_groups['desc']][0]);
             if (isset($arData[$i][$this->config_groups['groupfilter']])) {
                 $groups[$i]->setAmugroupfilter($arData[$i][$this->config_groups['groupfilter']][0]);
@@ -290,6 +289,7 @@ class GroupController extends Controller {
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
+        // Recherche des groupes privés de l'utilisateur
         $result = $ldapfonctions->recherche($this->config_groups['member']."=".$this->config_users['uid']."=".$request->getSession()->get('phpCAS_user').",".$this->config_users['people_branch'].",".$this->base, array($this->config_groups['cn'], $this->config_groups['desc']), $this->config_groups['cn']);
         
         // Initialisation du tableau d'entités Group
@@ -360,7 +360,8 @@ class GroupController extends Controller {
                     for($i=0;$i<$arDataAdmin["count"];$i++)
                         $tab_cn_admin[$i] = $arDataAdmin[$i][$this->config_groups['cn']][0];
                 }
-               
+
+                // Compteur du nombre de résultats donnés par la recherche
                 $nb = 0;
                 for ($i=0; $i<$arData["count"]; $i++) {
                     // on ne garde que les groupes publics
@@ -418,7 +419,6 @@ class GroupController extends Controller {
             else {
                 if ($opt=='add') {
                     // Renvoi vers le fonction group_add
-                    echo "Flag: ".$groupsearch->getFlag();
                     return $this->redirect($this->generateUrl('group_add', array('cn_search'=>$groupsearch->getCn(), 'uid'=>$uid, 'flag_cn'=> $groupsearch->getFlag())));
                 }
             }
@@ -492,7 +492,7 @@ class GroupController extends Controller {
         for($i=0;$i<$arDataAdmin["count"];$i++) {
             $tab_cn_admin[$i] = $arDataAdmin[$i][$this->config_groups['cn']][0];
         }
-        echo "cn_search: $cn_search, flag_cn: $flag_cn";
+
         // Si on a sélectionné une proposition dans la liste d'autocomplétion
         if ($flag_cn=='1') {
             // On teste si on est sur le message "... Résultat partiel ..."
@@ -1300,6 +1300,32 @@ class GroupController extends Controller {
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
+
+        $flag = "nok";
+        // Dans le cas d'un gestionnaire
+        if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
+            // Recup des groupes dont l'utilisateur est admin
+            $arDataAdminLogin = $ldapfonctions->recherche($this->config_groups['groupadmin']."=".$this->config_users['uid']."=".$request->getSession()->get('phpCAS_user').",".$this->config_users['people_branch'].",".$this->base,array($this->config_groups['cn'], $this->config_groups['desc'], $this->config_groups['groupfilter']), $this->config_groups['cn']);
+            for($i=0;$i<$arDataAdminLogin["count"];$i++)
+            {
+                if ($cn==$arDataAdminLogin[$i][$this->config_groups['cn']][0]) {
+                    $flag = "ok";
+                    break;
+                }
+
+            }
+        }
+        elseif (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
+            $flag = "ok";
+
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
+
+
 
         // Récup du filtre amugroupfilter pour affichage
         $amugroupfilter = $ldapfonctions->getAmuGroupFilter($cn);

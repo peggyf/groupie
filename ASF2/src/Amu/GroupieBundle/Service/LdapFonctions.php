@@ -69,10 +69,13 @@ class LdapFonctions
                     }
                 }
             }
+            $this->ldap->disconnect();
             return $arData;
         }
-        else
+        else {
+            $this->ldap->disconnect();
             return false;
+        }
     }
 
     /**
@@ -123,10 +126,14 @@ class LdapFonctions
         if ($resource) {
             $sr = ldap_mod_add($this->ldap->link, $dn_group, $groupinfo);
 
-            if(ldap_error($this->ldap->link) == "Success")
+            if(ldap_error($this->ldap->link) == "Success"){
+                $this->ldap->disconnect();
                 return true;
-            else
+            }
+            else {
+                $this->ldap->disconnect();
                 return false;
+            }
         }
 
         return false;
@@ -149,12 +156,16 @@ class LdapFonctions
         if ($resource) {
             $sr = ldap_mod_del($this->ldap->link, $dn_group, $groupinfo);
             //echo "<hr>DEBUG " . __CLASS__ . "::" . __FUNCTION__ . " Infos groupe <PRE>" . print_r($groupinfo, true) . "</PRE>";
-            if(ldap_error($this->ldap->link) == "Success")
+            if(ldap_error($this->ldap->link) == "Success") {
+                $this->ldap->disconnect();
                 return true;
-            else
+            }
+            else {
+                $this->ldap->disconnect();
                 return false;
+            }
         }
-
+        $this->ldap->disconnect();
         return false;
     }
 
@@ -173,12 +184,16 @@ class LdapFonctions
         $resource = $this->ldap->connect();
         if ($resource) {
             $sr = ldap_mod_add($this->ldap->link, $dn_group, $groupinfo);
-            if(ldap_error($this->ldap->link) == "Success")
+            if(ldap_error($this->ldap->link) == "Success") {
+                $this->ldap->disconnect();
                 return true;
-            else
+            }
+            else {
+                $this->ldap->disconnect();
                 return false;
+            }
         }
-
+        $this->ldap->disconnect();
         return false;
     }
 
@@ -197,12 +212,16 @@ class LdapFonctions
         $resource = $this->ldap->connect();
         if ($resource) {
             $sr = ldap_mod_del($this->ldap->link, $dn_group, $groupinfo);
-            if(ldap_error($this->ldap->link) == "Success")
+            if(ldap_error($this->ldap->link) == "Success") {
+                $this->ldap->disconnect();
                 return true;
-            else
+            }
+            else {
+                $this->ldap->disconnect();
                 return false;
+            }
         }
-
+        $this->ldap->disconnect();
         return false;
     }
 
@@ -219,12 +238,16 @@ class LdapFonctions
         $resource = $this->ldap->connect();
         if ($this->r) {
             $sr = ldap_mod_del($this->ldap->link, $dn_group, $groupinfo);
-            if(ldap_error($this->ldap->link) == "Success")
+            if(ldap_error($this->ldap->link) == "Success") {
+                $this->ldap->disconnect();
                 return true;
-            else
+            }
+            else {
+                $this->ldap->disconnect();
                 return false;
+            }
         }
-
+        $this->ldap->disconnect();
         return false;
     }
 
@@ -247,9 +270,10 @@ class LdapFonctions
         // Recherche avec les filtres et restrictions demandés
         if ($resource) {
            $res = $resource->add($dn, $groupeinfo);
+            $this->ldap->disconnect();
            return($res);
         }
-
+        $this->ldap->disconnect();
         return(false);
 
     }
@@ -263,9 +287,10 @@ class LdapFonctions
         // Recherche avec les filtres et restrictions demandés
         if ($resource) {
             $res = $resource->delete($dn);
+            $this->ldap->disconnect();
             return($res);
         }
-
+        $this->ldap->disconnect();
         return(false);
 
     }
