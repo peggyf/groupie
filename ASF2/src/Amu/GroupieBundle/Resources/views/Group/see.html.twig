@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block body %}
-    {{ parent() }}
+
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
     <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
@@ -19,87 +19,83 @@
         } );
     </script>
 
-  <h1> Liste des membres du groupe <span style="font-variant-caps: small-caps;">{{ cn }}</span> </h1>
+    <div style="padding: 15px">
 
-    {% if amugroupfilter != '' %}
-      
-      <h3>  amuGroupfilter :  </h3>
-      <center> <h4> {{ amugroupfilter }} </h4> </center>
-      
-        <br>
-        <br>
-    {% endif %}
+        <h1> Liste des membres du groupe <span style="font-variant-caps: small-caps;">{{ cn }}</span> </h1>
 
-    {% if nb_admins == 0 %}
-        <h3>   Le groupe n'a pas d'administrateur. </h3>
-        <br>
-    {% else %}
-    
-        <h3>   Nombre d'administrateurs du groupe : {{ nb_admins }} </h3>
-        <br>
-
-        <table id="tab_admin" class="display">
-            <thead>
-                <tr>
-                    <th>Identifiant</th>
-                    <th>Nom complet</th>
-                    <th>Mail</th>
-                    <th>Téléphone</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for admin in admins %}
+        {% if amugroupfilter != '' %}
+            <h3>  amuGroupfilter :  </h3>
+            <center> <h4> {{ amugroupfilter }} </h4> </center>
+            <br>
+            <br>
+        {% endif %}
+        {% if nb_admins == 0 %}
+            <h3>   Le groupe n'a pas d'administrateur. </h3>
+            <br>
+        {% else %}
+            <h3>   Nombre d'administrateurs du groupe : {{ nb_admins }} </h3>
+            <br>
+            <table id="tab_admin" class="display">
+                <thead>
                     <tr>
-                        <td style="vertical-align: middle;">{{admin.uid }}</td>
-                        <td style="vertical-align: middle;">{{admin.displayname }}</td>
-                        <td style="vertical-align: middle;"><a href="mailto:{{admin.mail}}">{{admin.mail }}</td>
-                        <td style="vertical-align: middle;">{{admin.tel }}</td>
+                        <th>Identifiant</th>
+                        <th>Nom complet</th>
+                        <th>Mail</th>
+                        <th>Téléphone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for admin in admins %}
+                        <tr>
+                            <td style="vertical-align: middle;">{{admin.uid }}</td>
+                            <td style="vertical-align: middle;">{{admin.displayname }}</td>
+                            <td style="vertical-align: middle;"><a href="mailto:{{admin.mail}}">{{admin.mail }}</td>
+                            <td style="vertical-align: middle;">{{admin.tel }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
+            <br>
+        {% endif %}
+        {% if nb_membres == 0 %}
+            <h3>   Le groupe n'a pas de membre. </h3>
+            <br>
+        {% else %}
+            <h3>   Nombre de membres du groupe : {{ nb_membres }} </h3>
+            <br>
+            <table id="tab_memb" class="display">
+                <thead>
+                    <tr>
+                        <th>Identifiant</th>
+                        <th>Nom complet</th>
+                        {%  if mail == 1 %}
+                            <th>Mail</th>
+                        {%  endif %}
+                        <th>Téléphone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr >
+                        <td style="vertical-align: middle;">{{user.uid }}</td>
+                        <td style="vertical-align: middle;">{{user.displayname }}</td>
+                        {%  if mail == 1 %}
+                            <td style="vertical-align: middle;"><a href="mailto:{{user.mail}}">{{user.mail }}</td>
+                        {%  endif %}
+                        <td style="vertical-align: middle;">{{user.tel }}</td>
                     </tr>
                 {% endfor %}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        {% endif %}
+
+        <br>
+        <div class="buttons">
+            <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;</button>
+        </div>
         <br>
         <br>
-    {% endif %}
-
-    {% if nb_membres == 0 %}
-        <h3>   Le groupe n'a pas de membre. </h3>
-        <br>
-    {% else %}
-        <h3>   Nombre de membres du groupe : {{ nb_membres }} </h3>
-        <br>
-
-        <table id="tab_memb" class="display">
-            <thead>
-                <tr>
-                    <th>Identifiant</th>
-                    <th>Nom complet</th>
-                    {%  if mail == 1 %}
-                        <th>Mail</th>
-                    {%  endif %}
-                    <th>Téléphone</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for user in users %}
-                <tr >
-                    <td style="vertical-align: middle;">{{user.uid }}</td>
-                    <td style="vertical-align: middle;">{{user.displayname }}</td>
-                    {%  if mail == 1 %}
-                        <td style="vertical-align: middle;"><a href="mailto:{{user.mail}}">{{user.mail }}</td>
-                    {%  endif %}
-                    <td style="vertical-align: middle;">{{user.tel }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-
-    <br>
-
-    <div class="buttons">
-        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste&nbsp;</button>
     </div>
-
 
 {% endblock %}

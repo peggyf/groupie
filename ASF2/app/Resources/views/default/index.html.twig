@@ -9,58 +9,85 @@
     <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
     <link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.min.css" /> <!-- jquery_ui_theme -->
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    {# Ajout d'une fonction javascript pour effacer automatiquement les messages flash après 5s #}
+    <script type="text/javascript">
+        setTimeout(function(){
+            $('#flash').remove();
+        },5000);
+    </script>
 
-    <h1>Bienvenue sur Groupie </h1>
-
-    <br><br>
-    <div style="text-align: center">
-    {% if (is_granted("ROLE_ADMIN") or (is_granted("ROLE_GESTIONNAIRE") and is_granted("ROLE_DOSI"))) %}
-        <div class="buttons-2">
-            <a href="{{ path('memberships') }}">
-                <img src="{{asset('bundles/amugroupie/images/usergroup.png')}}" alt=""/>
-                &nbsp;Voir mes appartenances&nbsp;
-            </a>
-            <a href="{{ path('my_groups') }}">
-                <img src="{{asset('bundles/amugroupie/images/usergroup-edit.png')}}" alt=""/>
-                &nbsp;Gérer mes groupes&nbsp;
-            </a>
-            <a href="{{ path('all_groups') }}">
-                <img src="{{asset('bundles/amugroupie/images/usergroup-search.png')}}" alt=""/>
-                &nbsp;Voir tous les groupes&nbsp;
-            </a>
-        </div>
-    {% elseif is_granted("ROLE_MEMBRE") and is_granted("ROLE_DOSI") %}
-        <div class="buttons-2">
-            <a href="{{ path('memberships') }}">
-                <img src="{{asset('bundles/amugroupie/images/usergroup.png')}}" alt=""/>
-                &nbsp;Voir mes appartenances&nbsp;
-            </a>
-            <a href="{{ path('all_groups') }}">
-                <img src="{{asset('bundles/amugroupie/images/usergroup-search.png')}}" alt=""/>
-                &nbsp;Voir tous les groupes&nbsp;
-            </a>
-        </div>
-    {% elseif is_granted("ROLE_MEMBRE") and is_granted("ROLE_GESTIONNAIRE") %}
-        <div class="buttons-2">
-            <a href="{{ path('memberships') }}">
-                <img src="{{asset('bundles/amugroupie/images/usergroup.png')}}" alt=""/>
-                &nbsp;Voir mes appartenances&nbsp;
-            </a>
-            <a href="{{ path('my_groups') }}">
-                <img src="{{asset('bundles/amugroupie/images/usergroup-edit.png')}}" alt=""/>
-                &nbsp;Gérer mes groupes&nbsp;
-            </a>
-        </div>
-    {% elseif is_granted("ROLE_MEMBRE") %}
-        <div class="buttons-2">
-            <a href="{{ path('memberships') }}">
-                <img src="{{asset('bundles/amugroupie/images/usergroup.png.')}}" alt=""/>
-                &nbsp;Voir mes appartenances&nbsp;
-            </a>
-        </div>
+    {% if app.session.flashbag.has('flash-notice') %}
+        <center>
+            <div id="flash" class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+                {% for flashMessage in app.session.flashbag.get('flash-notice') %}
+                    <p>{{ flashMessage }}</p>
+                {% endfor %}
+            </div>
+        </center>
     {% endif %}
-    </div>
 
-    <br><br><br><br><br><br><br><br>
+    {% if app.session.flashbag.has('flash-error') %}
+        <center>
+            <div id="flash" class="ui-state-error ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;margin:auto;">
+                {% for flashMessage in app.session.flashbag.get('flash-error') %}
+                    <p>{{ flashMessage }}</p>
+                {% endfor %}
+            </div>
+        </center>
+    {% endif %}
+
+    <div style="padding: 15px">
+
+        <h1>Bienvenue sur Groupie </h1>
+        <br><br>
+        <div style="text-align: center">
+            {% if (is_granted("ROLE_ADMIN") or (is_granted("ROLE_GESTIONNAIRE") and is_granted("ROLE_DOSI"))) %}
+                <div class="buttons-2">
+                    <a href="{{ path('memberships') }}">
+                        <img src="{{asset('bundles/amugroupie/images/usergroup.png')}}" alt=""/>
+                        &nbsp;Voir mes appartenances&nbsp;
+                    </a>
+                    <a href="{{ path('my_groups') }}">
+                        <img src="{{asset('bundles/amugroupie/images/usergroup-edit.png')}}" alt=""/>
+                        &nbsp;Gérer mes groupes&nbsp;
+                    </a>
+                    <a href="{{ path('all_groups') }}">
+                        <img src="{{asset('bundles/amugroupie/images/usergroup-search.png')}}" alt=""/>
+                        &nbsp;Voir tous les groupes&nbsp;
+                    </a>
+                </div>
+            {% elseif is_granted("ROLE_MEMBRE") and is_granted("ROLE_DOSI") %}
+                <div class="buttons-2">
+                    <a href="{{ path('memberships') }}">
+                        <img src="{{asset('bundles/amugroupie/images/usergroup.png')}}" alt=""/>
+                        &nbsp;Voir mes appartenances&nbsp;
+                    </a>
+                    <a href="{{ path('all_groups') }}">
+                        <img src="{{asset('bundles/amugroupie/images/usergroup-search.png')}}" alt=""/>
+                        &nbsp;Voir tous les groupes&nbsp;
+                    </a>
+                </div>
+            {% elseif is_granted("ROLE_MEMBRE") and is_granted("ROLE_GESTIONNAIRE") %}
+                <div class="buttons-2">
+                    <a href="{{ path('memberships') }}">
+                        <img src="{{asset('bundles/amugroupie/images/usergroup.png')}}" alt=""/>
+                        &nbsp;Voir mes appartenances&nbsp;
+                    </a>
+                    <a href="{{ path('my_groups') }}">
+                        <img src="{{asset('bundles/amugroupie/images/usergroup-edit.png')}}" alt=""/>
+                        &nbsp;Gérer mes groupes&nbsp;
+                    </a>
+                </div>
+            {% elseif is_granted("ROLE_MEMBRE") %}
+                <div class="buttons-2">
+                    <a href="{{ path('memberships') }}">
+                        <img src="{{asset('bundles/amugroupie/images/usergroup.png.')}}" alt=""/>
+                        &nbsp;Voir mes appartenances&nbsp;
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        <br><br><br><br><br><br><br><br>
+    </div>
 
 {% endblock %}

@@ -19,40 +19,44 @@
         } );
     </script>
 
-    <h1>Liste des membres du groupe privé <span style="font-variant: small-caps; ">{{ cn }}</span></h1>
-    <br>
-{% if nb_membres == 0 %}
-    <h3>   Le groupe n'a pas de membre. </h3>
-    <br>
-{% else %}  
-    <h3> <b>  Propriétaire du groupe : </b>{{ proprietaire.displayname }} </h3>
-    <br>
-    <h3> <b>  Nombre de membres du groupe : </b>{{ nb_membres }} </h3>
-    <br>
+    <div style="padding: 15px">
 
-    <table id="memb" class="display">
-        <thead>
-            <tr>
-                <th>Identifiant</th>
-                <th>Nom complet</th>
-                <th>Téléphone</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for user in users %}
-            <tr > 
-                <td style="vertical-align: middle;">{{user.uid }}</td>
-                <td style="vertical-align: middle;">{{user.displayname }}</td>
-                <td style="vertical-align: middle;">{{user.tel }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table> 
-{% endif %}   
+        <h1>Liste des membres du groupe privé <span style="font-variant: small-caps; ">{{ cn }}</span></h1>
+        <br>
+        {% if nb_membres == 0 %}
+            <h3>   Le groupe n'a pas de membre. </h3>
+            <br>
+        {% else %}
+            <h3> <b>  Propriétaire du groupe : </b>{{ proprietaire.displayname }} </h3>
+            <br>
+            <h3> <b>  Nombre de membres du groupe : </b>{{ nb_membres }} </h3>
+            <br>
 
-<br>
-    <div class="buttons">
-        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste des groupes &nbsp;</button>
+            <table id="memb" class="display">
+                <thead>
+                    <tr>
+                        <th>Identifiant</th>
+                        <th>Nom complet</th>
+                        <th>Téléphone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr >
+                        <td style="vertical-align: middle;">{{user.uid }}</td>
+                        <td style="vertical-align: middle;">{{user.displayname }}</td>
+                        <td style="vertical-align: middle;">{{user.tel }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        <br>
+        <div class="buttons">
+            <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la liste des groupes &nbsp;</button>
+        </div>
+        <br>
+        <br>
     </div>
 
 {% endblock %}

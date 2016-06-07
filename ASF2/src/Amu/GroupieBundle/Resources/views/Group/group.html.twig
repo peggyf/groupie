@@ -20,64 +20,64 @@
         },5000);
     </script>
 
-<h1>Création de groupe</h1>
+    <div style="padding: 15px">
 
-{% if app.session.flashbag.has('flash-notice') %}
-<center>
-    <div id="flash" class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
-    {% for flashMessage in app.session.flashbag.get('flash-notice') %}
-        <p>{{ flashMessage }}</p>
-    {% endfor %}
+        <h1>Création de groupe</h1>
+
+        {% if app.session.flashbag.has('flash-notice') %}
+            <center>
+                <div id="flash" class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+                {% for flashMessage in app.session.flashbag.get('flash-notice') %}
+                    <p>{{ flashMessage }}</p>
+                {% endfor %}
+                </div>
+            </center>
+        {% endif %}
+        {% if app.session.flashbag.has('flash-error') %}
+            <center>
+                <div class="ui-state-error ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;margin:auto;">
+                {% for flashMessage in app.session.flashbag.get('flash-error') %}
+                    <p>{{ flashMessage }}</p>
+                {% endfor %}
+                </div>
+            </center>
+        {% endif %}
+
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+
+        <div>
+            {{ form_label(form.cn) }}
+            {{ form_errors(form.cn) }}
+            {{ form_widget(form.cn) }}
+        </div>
+        <br>
+        <div>
+            {{ form_label(form.description) }}
+            {{ form_errors(form.description) }}
+            {{ form_widget(form.description) }}
+
+        </div>
+        <br>
+        <div>
+            {{ form_label(form.amugroupfilter) }}
+            {{ form_errors(form.amugroupfilter) }}
+            {{ form_widget(form.amugroupfilter) }}
+
+        </div>
+        <br>
+        <p>
+            <div class="buttons">
+                <button type="submit" name="btCreer"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/add-2.png') }}" />&nbsp;Créer&nbsp;</button>
+                <a href="{{ path('homepage') }}">
+                    <img src="{{asset('bundles/amugroupie/images/cancel-16.png')}}" alt=""/>
+                    &nbsp;Annuler&nbsp;
+                </a>
+            </div>
+        </p>
+        {{ form_end(form) }}
+        <br>
+        <br>
     </div>
-</center>
-{% endif %}
 
-{% if app.session.flashbag.has('flash-error') %}
-<center>
-    <div class="ui-state-error ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;margin:auto;">
-    {% for flashMessage in app.session.flashbag.get('flash-error') %}
-        <p>{{ flashMessage }}</p>
-    {% endfor %}
-    </div>
-</center>
-{% endif %}
-
-    {{ form_start(form) }}
-    {{ form_errors(form) }}
-
-    <div>
-        {{ form_label(form.cn) }}
-        {{ form_errors(form.cn) }}
-        {{ form_widget(form.cn) }}
-    </div>
-    <br>
-
-    <div>
-        {{ form_label(form.description) }}
-        {{ form_errors(form.description) }}
-        {{ form_widget(form.description) }}
-
-    </div>
-    <br>
-
-    <div>
-        {{ form_label(form.amugroupfilter) }}
-        {{ form_errors(form.amugroupfilter) }}
-        {{ form_widget(form.amugroupfilter) }}
-
-    </div>
-    <br>
-    <p>
-    <div class="buttons">
-        <button type="submit" name="btCreer"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/add-2.png') }}" />&nbsp;Créer&nbsp;</button>
-        <a href="{{ path('homepage') }}">
-            <img src="{{asset('bundles/amugroupie/images/cancel-16.png')}}" alt=""/>
-            &nbsp;Annuler&nbsp;
-        </a>
-    </div>
-    </p>
-
-    {{ form_end(form) }}
-
-    
 {% endblock %}

@@ -5,11 +5,7 @@
     <div class="clear"><hr /></div>
 {% endblock %}
 
-
 {% block body %}
-
-    <h1>Ajout de droits</h1>
-
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
     <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
@@ -22,7 +18,11 @@
         } );
     </script>
 
-    {{ form_start(form) }}
+    <div style="padding: 15px">
+
+        <h1>Ajout de droits</h1>
+
+        {{ form_start(form) }}
         <br>
         <h3>Droits sur le groupe : {{ cn }}</h3>
         <br>
@@ -47,9 +47,7 @@
                 {% endfor %}
             </tbody>
         </table>
-
         <br>
-
         <div class="buttons">
             <button type="submit" name="btAjouter"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/user-add.png') }}" />&nbsp;Ajouter les droits&nbsp;</button>
             <a href="{{ path('homepage') }}" >
@@ -57,15 +55,16 @@
                 &nbsp;Annuler&nbsp;
             </a>
         </div>
-    
         {{ form_rest(form) }}
+        {{ form_end(form) }}
+        <br>
+        <br>
+        <br>
+        <div class="buttons">
+            <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour&nbsp;</button>
+        </div>
+        <br><br>
 
-    {{ form_end(form) }}
-    <br>
-    <br>
-    <br>
-    <div class="buttons">
-        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour&nbsp;</button>
     </div>
 
     {# Ajout d'une fonction javascript pour gérer les lignes cachées de la datatable #}

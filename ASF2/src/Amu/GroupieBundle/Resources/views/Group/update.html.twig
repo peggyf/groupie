@@ -26,84 +26,86 @@
         },5000);
     </script>
 
-    <h1>Modification des membres du groupe <span style="font-variant-caps: small-caps;"> {{ group.cn }} </span></h1>
-    {% set hilightColor='#C7FE74' %}
+    <div style="padding: 15px">
 
-    {% if app.session.flashbag.has('flash-notice') %}
-        <center>
-            <div id="flash" class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
-                {% for flashMessage in app.session.flashbag.get('flash-notice') %}
-                    <p>{{ flashMessage }}</p>
-                {% endfor %}
-            </div>
-        </center>
-    {% endif %}
+        <h1>Modification des membres du groupe <span style="font-variant-caps: small-caps;"> {{ group.cn }} </span></h1>
+        {% set hilightColor='#C7FE74' %}
+        {% if app.session.flashbag.has('flash-notice') %}
+            <center>
+                <div id="flash" class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+                    {% for flashMessage in app.session.flashbag.get('flash-notice') %}
+                        <p>{{ flashMessage }}</p>
+                    {% endfor %}
+                </div>
+            </center>
+        {% endif %}
 
-
-    <br>
-    <h3>Nombre de membres du groupe <b> {{ group.cn }} </b> : {{ nb_membres }}</h3>
-    <br>
-    {% if group.amugroupfilter =='' %}
-        <h3>AmuGroupFilter : aucun </h3>
-    {% else %}
-        <h3>AmuGroupFilter : </h3> <h4> {#{{ group.amugroupfilter}}#} </h4>
-    {% endif %}
-    <br>
-    <div class="buttons">
-        <a href="{{ path('user_search', { 'opt': 'add', 'cn' : group.cn }) }}">
-            <img src="{{asset('bundles/amugroupie/images/add-2.png')}}" alt=""/>
-            &nbsp;Ajouter un membre&nbsp;
-        </a>
-    </div>
-    <br>
-    <br>
-    <br>
-    {% if nb_membres > 0 or nb_admins > 0 %}
-        {{ form_start(form) }}
-        <table id="memb" class="display">
-            <thead>
-                <tr>
-                    <th>Identifiant</th>
-                    <th>Nom complet</th>
-                    <th>Mail</th>
-                    <th>Téléphone</th>
-                    <th>Membre</th>
-                    <th>Admin</th>
-                </tr>
-            </thead>
-            <tbody>
-                {# itère sur chaque member existant et affiche les champs  #}
-                {% for m in form.members  %}
-                    <tr>
-                        <td style="vertical-align: middle;"> {{ group.members[loop.index0].uid }} </td>
-                        <td style="vertical-align: middle;"> {{ group.members[loop.index0].displayname }} </td>
-                        <td style="vertical-align: middle;"> <a href="mailto:{{group.members[loop.index0].mail}}"> {{ group.members[loop.index0].mail }} </td>
-                        <td style="vertical-align: middle;"> {{ group.members[loop.index0].tel }} </td>
-                        <td style="vertical-align: middle;"> {{ form_widget(m.member) }} </td>
-                        <td style="vertical-align: middle;"> {{ form_widget(m.admin) }} </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
         <br>
-
+        <h3>Nombre de membres du groupe <b> {{ group.cn }} </b> : {{ nb_membres }}</h3>
+        <br>
+        {% if group.amugroupfilter =='' %}
+            <h3>AmuGroupFilter : aucun </h3>
+        {% else %}
+            <h3>AmuGroupFilter : </h3> <h4> {#{{ group.amugroupfilter}}#} </h4>
+        {% endif %}
+        <br>
         <div class="buttons">
-            <button type="submit" name="btValider" id="submit"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/valid.png') }}" />&nbsp;Valider les changements de droits&nbsp;</button>
-            <a href="{{ path('homepage') }}" >
-                    <img src="{{asset('bundles/amugroupie/images/cancel.png')}}" alt=""/>
-                    &nbsp;Annuler&nbsp;
+            <a href="{{ path('user_search', { 'opt': 'add', 'cn' : group.cn }) }}">
+                <img src="{{asset('bundles/amugroupie/images/add-2.png')}}" alt=""/>
+                &nbsp;Ajouter un membre&nbsp;
             </a>
         </div>
-
-        {{ form_end(form) }}
         <br>
         <br>
         <br>
+        {% if nb_membres > 0 or nb_admins > 0 %}
+            {{ form_start(form) }}
+            <table id="memb" class="display">
+                <thead>
+                    <tr>
+                        <th>Identifiant</th>
+                        <th>Nom complet</th>
+                        <th>Mail</th>
+                        <th>Téléphone</th>
+                        <th>Membre</th>
+                        <th>Admin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {# itère sur chaque member existant et affiche les champs  #}
+                    {% for m in form.members  %}
+                        <tr>
+                            <td style="vertical-align: middle;"> {{ group.members[loop.index0].uid }} </td>
+                            <td style="vertical-align: middle;"> {{ group.members[loop.index0].displayname }} </td>
+                            <td style="vertical-align: middle;"> <a href="mailto:{{group.members[loop.index0].mail}}"> {{ group.members[loop.index0].mail }} </td>
+                            <td style="vertical-align: middle;"> {{ group.members[loop.index0].tel }} </td>
+                            <td style="vertical-align: middle;"> {{ form_widget(m.member) }} </td>
+                            <td style="vertical-align: middle;"> {{ form_widget(m.admin) }} </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
 
-    {% endif %}
+            <div class="buttons">
+                <button type="submit" name="btValider" id="submit"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/valid.png') }}" />&nbsp;Valider les changements de droits&nbsp;</button>
+                <a href="{{ path('homepage') }}" >
+                        <img src="{{asset('bundles/amugroupie/images/cancel.png')}}" alt=""/>
+                        &nbsp;Annuler&nbsp;
+                </a>
+            </div>
 
-    <div class="buttons">
-        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour &nbsp;</button>
+            {{ form_end(form) }}
+            <br>
+            <br>
+            <br>
+        {% endif %}
+
+        <div class="buttons">
+            <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour &nbsp;</button>
+        </div>
+        <br>
+        <br>
     </div>
 
     {# Ajout d'une fonction javascript pour gérer les lignes cachées de la datatable #}

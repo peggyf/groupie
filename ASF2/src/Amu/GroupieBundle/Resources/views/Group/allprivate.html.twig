@@ -18,40 +18,41 @@
         } );
     </script>
 
-    <h1>Liste de tous les groupes privés</h1>
+    <div style="padding: 15px">
 
-    <div class="buttons">
-        <a href="{{  path('user_search', { 'opt': 'searchprivate' }) }}">
-            <img src="{{asset('bundles/amugroupie/images/user-search.png')}}" alt=""/>
-            &nbsp;Voir les groupes privés d'un utilisateur&nbsp;
-        </a>
+        <h1>Liste de tous les groupes privés</h1>
+        <div class="buttons">
+            <a href="{{  path('user_search', { 'opt': 'searchprivate' }) }}">
+                <img src="{{asset('bundles/amugroupie/images/user-search.png')}}" alt=""/>
+                &nbsp;Voir les groupes privés d'un utilisateur&nbsp;
+            </a>
+        </div>
+        <br>
+        <br>
+        <br>
+        <table id="groups" class="display">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Voir</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for group in groups %}
+                <tr >
+                    <td style="vertical-align: middle;">{{group.cn}}</td>
+                    <td style="vertical-align: middle;">{{group.description}}</td>
+                    <td style="vertical-align: middle;">
+                        <a href="{{path('see_private_group', { 'cn': group.cn, 'opt': 'tous' })}}">
+                            <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/amugroupie/images/view-page.png") }}" title="Voir les membres de {{ group.cn }} "/>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br>
     </div>
-    <br>
-    <br>
-    <br>
-    <table id="groups" class="display">
-        <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Description</th>
-                <th>Voir</th>
-            </tr>
-        </thead>
-        <tbody> 
-        {% for group in groups %}
-            <tr > 
-                <td style="vertical-align: middle;">{{group.cn}}</td>
-                <td style="vertical-align: middle;">{{group.description}}</td>
-                <td style="vertical-align: middle;">
-                    <a href="{{path('see_private_group', { 'cn': group.cn, 'opt': 'tous' })}}">
-                        <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/amugroupie/images/view-page.png") }}" title="Voir les membres de {{ group.cn }} "/>
-                    </a>
-                </td>
-            </tr> 
-        {% endfor %}
-        </tbody>    
-    </table>
-    <br>
-    
 
 {% endblock %}

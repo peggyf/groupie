@@ -5,7 +5,6 @@
     <div class="clear"><hr /></div>
 {% endblock %}
 
-
 {% block body %}
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
     <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
@@ -20,67 +19,62 @@
         } );
     </script>
 
-    <h1>Liste des groupes privés de l'utilisateur {{ uid }} </h1>
+    <div style="padding: 15px">
+        <h1>Liste des groupes privés de l'utilisateur {{ uid }} </h1>
 
- {% if nb_grp_prop == 0 %}
-     <h3>   L'utilisateur n'est propriétaire d'aucun groupe privé. </h3>
-    <br>
- {% else %}
-    
-    <h3>   Nombre de groupes privés dont l'utilisateur est propriétaire : {{ nb_grp_prop }} </h3>
-    <br>
-
-    <table id="groups" class="display">
-        <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for grp in grp_prop %}
-        <tr >
-          <td style="vertical-align: middle;">{{grp.cn }}</td>
-              <td style="vertical-align: middle;">{{grp.description }}</td>
-            </tr>
-       {% endfor %}
-        </tbody>
-   </table>
-{% endif %}      
-{% if nb_grp_membres == 0 %}       
-    <h3>   L'utilisateur n'est membre d'aucun groupe privé. </h3>
-    <br>
-{% else %}    
-</table>
-    <br>
-    <br>
-    
-    <h3>   Nombre de groupes privés dont l'utilisateur est membre : {{ nb_grp_membres }} </h3>
-    <br>
-
-    <table id="groups2" class="display">
-    <thead>
-        <tr>
-            <th>Nom</th>
-	        <th>Description</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for grp in grp_membres %}
-	<tr > 
-	  <td style="vertical-align: middle;">{{grp.cn }}</td>
-          <td style="vertical-align: middle;">{{grp.description }}</td>
-        </tr>
-   {% endfor %}
-    </tbody>
-      
-    </table>
-{% endif %}   
-
-<br>
-
-    <div class="buttons">
-        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la recherche &nbsp;</button>
+         {% if nb_grp_prop == 0 %}
+             <h3>   L'utilisateur n'est propriétaire d'aucun groupe privé. </h3>
+             <br>
+         {% else %}
+            <h3>   Nombre de groupes privés dont l'utilisateur est propriétaire : {{ nb_grp_prop }} </h3>
+            <br>
+            <table id="groups" class="display">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for grp in grp_prop %}
+                <tr >
+                  <td style="vertical-align: middle;">{{grp.cn }}</td>
+                      <td style="vertical-align: middle;">{{grp.description }}</td>
+                    </tr>
+               {% endfor %}
+                </tbody>
+           </table>
+        {% endif %}
+        {% if nb_grp_membres == 0 %}
+            <h3>   L'utilisateur n'est membre d'aucun groupe privé. </h3>
+            <br>
+        {% else %}
+            <br>
+            <br>
+            <h3>   Nombre de groupes privés dont l'utilisateur est membre : {{ nb_grp_membres }} </h3>
+            <br>
+            <table id="groups2" class="display">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for grp in grp_membres %}
+                        <tr >
+                            <td style="vertical-align: middle;">{{grp.cn }}</td>
+                            <td style="vertical-align: middle;">{{grp.description }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        <br>
+        <div class="buttons">
+            <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour à la recherche &nbsp;</button>
+        </div>
+        <br><br>
     </div>
         
 {% endblock %}

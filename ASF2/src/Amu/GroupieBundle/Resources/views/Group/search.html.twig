@@ -21,99 +21,95 @@
         },5000);
     </script>
 
-    <h1>Recherche de groupe</h1>
+    <div style="padding: 15px">
+        <h1>Recherche de groupe</h1>
 
-    <br>
-    <h3> Veuillez indiquer le nom du groupe à rechercher. </h3>
-    <br>
-    <br>
+        <br>
+        <h3> Veuillez indiquer le nom du groupe à rechercher. </h3>
+        <br>
+        <br>
+        {% if app.session.flashbag.has('flash-notice') %}
+        <center>
+            <div id="flash" class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+            {% for flashMessage in app.session.flashbag.get('flash-notice') %}
+                <p>{{ flashMessage }}</p>
+            {% endfor %}
+            </div>
+        </center>
+        {% endif %}
+        {% if app.session.flashbag.has('flash-error') %}
+        <center>
+            <div class="ui-state-error ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;margin:auto;">
+            {% for flashMessage in app.session.flashbag.get('flash-error') %}
+                <p>{{ flashMessage }}</p>
+            {% endfor %}
+            </div>
+        </center>
+        {% endif %}
 
-{% if app.session.flashbag.has('flash-notice') %}
-<center>
-    <div id="flash" class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
-    {% for flashMessage in app.session.flashbag.get('flash-notice') %}
-        <p>{{ flashMessage }}</p>
-    {% endfor %}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <br>
+        <p>
+            <div class="buttons">
+                <button type="submit" name="btRechercher"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/search-3.png') }}" />&nbsp;Rechercher&nbsp;</button>
+                <a href="{{ path('homepage') }}">
+                    <img src="{{asset('bundles/amugroupie/images/cancel-16.png')}}" alt=""/>
+                    &nbsp;Annuler&nbsp;
+                </a>
+            </div>
+        </p>
+        {{ form_end(form) }}
+        <br>
+        <br>
+        <p style='font-size:10px;'>
+            <img align="absmiddle" src="{{ asset('bundles/amugroupie/images/warning.png') }}" />
+            L'autocomplétion fournit un maximum de 20 résultats.
+           <br>Si vous ne trouvez pas dans la liste le groupe que vous recherchez, tapez le nom dans le formulaire puis cliquez sur le bouton "Rechercher".
+        </p>
+        <br>
+
+        {% if opt=='add' %}
+            <div class="buttons">
+                <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour&nbsp;</button>
+            </div>
+            <br>
+        {% endif %}
+        <br>
+
     </div>
-</center>
-{% endif %}
 
-{% if app.session.flashbag.has('flash-error') %}
-<center>
-    <div class="ui-state-error ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;margin:auto;">
-    {% for flashMessage in app.session.flashbag.get('flash-error') %}
-        <p>{{ flashMessage }}</p>
-    {% endfor %}
-    </div>
-</center>
-{% endif %}
+    <script type="text/javascript">
+        $('#groupsearch_flag').val('0');
+        $('#groupsearch_cn').autocomplete({
+            source: function (requete, reponse) {
+                var motcle = $('#groupsearch_cn').val();
+                var DATA = 'motcle=' + motcle;
 
+                $.ajax({
+                    type: "POST",
+                    url: "{{ path('ajax_groupcompletlist') }}",
+                    dataType: 'json',
+                    data: DATA,
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
+                    success: function (donnee) {
+                        reponse($.map(donnee, function (object) {
+                            return object;
+                        }));
+                    }
+                });
+            },
+            autoFocus: true,
+            select: function (event, ui) {
+                {# $('#groupsearch_cn').val(ui.item.value); #}
+                $(event.target).val(ui.item.value);
+                $('#groupsearch_flag').val('1');
+                $('#groupsearch').closest("form").submit();
+                {# $('#groupsearch').submit(); #}
+                return false;
+            }
+        });
 
-    <br>
-    <p>
-        <div class="buttons">
-            <button type="submit" name="btRechercher"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/search-3.png') }}" />&nbsp;Rechercher&nbsp;</button>
-            <a href="{{ path('homepage') }}">
-                <img src="{{asset('bundles/amugroupie/images/cancel-16.png')}}" alt=""/>
-                &nbsp;Annuler&nbsp;
-            </a>
-        </div>
-    </p>
-
-    {{ form_end(form) }}
-
-    <br>
-    <br>
-     
-<p style='font-size:10px;'> 
-    <img align="absmiddle" src="{{ asset('bundles/amugroupie/images/warning.png') }}" />
-    L'autocomplétion fournit un maximum de 20 résultats. 
-   <br>Si vous ne trouvez pas dans la liste le groupe que vous recherchez, tapez le nom dans le formulaire puis cliquez sur le bouton "Rechercher". 
-</p>
-<br>
-
-{% if opt=='add' %}
-    <div class="buttons">
-        <button type="button"  onclick="history.back()"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/prev-green.png') }}" />&nbsp;Retour&nbsp;</button>
-    </div>
-    <br>
-{% endif %}
-
-
-<script type="text/javascript">
-    $('#groupsearch_flag').val('0');
-    $('#groupsearch_cn').autocomplete({
-        source: function (requete, reponse) {
-            var motcle = $('#groupsearch_cn').val();
-            var DATA = 'motcle=' + motcle;
-
-            $.ajax({
-                type: "POST",
-                url: "{{ path('ajax_groupcompletlist') }}",
-                dataType: 'json',
-                data: DATA,
-
-                success: function (donnee) {
-                    reponse($.map(donnee, function (object) {
-                        return object;
-                    }));
-                }
-            });
-        },
-        autoFocus: true,
-        select: function (event, ui) {
-            {# $('#groupsearch_cn').val(ui.item.value); #}
-            $(event.target).val(ui.item.value);
-            $('#groupsearch_flag').val('1');
-            $('#groupsearch').closest("form").submit();
-            {# $('#groupsearch').submit(); #}
-            return false;
-        }
-    });
-
-</script>
+    </script>
 
 {% endblock %} 

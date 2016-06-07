@@ -26,48 +26,49 @@
         },5000);
     </script>
 
-<h1>Le groupe a été créé</h1>
+    <div style="padding: 15px">
+        <h1>Le groupe a été créé</h1>
 
-{% if app.session.flashbag.has('flash-notice') %}
-  <center>
-  <div id="flash" class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
-    {% for flashMessage in app.session.flashbag.get('flash-notice') %}
-        <p>{{ flashMessage }}</p>
-    {% endfor %}
-  </div>
-  </center>
-{% endif %}
+        {% if app.session.flashbag.has('flash-notice') %}
+          <center>
+          <div id="flash" class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+            {% for flashMessage in app.session.flashbag.get('flash-notice') %}
+                <p>{{ flashMessage }}</p>
+            {% endfor %}
+          </div>
+          </center>
+        {% endif %}
 
-    <table id="groups" class="display">
-    <thead>
-        <tr>
-            <th>Nom</th>
-	        <th>Description</th>
-	        <th>Ajouter des droits</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for group in groups %}
-	<tr > 
-	  <td style="vertical-align: middle;">{{group.cn }}</td>
-          <td style="vertical-align: middle;">{{group.description }}</td>
-          <td style="vertical-align: middle;">
-              <a href="{{path('user_search', { 'opt': 'addprivate', 'cn': group.cn })}}">
-                  <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/amugroupie/images/add-1.png") }}" title="Ajouter un membre"/>
-              </a>
-          </td>
-        </tr>
-   {% endfor %}
-   
-    </tbody>
-             
-</table>
-<br>
-    <div class="buttons">
-        <a href="{{ path('private_group') }}" >
-            <img src="{{asset('bundles/amugroupie/images/prev-green.png')}}" alt=""/>
-            &nbsp;Retour à la liste des groupes privés&nbsp;
-        </a>
+        <table id="groups" class="display">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Ajouter des droits</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for group in groups %}
+                <tr >
+                  <td style="vertical-align: middle;">{{group.cn }}</td>
+                      <td style="vertical-align: middle;">{{group.description }}</td>
+                      <td style="vertical-align: middle;">
+                          <a href="{{path('user_search', { 'opt': 'addprivate', 'cn': group.cn })}}">
+                              <img class="jqtip ui-button" align="absmiddle" src="{{ asset("bundles/amugroupie/images/add-1.png") }}" title="Ajouter un membre"/>
+                          </a>
+                      </td>
+                    </tr>
+               {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <div class="buttons">
+            <a href="{{ path('private_group') }}" >
+                <img src="{{asset('bundles/amugroupie/images/prev-green.png')}}" alt=""/>
+                &nbsp;Retour à la liste des groupes privés&nbsp;
+            </a>
+        </div>
+        <br>
+        <br>
     </div>
-
 {% endblock %}

@@ -3,17 +3,21 @@
 {% block titre %}Limite atteinte{% endblock %}
 
 {% block body %}
-    <h2>Vous ne pouvez plus créer de nouveaux groupes privés. </h2>
-    <br>
-    <h3>Le nombre maximum de groupes privés créés est atteint (20 groupes). </h3>    
-    
-    <br>
-    <br>
-    <div class="buttons">
-        <a href="{{ path('private_group') }}">
-            <img src="{{asset('bundles/amugroupie/images/prev-green.png')}}" alt=""/>
-            &nbsp;Retour à la liste des groupes privés&nbsp;
-        </a>
+
+    <div style="padding: 15px">
+        <h2>Vous ne pouvez plus créer de nouveaux groupes privés. </h2>
+        <br>
+        <h3>Le nombre maximum de groupes privés créés est atteint (20 groupes). </h3>
+        <br>
+        <br>
+        <div class="buttons">
+            <a href="{{ path('private_group') }}">
+                <img src="{{asset('bundles/amugroupie/images/prev-green.png')}}" alt=""/>
+                &nbsp;Retour à la liste des groupes privés&nbsp;
+            </a>
+        </div>
+        <br>
+        <br>
     </div>
                 
 {% endblock %}
