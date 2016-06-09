@@ -41,7 +41,7 @@
             <tbody>
             {% for group in groups %}
                 <tr >
-                    <td style="vertical-align: middle;">{{group.cn}}</td>
+                    <td style="vertical-align: middle;"><a href="{{path('see_private_group', { 'cn': group.cn, 'opt': 'tous' })}}"> {{group.cn}} </a> </td>
                     <td style="vertical-align: middle;">{{group.description}}</td>
                     <td style="vertical-align: middle;">
                         <a href="{{path('see_private_group', { 'cn': group.cn, 'opt': 'tous' })}}">
