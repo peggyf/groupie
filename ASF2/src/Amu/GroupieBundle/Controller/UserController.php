@@ -64,6 +64,17 @@ class UserController extends Controller {
     public function updateAction(Request $request, $uid)
     {
         $this->init_config();
+
+        // Accès autorisé pour les membres
+        $flag= "nok";
+        if (true === $this->get('security.context')->isGranted('ROLE_MEMBRE'))
+            $flag = "ok";
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
@@ -329,6 +340,7 @@ class UserController extends Controller {
      */
     public function addAction(Request $request, $uid='', $cn='', $liste='') {
         $this->init_config();
+
         // Récupération utilisateur
         $user = new User();
         $user->setUid($uid);
@@ -336,6 +348,28 @@ class UserController extends Controller {
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
+
+        $flag = "nok";
+        // Dans le cas d'un gestionnaire
+        if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
+            // Recup des groupes dont l'utilisateur est admin
+            $arDataAdminLogin = $ldapfonctions->recherche($this->config_groups['groupadmin']."=".$this->config_users['uid']."=".$request->getSession()->get('phpCAS_user').",".$this->config_users['people_branch'].",".$this->base,array($this->config_groups['cn'], $this->config_groups['desc'], $this->config_groups['groupfilter']), $this->config_groups['cn']);
+            for($i=0;$i<$arDataAdminLogin["count"];$i++)
+            {
+                if ($cn==$arDataAdminLogin[$i][$this->config_groups['cn']][0]) {
+                    $flag = "ok";
+                    break;
+                }
+            }
+        }
+        elseif (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
+            $flag = "ok";
+
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
 
         $arDataUser = $ldapfonctions->recherche($this->config_users['uid']."=".$uid, array($this->config_users['displayname'], $this->config_groups['memberof'], $this->config_users['uid']), $this->config_users['uid']);
                 
@@ -505,12 +539,36 @@ class UserController extends Controller {
      */
     public function addprivateAction(Request $request, $uid='', $cn='', $opt='liste') {
         $this->init_config();
-        // Récupération utilisateur
-        $user = new User();
-        $user->setUid($uid);
+
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
+
+        // Accès autorisé pour les gestionnaires et les admins
+        $flag= "nok";
+        if ((true === $this->get('security.context')->isGranted('ROLE_MEMBRE'))){
+            // Recup des groupes dont l'utilisateur est admin
+            $arDataAdminLogin = $ldapfonctions->recherche("(&(objectClass=".$this->config_groups['object_class'].")(".$this->config_groups['cn']."=".$this->config_private['prefix'].":".$request->getSession()->get('phpCAS_user').":*))", array($this->config_groups['cn'], $this->config_groups['desc']) , $this->config_groups['cn']);
+            for($i=0;$i<$arDataAdminLogin["count"];$i++) {
+                if ($cn==$arDataAdminLogin[$i][$this->config_groups['cn']][0]) {
+                    $flag = "ok";
+                    break;
+                }
+            }
+        }
+        elseif (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
+            $flag = "ok";
+
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
+        // Récupération utilisateur
+        $user = new User();
+        $user->setUid($uid);
+
         $arDataUser = $ldapfonctions->recherche($this->config_users['uid']."=".$uid, array($this->config_users['displayname'], $this->config_groups['memberof'], $this->config_users['uid']), $this->config_users['uid']);
         
         // Test de la validité de l'uid
@@ -577,6 +635,18 @@ class UserController extends Controller {
     public function seeAction(Request $request, $uid)
     {
         $this->init_config();
+
+        // Vérification des droits
+        $flag = "nok";
+        // Dans le cas DOSI
+        if ((true === $this->get('security.context')->isGranted('ROLE_DOSI')) || (true === $this->get('security.context')->isGranted('ROLE_ADMIN')))
+            $flag = "ok";
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
         $membersof = array();
         $adminsof = array();
         // On récupère le service ldapfonctions
@@ -622,6 +692,18 @@ class UserController extends Controller {
     public function seeprivateAction(Request $request, $uid)
     {
         $this->init_config();
+
+        // Vérification des droits
+        $flag = "nok";
+        // Dans le cas DOSI
+        if ((true === $this->get('security.context')->isGranted('ROLE_DOSI')) || (true === $this->get('security.context')->isGranted('ROLE_ADMIN')))
+            $flag = "ok";
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
         $membersof = array();
         $propof = array();
 
@@ -820,6 +902,29 @@ class UserController extends Controller {
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
+
+        $flag = "nok";
+        // Dans le cas d'un gestionnaire
+        if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
+            // Recup des groupes dont l'utilisateur est admin
+            $arDataAdminLogin = $ldapfonctions->recherche($this->config_groups['groupadmin']."=".$this->config_users['uid']."=".$request->getSession()->get('phpCAS_user').",".$this->config_users['people_branch'].",".$this->base,array($this->config_groups['cn'], $this->config_groups['desc'], $this->config_groups['groupfilter']), $this->config_groups['cn']);
+            for($i=0;$i<$arDataAdminLogin["count"];$i++)
+            {
+                if ($cn==$arDataAdminLogin[$i][$this->config_groups['cn']][0]) {
+                    $flag = "ok";
+                    break;
+                }
+            }
+        }
+        elseif (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
+            $flag = "ok";
+
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
 
         $tab = array();
         // Création du formulaire

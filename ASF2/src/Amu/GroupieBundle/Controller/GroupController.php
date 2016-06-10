@@ -69,6 +69,16 @@ class GroupController extends Controller {
     public function allgroupsAction() {
         $this->init_config();
 
+        // Accès autorisé pour la DOSI
+        $flag= "nok";
+        if (true === $this->get('security.context')->isGranted('ROLE_DOSI'))
+            $flag = "ok";
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
         // Variables pour l'affichage "dossier" avec javascript 
         $arEtages = array();
         $NbEtages = 0;
@@ -134,6 +144,17 @@ class GroupController extends Controller {
      */
     public function allprivateAction() {
         $this->init_config();
+
+        // Accès autorisé pour la DOSI
+        $flag= "nok";
+        if (true === $this->get('security.context')->isGranted('ROLE_DOSI'))
+            $flag = "ok";
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
@@ -167,6 +188,16 @@ class GroupController extends Controller {
         $NbEtages = 0;
         $arEtagesPrec = array();
         $NbEtagesPrec = 0;
+
+        // Accès autorisé pour les gestionnaires
+        $flag= "nok";
+        if ((true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE'))||(true === $this->get('security.context')->isGranted('ROLE_ADMIN')))
+            $flag = "ok";
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
 
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
@@ -456,6 +487,17 @@ class GroupController extends Controller {
      */
     public function addAction(Request $request, $cn_search='', $uid='', $flag_cn=0) {
         $this->init_config();
+
+        // Accès autorisé pour les gestionnaires et les admins
+        $flag= "nok";
+        if ((true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) || (true === $this->get('security.context')->isGranted('ROLE_ADMIN')))
+            $flag = "ok";
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
@@ -466,7 +508,7 @@ class GroupController extends Controller {
             for($i=0;$i<$arDataAdminLogin["count"];$i++) 
                 $tab_cn_admin_login[$i] = $arDataAdminLogin[$i][$this->config_groups['cn']][0];
         }
-        
+
         // Récupération utilisateur et début d'initialisation de l'objet
         $user = new User();
         $user->setUid($uid);
@@ -678,6 +720,17 @@ class GroupController extends Controller {
         $users = array();
         $admins = array();
 
+        // Vérification des droits
+        $flag = "nok";
+        // Dans le cas d'un membre
+        if ((true === $this->get('security.context')->isGranted('ROLE_MEMBRE'))||(true === $this->get('security.context')->isGranted('ROLE_DOSI')))
+            $flag = "ok";
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
@@ -755,6 +808,16 @@ class GroupController extends Controller {
     {
         $this->init_config();
         $users = array();
+        // Vérification des droits
+        $flag = "nok";
+        // Dans le cas d'un membre
+        if (true === $this->get('security.context')->isGranted('ROLE_MEMBRE'))
+            $flag = "ok";
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
@@ -800,6 +863,17 @@ class GroupController extends Controller {
         // Initialisation des entités
         $group = new Group();
         $groups = array();
+
+        // Vérification des droits
+        $flag = "nok";
+        // Droits seulement pour les admins de l'appli
+        if (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
+            $flag = "ok";
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
         
         // Création du formulaire de création de groupe
         $form = $this->createForm(new GroupCreateType(),
@@ -862,6 +936,18 @@ class GroupController extends Controller {
      */
     public function createPrivateAction(Request $request, $nb_groups) {
         $this->init_config();
+
+        // Vérification des droits
+        $flag = "nok";
+        // Dans le cas d'un membre
+        if (true === $this->get('security.context')->isGranted('ROLE_MEMBRE'))
+            $flag = "ok";
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
         // Limite sur le nombre de groupes privés qu'il est possible de créer
         if ($nb_groups>20){
             return $this->render('AmuCliGrouperBundle:Group:limite.html.twig');
@@ -955,6 +1041,17 @@ class GroupController extends Controller {
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
+        // Vérification des droits
+        $flag = "nok";
+        // Suppression autorisée pour les admin de l'appli seulement
+        if (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
+            $flag = "ok";
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
         $b = $ldapfonctions->deleteGroupeLdap($cn);
         if ($b==true) {
             //Le groupe a bien été supprimé
@@ -1021,6 +1118,28 @@ class GroupController extends Controller {
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
+
+        // Vérification des droits
+        $flag = "nok";
+        // Dans le cas d'un gestionnaire
+        if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
+            // Recup des groupes dont l'utilisateur est admin
+            $arDataAdminLogin = $ldapfonctions->recherche($this->config_groups['groupadmin']."=".$this->config_users['uid']."=".$request->getSession()->get('phpCAS_user').",".$this->config_users['people_branch'].",".$this->base,array($this->config_groups['cn'], $this->config_groups['desc'], $this->config_groups['groupfilter']), $this->config_groups['cn']);
+            for($i=0;$i<$arDataAdminLogin["count"];$i++) {
+                if ($cn==$arDataAdminLogin[$i][$this->config_groups['cn']][0]) {
+                    $flag = "ok";
+                    break;
+                }
+            }
+        }
+        elseif (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
+            $flag = "ok";
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
         $b = $ldapfonctions->deleteGroupeLdap($cn.",".$this->config_private['private_branch']);
         if ($b==true) {
             //Le groupe a bien été supprimé
@@ -1179,6 +1298,27 @@ class GroupController extends Controller {
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
 
+        $flag = "nok";
+        // Dans le cas d'un utilisateur
+        if (true === $this->get('security.context')->isGranted('ROLE_MEMBRE')) {
+            // Recup des groupes dont l'utilisateur est admin
+            $arDataAdminLogin = $ldapfonctions->recherche("(&(objectClass=".$this->config_groups['object_class'].")(".$this->config_groups['cn']."=".$this->config_private['prefix'].":".$request->getSession()->get('phpCAS_user').":*))", array($this->config_groups['cn'], $this->config_groups['desc']) , $this->config_groups['cn']);
+            for($i=0;$i<$arDataAdminLogin["count"];$i++) {
+                if ($cn==$arDataAdminLogin[$i][$this->config_groups['cn']][0]) {
+                    $flag = "ok";
+                    break;
+                }
+            }
+        }
+        elseif (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
+            $flag = "ok";
+
+        if ($flag=="nok") {
+            // Retour à l'accueil
+            $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
         // Recherche des membres dans le LDAP
         $arUsers = $ldapfonctions->getMembersGroup($cn.",".$this->config_private['private_branch']);
         
@@ -1323,9 +1463,6 @@ class GroupController extends Controller {
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
             return $this->redirect($this->generateUrl('accueil'));
         }
-
-
-
 
         // Récup du filtre amugroupfilter pour affichage
         $amugroupfilter = $ldapfonctions->getAmuGroupFilter($cn);
