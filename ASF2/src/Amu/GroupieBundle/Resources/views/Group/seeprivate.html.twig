@@ -36,16 +36,16 @@
             <table id="memb" class="display">
                 <thead>
                     <tr>
-                        <th>Identifiant</th>
                         <th>Nom complet</th>
+                        <th>Identifiant</th>
                         <th>Téléphone</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for user in users %}
                     <tr >
-                        <td style="vertical-align: middle;">{{user.uid }}</td>
                         <td style="vertical-align: middle;">{{user.displayname }}</td>
+                        <td style="vertical-align: middle;">{{user.uid }}</td>
                         <td style="vertical-align: middle;">{{user.tel }}</td>
                     </tr>
                 {% endfor %}

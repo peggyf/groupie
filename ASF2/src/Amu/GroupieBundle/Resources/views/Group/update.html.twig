@@ -64,8 +64,8 @@
             <table id="memb" class="display">
                 <thead>
                     <tr>
-                        <th>Identifiant</th>
                         <th>Nom complet</th>
+                        <th>Identifiant</th>
                         <th>Mail</th>
                         <th>Téléphone</th>
                         <th>Membre</th>
@@ -76,8 +76,8 @@
                     {# itère sur chaque member existant et affiche les champs  #}
                     {% for m in form.members  %}
                         <tr>
-                            <td style="vertical-align: middle;"> {{ group.members[loop.index0].uid }} </td>
                             <td style="vertical-align: middle;"> {{ group.members[loop.index0].displayname }} </td>
+                            <td style="vertical-align: middle;"> {{ group.members[loop.index0].uid }} </td>
                             <td style="vertical-align: middle;"> <a href="mailto:{{group.members[loop.index0].mail}}"> {{ group.members[loop.index0].mail }} </td>
                             <td style="vertical-align: middle;"> {{ group.members[loop.index0].tel }} </td>
                             <td style="vertical-align: middle;"> {{ form_widget(m.member) }} </td>

@@ -30,16 +30,16 @@
             <br>
         {% endif %}
         {% if nb_admins == 0 %}
-            <h3>   Le groupe n'a pas d'administrateur. </h3>
-            <br>
+{#            <h3>   Le groupe n'a pas d'administrateur. </h3>
+            <br> #}
         {% else %}
             <h3>   Nombre d'administrateurs du groupe : {{ nb_admins }} </h3>
             <br>
             <table id="tab_admin" class="display">
                 <thead>
                     <tr>
-                        <th>Identifiant</th>
                         <th>Nom complet</th>
+                        <th>Identifiant</th>
                         <th>Mail</th>
                         <th>Téléphone</th>
                     </tr>
@@ -47,8 +47,8 @@
                 <tbody>
                     {% for admin in admins %}
                         <tr>
-                            <td style="vertical-align: middle;">{{admin.uid }}</td>
                             <td style="vertical-align: middle;">{{admin.displayname }}</td>
+                            <td style="vertical-align: middle;">{{admin.uid }}</td>
                             <td style="vertical-align: middle;"><a href="mailto:{{admin.mail}}">{{admin.mail }}</td>
                             <td style="vertical-align: middle;">{{admin.tel }}</td>
                         </tr>
@@ -67,8 +67,8 @@
             <table id="tab_memb" class="display">
                 <thead>
                     <tr>
-                        <th>Identifiant</th>
                         <th>Nom complet</th>
+                        <th>Identifiant</th>
                         {%  if mail == 1 %}
                             <th>Mail</th>
                         {%  endif %}
@@ -78,8 +78,8 @@
                 <tbody>
                 {% for user in users %}
                     <tr >
-                        <td style="vertical-align: middle;">{{user.uid }}</td>
                         <td style="vertical-align: middle;">{{user.displayname }}</td>
+                        <td style="vertical-align: middle;">{{user.uid }}</td>
                         {%  if mail == 1 %}
                             <td style="vertical-align: middle;"><a href="mailto:{{user.mail}}">{{user.mail }}</td>
                         {%  endif %}
