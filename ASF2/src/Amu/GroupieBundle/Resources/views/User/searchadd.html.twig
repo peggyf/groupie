@@ -6,12 +6,13 @@
 {% endblock %}
 
 {% block body %}
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/jquery.dataTables.min.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ asset('bundles/amugroupie/css/groupie.css') }}" type="text/css" />
-    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.11/sorting/custom-data-source/dom-checkbox.js"></script>
+    <script type="text/javascript" src="{{ asset('bundles/amugroupie/js/jquery-1.11.3.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/amugroupie/js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/amugroupie/js/dom-checkbox.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/amugroupie/js/initdatatable.js') }}"></script>
+
     <script type="text/javascript">
         $(document).ready(function() {
             initdatatable_add('#memb');
