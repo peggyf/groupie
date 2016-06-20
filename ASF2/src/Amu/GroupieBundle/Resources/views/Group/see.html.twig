@@ -23,11 +23,10 @@
 
         <h1> Liste des membres du groupe <span style="font-variant-caps: small-caps;">{{ cn }}</span> </h1>
 
-        {% if amugroupfilter != '' %}
-            <h3>  amuGroupfilter :  </h3>
-            <center> <h4> {{ amugroupfilter }} </h4> </center>
-            <br>
-            <br>
+        {% if dosi == 1 %}
+            {% if amugroupfilter != '' %}
+                <h3>  amuGroupfilter : {{ amugroupfilter }} </h3>
+            {% endif %}
         {% endif %}
         {% if nb_admins == 0 %}
 {#            <h3>   Le groupe n'a pas d'administrateur. </h3>

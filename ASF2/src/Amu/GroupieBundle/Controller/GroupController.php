@@ -786,6 +786,11 @@ class GroupController extends Controller {
         else {
             $arAdmins[0][$this->config_groups['groupadmin']]["count"]=0;
         }
+
+        if (true === $this->get('security.context')->isGranted('ROLE_DOSI'))
+            $dosi=1;
+        else
+            $dosi=0;
         
         // Affichage via le fichier twig
         return array('cn' => $cn,
@@ -794,6 +799,7 @@ class GroupController extends Controller {
                     'users' => $users,
                     'nb_admins' => $arAdmins[0][$this->config_groups['groupadmin']]["count"],
                     'admins' => $admins,
+                    'dosi' => $dosi,
                     'mail' => $mail,
                     'liste' => $liste);
     }
@@ -993,6 +999,20 @@ class GroupController extends Controller {
                     // Log création OK
                     syslog(LOG_INFO, "create_private_group by $adm : group : $cn");
 
+                    // Ajout du propriétaire dans le groupe
+                    $r = $ldapfonctions->addMemberGroup($infogroup['dn'], array($adm));
+                    if ($r) {
+                        // Log modif
+                        syslog(LOG_INFO, "add_member by $adm : group : $cn, user : $adm");
+                    }
+                    else {
+                        syslog(LOG_ERR, "LDAP ERROR : add_member by $adm : group : $cn, user : $adm");
+                    }
+                    // Ferme fichier log
+                    closelog();
+
+                    // Retour à la page update d'un groupe
+                    return $this->redirect($this->generateUrl('private_group_update', array('cn'=>$cn)));
                     // Affichage création OK
                     return $this->render('AmuGroupieBundle:Group:privatecreation.html.twig',array('groups' => $groups));
                 }
@@ -1122,11 +1142,11 @@ class GroupController extends Controller {
         // Vérification des droits
         $flag = "nok";
         // Dans le cas d'un gestionnaire
-        if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
-            // Recup des groupes dont l'utilisateur est admin
-            $arDataAdminLogin = $ldapfonctions->recherche($this->config_groups['groupadmin']."=".$this->config_users['uid']."=".$request->getSession()->get('phpCAS_user').",".$this->config_users['people_branch'].",".$this->base,array($this->config_groups['cn'], $this->config_groups['desc'], $this->config_groups['groupfilter']), $this->config_groups['cn']);
-            for($i=0;$i<$arDataAdminLogin["count"];$i++) {
-                if ($cn==$arDataAdminLogin[$i][$this->config_groups['cn']][0]) {
+        if (true === $this->get('security.context')->isGranted('ROLE_MEMBRE')) {
+            // Recup des groupes privés de l'utilisateur
+            $result = $ldapfonctions->recherche("(&(objectClass=".$this->config_groups['object_class'].")(".$this->config_groups['cn']."=".$this->config_private['prefix'].":".$adm.":*))", array($this->config_groups['cn'], $this->config_groups['desc']), $this->config_groups['cn']);
+            for($i=0;$i<$result["count"];$i++) {
+                if ($cn==$result[$i][$this->config_groups['cn']][0]) {
                     $flag = "ok";
                     break;
                 }
