@@ -37,6 +37,10 @@ class UserController extends Controller {
     protected $config_private;
     protected $base;
 
+    /**
+     * Fonction d'initialisation : récupère les paramètres définis dans le fichier config.yml
+     *
+     */
     protected function init_config()
     {
         if (!isset($this->config_logs))
@@ -162,7 +166,7 @@ class UserController extends Controller {
                 }
             }
             
-            // Par défaut
+            // Par défaut, aucun droit
             $membership->setDroits('Aucun');
             $membershipini->setDroits('Aucun'); 
                             
@@ -246,6 +250,7 @@ class UserController extends Controller {
             'action' => $this->generateUrl('user_update', array('uid'=> $uid)),
             'method' => 'POST',));
         $editForm->handleRequest($request);
+
         if ($editForm->isValid()) {
             $userupdate = new User();
             // Récupération des données du formulaire
@@ -275,6 +280,7 @@ class UserController extends Controller {
                             }
                             else {
                                 // Log erreur
+                                $this->get('session')->getFlashBag()->add('flash-error', 'Erreur lors de l\'ajout des droits \'membre\'');
                                 syslog(LOG_ERR, "LDAP ERROR : add_member by $adm : group : $c, user : $uid");
                             }              
                         }
@@ -285,6 +291,7 @@ class UserController extends Controller {
                                 syslog(LOG_INFO, "del_member by $adm : group : $c, user : $uid");
                             }
                             else {
+                                $this->get('session')->getFlashBag()->add('flash-error', 'Erreur lors de la suppression des droits \'membre\'');
                                 syslog(LOG_ERR, "LDAP ERROR : del_member by $adm : group : $c, user : $uid");
                             }
                         }
@@ -299,6 +306,7 @@ class UserController extends Controller {
                                 syslog(LOG_INFO, "add_admin by $adm : group : $c, user : $uid");
                             }
                             else {
+                                $this->get('session')->getFlashBag()->add('flash-error', 'Erreur lors de l\'ajout des droits \'admin\'');
                                 syslog(LOG_ERR, "LDAP ERROR : add_admin by $adm : group : $c, user : $uid");
                             }
                         }
@@ -309,6 +317,7 @@ class UserController extends Controller {
                                 syslog(LOG_INFO, "del_admin by $adm : group : $c, user : $uid");
                             }
                             else {
+                                $this->get('session')->getFlashBag()->add('flash-error', 'Erreur lors de la suppression des droits \'admin\'');
                                 syslog(LOG_ERR, "LDAP ERROR : del_admin by $adm : group : $c, user : $uid");
                             }
                         }
@@ -349,8 +358,8 @@ class UserController extends Controller {
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
 
+        // Vérification des droits
         $flag = "nok";
-        // Dans le cas d'un gestionnaire
         if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
             // Recup des groupes dont l'utilisateur est admin
             $arDataAdminLogin = $ldapfonctions->recherche($this->config_groups['groupadmin']."=".$this->config_users['uid']."=".$request->getSession()->get('phpCAS_user').",".$this->config_users['people_branch'].",".$this->base,array($this->config_groups['cn'], $this->config_groups['desc'], $this->config_groups['groupfilter']), $this->config_groups['cn']);
@@ -364,13 +373,13 @@ class UserController extends Controller {
         }
         elseif (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
             $flag = "ok";
-
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
             return $this->redirect($this->generateUrl('accueil'));
         }
 
+        // Recherche user
         $arDataUser = $ldapfonctions->recherche($this->config_users['uid']."=".$uid, array($this->config_users['displayname'], $this->config_groups['memberof'], $this->config_users['uid']), $this->config_users['uid']);
                 
         // Test de la validité de l'uid
@@ -447,6 +456,7 @@ class UserController extends Controller {
                 'method' => 'GET',
             ));
             $editForm->handleRequest($request);
+
             if ($editForm->isValid()) {
                 $userupdate = new User();
                 // Récupération des données du formulaire
@@ -473,6 +483,8 @@ class UserController extends Controller {
                                 syslog(LOG_INFO, "add_member by $adm : group : $cn, user : $uid");
                             }
                             else {
+                                // Affichage notification
+                                $this->get('session')->getFlashBag()->add('flash-error', 'Erreur lors de l\'ajout des droits \'membre\' '.$cn);
                                 syslog(LOG_ERR, "LDAP ERROR : add_member by $adm : group : $cn, user : $uid");
                             }
                         }
@@ -483,6 +495,8 @@ class UserController extends Controller {
                                 syslog(LOG_INFO, "del_member by $adm : group : $cn, user : $uid");
                             }
                             else {
+                                // Affichage notification
+                                $this->get('session')->getFlashBag()->add('flash-error', 'Erreur lors de la suppression des droits \'membre\'');
                                 syslog(LOG_ERR, "LDAP ERROR : del_member by $adm : group : $cn, user : $uid");
                             }
                         }
@@ -498,6 +512,8 @@ class UserController extends Controller {
                                 syslog(LOG_INFO, "add_admin by $adm : group : $cn, user : $uid");
                             }
                             else {
+                                // Affichage notification
+                                $this->get('session')->getFlashBag()->add('flash-error', 'Erreur lors de l\'ajout des droits \'admin\'');
                                 syslog(LOG_ERR, "LDAP ERROR : add_admin by $adm : group : $cn, user : $uid");
                             }
                         }
@@ -508,16 +524,17 @@ class UserController extends Controller {
                                 syslog(LOG_INFO, "del_admin by $adm : group : $cn, user : $uid");
                             }
                             else {
+                                $this->get('session')->getFlashBag()->add('flash-error', 'Erreur lors de la suppression des droits \'admin\'');
                                 syslog(LOG_ERR, "LDAP ERROR : del_admin by $adm : group : $cn, user : $uid");
                             }
                         }
                     }
                 }
+                // Affichage notification
+                $this->get('session')->getFlashBag()->add('flash-notice', 'Les droits ont bien été modifiés');
+
                 // Ferme fichier log
                 closelog();
-
-                // Affichage notification
-                $this->get('session')->getFlashBag()->add('flash-notice', 'Les droits ont bien été ajoutés');
 
                 // Retour à la page update d'un groupe
                 return $this->redirect($this->generateUrl('group_update', array('cn'=>$cn)));
@@ -604,17 +621,19 @@ class UserController extends Controller {
 
                 $r = $ldapfonctions->addMemberGroup($dn_group, array($uid));
                 if ($r) {
+                    // Notification
+                    $this->get('session')->getFlashBag()->add('flash-notice', 'Les droits ont bien été ajoutés');
                     // Log modif
                     syslog(LOG_INFO, "add_member by $adm : group : $cn, user : $uid");
                 }
                 else {
+                    // Notification
+                    $this->get('session')->getFlashBag()->add('flash-error', 'Erreur lors de l\'ajout des droits');
                     syslog(LOG_ERR, "LDAP ERROR : add_member by $adm : group : $cn, user : $uid");
                 }
 
                 // Ferme fichier log
                 closelog();
-
-                $this->get('session')->getFlashBag()->add('flash-notice', 'Les droits ont bien été ajoutés');
 
                 // Retour à la page update d'un groupe
                 return $this->redirect($this->generateUrl('private_group_update', array('cn'=>$cn)));
@@ -903,8 +922,8 @@ class UserController extends Controller {
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
         $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
 
+        // Vérification des droits
         $flag = "nok";
-        // Dans le cas d'un gestionnaire
         if (true === $this->get('security.context')->isGranted('ROLE_GESTIONNAIRE')) {
             // Recup des groupes dont l'utilisateur est admin
             $arDataAdminLogin = $ldapfonctions->recherche($this->config_groups['groupadmin']."=".$this->config_users['uid']."=".$request->getSession()->get('phpCAS_user').",".$this->config_users['people_branch'].",".$this->base,array($this->config_groups['cn'], $this->config_groups['desc'], $this->config_groups['groupfilter']), $this->config_groups['cn']);
@@ -918,7 +937,6 @@ class UserController extends Controller {
         }
         elseif (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
             $flag = "ok";
-
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
@@ -1012,7 +1030,7 @@ class UserController extends Controller {
                     // Si pb connexion ldap
                     if ($r==false) {
                         // Affichage erreur
-                        $this->get('session')->getFlashBag()->add('flash-error', "Erreur LDAP lors de l'uid $ligne");
+                        $this->get('session')->getFlashBag()->add('flash-error', "Erreur LDAP sur l'uid $ligne");
                                             
                         // Log erreur
                         syslog(LOG_ERR, "LDAP ERREUR : get_uid_from_mail by $adm : $ligne");

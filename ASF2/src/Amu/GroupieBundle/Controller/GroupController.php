@@ -1385,6 +1385,8 @@ class GroupController extends Controller {
                             $nb_memb++;
                         }
                         else {
+                            // Message de notification
+                            $this->get('session')->getFlashBag()->add('flash-error', 'Erreur  lors de l\'ajout uid='.$u);
                             syslog(LOG_ERR, "LDAP ERROR : add_member by $adm : group : $cn, user : $u ");
                         }
                     }
@@ -1396,6 +1398,8 @@ class GroupController extends Controller {
                             $nb_memb--;
                         }
                         else {
+                            // Message de notification
+                            $this->get('session')->getFlashBag()->add('flash-error', 'Erreur  lors de la suppression uid='.$u);
                             syslog(LOG_ERR, "LDAP ERROR : del_member by $adm : group : $cn, user : $u ");
                         }
                     }
@@ -1403,7 +1407,7 @@ class GroupController extends Controller {
             }
             // Ferme fichier de log
             closelog();
-            
+
             // Message de notification
             $this->get('session')->getFlashBag()->add('flash-notice', 'Les modifications ont bien été enregistrées');
 
@@ -1423,8 +1427,7 @@ class GroupController extends Controller {
      * Mettre à jour les membres d'un groupe 
      *
      * @Route("/update/{cn}/{liste}", name="group_update")
-     * @Template("AmuGroupieBundle:Group:update.html.twig")
-     */
+     * @Template("AmuGroupieBundle:Group:update.html.twig")     */
     public function updateAction(Request $request, $cn, $liste="")
     {
         $this->init_config();
