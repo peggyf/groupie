@@ -13,18 +13,18 @@ class Builder extends ContainerAware
 
         // ONGLET ACCUEIL visible pour tout le personnel
         if ((true === $this->container->get('security.authorization_checker')->isGranted('ROLE_MEMBRE'))) {
-            $menu->addChild('Accueil', array('route' => 'homepage'));
+            $menu->addChild('Groupes institutionnels', array('route' => 'homepage'));
             // Sous-menus pour Accueil
-            $menu['Accueil']->addChild('Voir mes appartenances', array('route' => 'memberships'));
+            $menu['Groupes institutionnels']->addChild('Dont je suis membre', array('route' => 'memberships'));
             if ((true === $this->container->get('security.authorization_checker')->isGranted('ROLE_GESTIONNAIRE')) ||
                 (true === $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))
             ) {
-                $menu['Accueil']->addChild('Gérer mes groupes', array('route' => 'my_groups'));
+                $menu['Groupes institutionnels']->addChild('Dont je suis administrateur', array('route' => 'my_groups'));
             }
             if ((true === $this->container->get('security.authorization_checker')->isGranted('ROLE_DOSI')) ||
                 (true === $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))
             ) {
-                $menu['Accueil']->addChild('Voir tous les groupes', array('route' => 'all_groups', 'roles' => ["ROLE_DOSI", "ROLE_ADMIN"]));
+                $menu['Groupes institutionnels']->addChild('Voir tous les groupes', array('route' => 'all_groups', 'roles' => ["ROLE_DOSI", "ROLE_ADMIN"]));
             }
         }
 
@@ -39,11 +39,11 @@ class Builder extends ContainerAware
         }
 
         // ONGLET GROUPES PRIVES visible pour tout le personnel
-        if ((true === $this->container->get('security.authorization_checker')->isGranted('ROLE_MEMBRE'))) {
+        if ((true === $this->container->get('security.authorization_checker')->isGranted('ROLE_PRIVE'))) {
             $menu->addChild('Groupes privés');
             // Sous-menus pour Groupes privés
-            $menu['Groupes privés']->addChild('Voir mes appartenances', array('route' => 'private_memberships'));
-            $menu['Groupes privés']->addChild('Gérer mes groupes', array('route' => 'private_group'));
+            $menu['Groupes privés']->addChild('Dont je suis membre', array('route' => 'private_memberships'));
+            $menu['Groupes privés']->addChild('Dont je suis administrateur', array('route' => 'private_group'));
             if ((true === $this->container->get('security.authorization_checker')->isGranted('ROLE_DOSI'))) {
                 $menu['Groupes privés']->addChild('Tous les groupes (DOSI)', array('route' => 'all_private_groups'));
             }
