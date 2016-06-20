@@ -16,6 +16,9 @@ class User {
   protected $tel;
   protected $comp;
   protected $aff;
+  protected $primaff;
+  protected $campus;
+  protected $site;
   protected $memberof;
   protected $adminof;
   protected $memberships;
@@ -91,8 +94,39 @@ class User {
  public function setAff($aff)
  {
     $this->aff = $aff;
- } 
+ }
+
+/**
+ * Set supannEntiteAffectationPrincipale
+ *
+ * @param string $primaff
+ */
+ public function setPrimAff($primaff)
+ {
+    $this->primaff = $primaff;
+ }
+
  /**
+ * Set amucampus
+ *
+ * @param string $campus
+ */
+ public function setCampus($campus)
+ {
+    $this->campus = $campus;
+ }
+
+ /**
+  * Set amusite
+  *
+  * @param string $site
+  */
+  public function setSite($site)
+  {
+     $this->site = $site;
+  }
+
+    /**
   * Set memberof
   *
   * @param string $memberof
@@ -183,8 +217,36 @@ class User {
  public function getAff()
  {
     return ($this->aff);
- } 
- /**
+ }
+
+/**
+ * Get supannEntitePrimaryAffectation
+ *
+*/
+public function getPrimAff()
+ {
+    return ($this->primaff);
+ }
+
+/**
+ * Get amuCampus
+ *
+ */
+public function getCampus()
+ {
+    return ($this->campus);
+ }
+
+/**
+ * Get amuCampus
+ *
+ */
+public function getSite()
+ {
+    return ($this->site);
+ }
+
+    /**
   * Get memberof
   *
  */

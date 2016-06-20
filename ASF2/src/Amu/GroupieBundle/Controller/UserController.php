@@ -795,10 +795,10 @@ class UserController extends Controller {
                 // si on a rien, on teste le nom
                 // On teste si on fait une recherche exacte ou non
                 if ($usersearch->getExacte()) {
-                    $arData=$ldapfonctions->recherche("(&(".$this->config_users['name']."=".$usersearch->getSn().")".$this->config_users['filter'].")", array($this->config_users['uid'], $this->config_users['name'],$this->config_users['displayname'], $this->config_users['mail'], $this->config_users['tel'], $this->config_users['comp'], $this->config_users['aff'], $this->config_groups['memberof']), $this->config_users['uid']);
+                    $arData=$ldapfonctions->recherche("(&(".$this->config_users['name']."=".$usersearch->getSn().")".$this->config_users['filter'].")", array($this->config_users['uid'], $this->config_users['name'],$this->config_users['displayname'], $this->config_users['mail'], $this->config_users['tel'], $this->config_users['comp'], $this->config_users['aff'], $this->config_users['primaff'], $this->config_users['campus'], $this->config_users['site'], $this->config_groups['memberof']), $this->config_users['uid']);
                 }
                 else {
-                    $arData=$ldapfonctions->recherche("(&(".$this->config_users['name']."=".$usersearch->getSn()."*)".$this->config_users['filter'].")", array($this->config_users['uid'], $this->config_users['name'],$this->config_users['displayname'], $this->config_users['mail'], $this->config_users['tel'], $this->config_users['comp'], $this->config_users['aff'], $this->config_groups['memberof']), $this->config_users['uid']);
+                    $arData=$ldapfonctions->recherche("(&(".$this->config_users['name']."=".$usersearch->getSn()."*)".$this->config_users['filter'].")", array($this->config_users['uid'], $this->config_users['name'],$this->config_users['displayname'], $this->config_users['mail'], $this->config_users['tel'], $this->config_users['comp'], $this->config_users['aff'], $this->config_users['primaff'], $this->config_users['campus'], $this->config_users['site'], $this->config_groups['memberof']), $this->config_users['uid']);
                 }
 
                 // on récupère la liste des uilisateurs renvoyés par la recherche
@@ -818,6 +818,12 @@ class UserController extends Controller {
                         $user->setComp($data[$this->config_users['comp']][0]);
                     if (isset($data[$this->config_users['aff']][0]))
                         $user->setAff($data[$this->config_users['aff']][0]);
+                    if (isset($data[$this->config_users['primaff']][0]))
+                        $user->setPrimAff($data[$this->config_users['primaff']][0]);
+                    if (isset($data[$this->config_users['campus']][0]))
+                        $user->setCampus($data[$this->config_users['campus']][0]);
+                    if (isset($data[$this->config_users['site']][0]))
+                        $user->setSite($data[$this->config_users['site']][0]);
                     $users[] = $user; 
                     $nb++;    
                 }
@@ -849,7 +855,7 @@ class UserController extends Controller {
             }
             else {
                 // Recherche des utilisateurs dans le LDAP
-                $arData=$ldapfonctions->recherche("(&(".$this->config_users['uid']."=".$usersearch->getUid().")".$this->config_users['filter'].")", array($this->config_users['uid'], $this->config_users['name'],$this->config_users['displayname'], $this->config_users['mail'], $this->config_users['tel'],$this->config_users['comp'], $this->config_users['aff'], $this->config_groups['memberof'], "amudatevalidation"), $this->config_users['uid']);
+                $arData=$ldapfonctions->recherche("(&(".$this->config_users['uid']."=".$usersearch->getUid().")".$this->config_users['filter'].")", array($this->config_users['uid'], $this->config_users['name'],$this->config_users['displayname'], $this->config_users['mail'], $this->config_users['tel'],$this->config_users['comp'], $this->config_users['aff'], $this->config_users['primaff'], $this->config_users['campus'], $this->config_users['site'], $this->config_groups['memberof'], "amudatevalidation"), $this->config_users['uid']);
                 
                 // Test de la validité de l'uid
                 if (!isset($arData[0][$this->config_users['uid']][0])) {
@@ -868,6 +874,12 @@ class UserController extends Controller {
                         $user->setComp($arData[0][$this->config_users['comp']][0]);
                     if (isset($ardata[0][$this->config_users['aff']][0]))
                         $user->setAff($arData[0][$this->config_users['aff']][0]);
+                    if (isset($ardata[0][$this->config_users['primaff']][0]))
+                        $user->setPrimAff($arData[0][$this->config_users['primaff']][0]);
+                    if (isset($ardata[0][$this->config_users['campus']][0]))
+                        $user->setCampus($arData[0][$this->config_users['campus']][0]);
+                    if (isset($ardata[0][$this->config_users['site']][0]))
+                        $user->setSite($arData[0][$this->config_users['site']][0]);
                     // Récupération du cn des groupes (memberof)
                     $tab = array();
                     $tab = array_splice($arData[0][$this->config_groups['memberof']], 1);

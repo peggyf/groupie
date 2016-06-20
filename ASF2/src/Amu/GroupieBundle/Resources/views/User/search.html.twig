@@ -30,7 +30,10 @@
                     <th>Mail</th>
                     <th>Téléphone</th>
                     <th>Composante</th>
-                    <th>Service</th>
+                    <th>Affectation principale</th>
+                    <th>Affectation</th>
+                    <th>Campus</th>
+                    <th>Site</th>
                     {% if opt == 'add' %}
                         <th> Groupe </th>
                         <th> Ajouter </th>
@@ -55,7 +58,10 @@
                     <td style="vertical-align: middle;"> <a href="mailto:{{user.mail}}"> {{user.mail}}</td>
                     <td style="vertical-align: middle;">{{user.tel}}</td>
                     <td style="vertical-align: middle;">{{user.comp}}</td>
+                    <td style="vertical-align: middle;">{{user.primaff}}</td>
                     <td style="vertical-align: middle;">{{user.aff}}</td>
+                    <td style="vertical-align: middle;">{{user.campus}}</td>
+                    <td style="vertical-align: middle;">{{user.site}}</td>
                     {% if opt == 'add' %}
                         <td style="vertical-align: middle;">{{cn}}</td>
                         <td style="vertical-align: middle;">
