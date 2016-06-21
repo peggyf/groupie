@@ -259,7 +259,12 @@ class LdapFonctions
 
         $filtre = $this->config_groups['cn']."=" . $cn_group;
         $result = $this->recherche($filtre, array($this->config_groups['groupfilter']), $this->config_groups['cn']);
-        return $result;
+        if (isset($result[0][$this->config_groups['groupfilter']]))
+            $amugroupfilter = $result[0][$this->config_groups['groupfilter']][0];
+        else
+            $amugroupfilter = "";
+
+        return $amugroupfilter;
     }
 
     public function createGroupeLdap($dn, $groupeinfo)

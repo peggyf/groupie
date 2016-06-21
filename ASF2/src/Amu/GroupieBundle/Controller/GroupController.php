@@ -76,7 +76,7 @@ class GroupController extends Controller {
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         // Variables pour l'affichage "dossier" avec javascript 
@@ -152,7 +152,7 @@ class GroupController extends Controller {
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         // On récupère le service ldapfonctions
@@ -196,7 +196,7 @@ class GroupController extends Controller {
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         // On récupère le service ldapfonctions
@@ -495,7 +495,7 @@ class GroupController extends Controller {
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         // On récupère le service ldapfonctions
@@ -728,7 +728,7 @@ class GroupController extends Controller {
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         // On récupère le service ldapfonctions
@@ -822,7 +822,7 @@ class GroupController extends Controller {
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
         // On récupère le service ldapfonctions
         $ldapfonctions = $this->container->get('groupie.ldapfonctions');
@@ -878,7 +878,7 @@ class GroupController extends Controller {
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
         
         // Création du formulaire de création de groupe
@@ -951,7 +951,7 @@ class GroupController extends Controller {
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         // Limite sur le nombre de groupes privés qu'il est possible de créer
@@ -1069,7 +1069,7 @@ class GroupController extends Controller {
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         $b = $ldapfonctions->deleteGroupeLdap($cn);
@@ -1152,12 +1152,12 @@ class GroupController extends Controller {
                 }
             }
         }
-        elseif (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
+        if (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
             $flag = "ok";
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         $b = $ldapfonctions->deleteGroupeLdap($cn.",".$this->config_private['private_branch']);
@@ -1330,13 +1330,13 @@ class GroupController extends Controller {
                 }
             }
         }
-        elseif (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
+        if (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
             $flag = "ok";
 
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         // Recherche des membres dans le LDAP
@@ -1475,22 +1475,20 @@ class GroupController extends Controller {
                     $flag = "ok";
                     break;
                 }
-
             }
         }
-        elseif (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
+        if (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
             $flag = "ok";
 
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         // Récup du filtre amugroupfilter pour affichage
         $amugroupfilter = $ldapfonctions->getAmuGroupFilter($cn);
-        if ($amugroupfilter!=false)
-            $group->setAmugroupfilter($amugroupfilter);
+        $group->setAmugroupfilter($amugroupfilter);
                
         // Recherche des membres dans le LDAP
         $arUsers = $ldapfonctions->getMembersGroup($cn);

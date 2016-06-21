@@ -76,7 +76,7 @@ class UserController extends Controller {
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         // On récupère le service ldapfonctions
@@ -371,12 +371,12 @@ class UserController extends Controller {
                 }
             }
         }
-        elseif (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
+        if (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
             $flag = "ok";
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         // Recherche user
@@ -573,13 +573,13 @@ class UserController extends Controller {
                 }
             }
         }
-        elseif (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
+        if (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
             $flag = "ok";
 
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         // Récupération utilisateur
@@ -663,7 +663,7 @@ class UserController extends Controller {
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         $membersof = array();
@@ -720,7 +720,7 @@ class UserController extends Controller {
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         $membersof = array();
@@ -947,12 +947,12 @@ class UserController extends Controller {
                 }
             }
         }
-        elseif (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
+        if (true === $this->get('security.context')->isGranted('ROLE_ADMIN'))
             $flag = "ok";
         if ($flag=="nok") {
             // Retour à l'accueil
             $this->get('session')->getFlashBag()->add('flash-error', 'Vous n\'avez pas les droits pour effectuer cette opération');
-            return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
 
