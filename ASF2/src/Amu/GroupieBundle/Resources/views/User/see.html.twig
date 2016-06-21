@@ -20,9 +20,26 @@
         } );
     </script>
 
+    {# Ajout d'une fonction javascript pour effacer automatiquement les messages flash après 5s #}
+    <script type="text/javascript">
+        setTimeout(function(){
+            $('#flash').hide(1500);
+        },15000);
+    </script>
+
     <div style="padding: 15px">
 
         <h1>Liste des groupes de l'utilisateur {{ uid }} </h1>
+
+        {% if app.session.flashbag.has('flash-notice') %}
+            <center>
+                <div id="flash" class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).hide(500);" style="min-width:600px;padding:15px;margin:10px;">
+                    {% for flashMessage in app.session.flashbag.get('flash-notice') %}
+                        <p>{{ flashMessage }}</p>
+                    {% endfor %}
+                </div>
+            </center>
+        {% endif %}
 
         {% if nb_grp_admins == 0 %}
             <h3>   L'utilisateur n'est administrateur d'aucun groupe. </h3>

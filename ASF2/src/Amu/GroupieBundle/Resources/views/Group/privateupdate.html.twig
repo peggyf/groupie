@@ -22,8 +22,8 @@
     {# Ajout d'une fonction javascript pour effacer automatiquement les messages flash après 5s #}
     <script type="text/javascript">
         setTimeout(function(){
-            $('#flash').remove();
-        },5000);
+            $('#flash').hide(1500);
+        },15000);
     </script>
 
     <div style="padding: 15px">
@@ -32,7 +32,7 @@
         {% set hilightColor='#C7FE74' %}
         {% if app.session.flashbag.has('flash-notice') %}
             <center>
-                <div id="flash" class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).remove();" style="min-width:600px;padding:15px;margin:10px;">
+                <div id="flash" class="ui-state-highlight ui-button ui-corner-all" onclick="$(this).hide(500);" style="min-width:600px;padding:15px;margin:10px;">
                     {% for flashMessage in app.session.flashbag.get('flash-notice') %}
                         <p>{{ flashMessage }}</p>
                     {% endfor %}
