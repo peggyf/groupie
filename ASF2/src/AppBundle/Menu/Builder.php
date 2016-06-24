@@ -66,7 +66,9 @@ class Builder extends ContainerAware
                 (true === $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))) {
                 $menu['Aide']->addChild('Aide groupes institutionnels', array('route' => 'help'));
             }
-            $menu['Aide']->addChild('Aide groupes privés', array('route' => 'private_help'));
+            if ((true === $this->container->get('security.authorization_checker')->isGranted('ROLE_PRIVE'))) {
+                $menu['Aide']->addChild('Aide groupes privés', array('route' => 'private_help'));
+            }
         }
 
         return $menu;
