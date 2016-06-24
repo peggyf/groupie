@@ -41,13 +41,7 @@
             </center>
         {% endif %}
 
-        <br>
         <h3>Nombre de membres du groupe <b> {{ group.cn }} </b> : {{ nb_membres }}</h3>
-        {% if group.amugroupfilter =='' %}
-            <h3>AmuGroupFilter : aucun </h3>
-        {% else %}
-            <h3>AmuGroupFilter : {{ group.amugroupfilter }} </h3>
-        {% endif %}
         <br>
         <div class="buttons">
             <a href="{{ path('user_search', { 'opt': 'add', 'cn' : group.cn }) }}">
