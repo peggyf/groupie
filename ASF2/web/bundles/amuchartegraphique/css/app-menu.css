@@ -8,6 +8,11 @@ and open the template in the editor.
     Author     : arnaud
 */
 
+#app-menu
+{
+    font-size: 112%;
+}
+
 #app-menu ul
 {
     border-top: 2px solid #F80;
@@ -120,14 +125,15 @@ and open the template in the editor.
 #app-menu .menu_level_1 li.first
 {
     border-top: 1px solid #EDECEC;
-    border-radius: 10px 10px 0px 0px;
-
+/*    border-radius: 10px 10px 0px 0px;
+*/
 }
 
 #app-menu .menu_level_1 li.last
 {
     border-bottom: 1px solid #EDECEC;
-    border-radius: 0px 0px 10px 10px;
+/*    border-radius: 0px 0px 10px 10px;
+*/
 }
 
 #app-menu .menu_level_1 li:hover
