@@ -6,7 +6,14 @@ parameters:
     amu_chartegraphique_auteur: "DOSI"
     amu_chartegraphique_apptitle: "Groupie"
     amu_chartegraphique_appslogan: "Gestion des groupes"
-    amu_chartegraphique_appcontact: ""
+    amu_chartegraphique_appcontact: "AMU - DOSI Pôle Environnement Numérique"
+    amu_chartegraphique_url_intranet: "http://intramu.univ-amu.fr"
+    amu_chartegraphique_nom_intranet: "intrAMU"
+    amu_chartegraphique_url_ent: "http://ent.univ-amu.fr"
+    amu_chartegraphique_url_annuaire: "http://annuaire.univ-amu.fr"
+    amu_chartegraphique_url_site: "http://www.univ-amu.fr"
+    amu_chartegraphique_accueil: "Accueil Aix-Marseille Université"
+
 
 twig:
     globals:
@@ -15,3 +22,10 @@ twig:
         appslogan: '%amu_chartegraphique_appslogan%'
         appcontact: '%amu_chartegraphique_appcontact%'
         title: '%amu_chartegraphique_title%'
+        urlintranet: '%amu_chartegraphique_url_intranet%'
+        nomintranet: '%amu_chartegraphique_nom_intranet%'
+        urlent: '%amu_chartegraphique_url_ent%'
+        urlannuaire: '%amu_chartegraphique_url_annuaire%'
+        urlsite: '%amu_chartegraphique_url_site%'
+        accueil: '%amu_chartegraphique_accueil%'
+
