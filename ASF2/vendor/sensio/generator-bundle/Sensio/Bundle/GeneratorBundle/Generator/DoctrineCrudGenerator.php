@@ -256,13 +256,13 @@ class DoctrineCrudGenerator extends Generator
     }
 
     /**
-     * Generates the edit.html.twig template in the final bundle.
+     * Generates the update.html.twig template in the final bundle.
      *
      * @param string $dir The path to the folder that hosts templates in the bundle
      */
     protected function generateEditView($dir)
     {
-        $this->renderFile('crud/views/edit.html.twig.twig', $dir.'/edit.html.twig', array(
+        $this->renderFile('crud/views/update.html.twig.twig', $dir.'/update.html.twig', array(
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
             'identifier'        => $this->metadata->identifier[0],
