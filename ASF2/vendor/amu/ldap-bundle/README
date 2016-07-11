@@ -1,0 +1,84 @@
+h1. Installation
+
+# Ajouter ces lignes dans votre composer.json (à la racine du projet) :
+<pre><code class="yaml">
+    "require": {
+        ...
+        "amu/ldap-bundle": "dev-master"
+    },
+    "repositories": [
+      ...
+      {
+        "type": "git",
+        "url": "ssh://gitadmin@rubis.pp.univ-amu.fr/LdapBundle.git"
+      },
+      ...
+    ], 
+   ...
+</code></pre>
+
+# Mettre à jour *AppKernel.php*
+<pre><code class="php">$bundles = array(
+            ...
+            new Amu\LdapBundle\AmuLdapBundle(),
+            ...)
+</code></pre>
+
+# Mettre à jour app/config/config.yml
+<pre><code class="yaml">
+
+amu_ldap:
+    default_profil: default
+    profils:
+        default:
+            servers:
+                primary:
+                    host: ldaps://ldap1.univ-amu.fr
+                    port: 636
+                secondary:
+                    host: ldaps://ldap2.univ-amu.fr
+                    port: 636
+            relative_dn: cn=monidentifiant,ou=system,dc=univ-amu,dc=fr
+            password: monMotDePasse
+            network_timeout: 3
+            protocol_version: 3
+             base_dn: ou=people,dc=univ-amu,dc=fr
+        
+        test: #mon deuxième profil
+            servers:
+                primary:
+                    host: ldaps2://
+                    port: 388
+                tutu:
+                    host: qefq
+                    port: 350
+            relative_dn: totdgf
+            password: titqfh
+            network_timeout: 3
+            protocol_version: 3
+            referrals: 3 #l'option referrals est optionnel
+            base_dn: qdegqeg
+</code></pre>
+
+h1. Exemples d'utilisation
+
+h2. Connexion au ldap
+
+<pre>
+<code>
+        $relativeDN = $this->get('amu.ldap')->getRelativeDN();
+        $password = $this->get('amu.ldap')->getPassword();
+        $baseDN = $this->get('amu.ldap')->getBaseDN();
+
+        $resource = $this->get('amu.ldap')->connect()->bind($relativeDN, $password);
+</code>
+</pre>
+
+h2. Recherche dans le ldap
+
+<pre>
+<code>
+        //Dans cet exemple on cherche l'utilisateur "salvucci" et on récupère son uid et son mail
+        $result = $resource->search($baseDN, '(uid=salvucci)', array('uid', 'mail'));
+</code>
+</pre>

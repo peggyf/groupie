@@ -1,0 +1,11 @@
+parameters:
+    amu.ldap.client.class: Amu\LdapBundle\Ldap\Client
+    amu.ldap.profils: ~
+    amu.ldap.default_profil: ~
+
+services:
+    amu.ldap:
+        class: %amu.ldap.client.class%
+        arguments:
+            - %amu.ldap.profils%
+            - %amu.ldap.default_profil%

@@ -1,0 +1,107 @@
+h1. 1. Installation
+
+h2. 1. Composer.json
+
+Ajouter ces lignes dans votre composer.json (à la racine du projet)
+
+<pre><code class="yaml">
+
+    "require": {
+        ...
+        "amu/charte-graphique-bundle" : "dev-master"
+    },
+    "repositories": [
+      ...
+      {
+        "type": "git",
+        "url": "ssh://gitadmin@rubis.pp.univ-amu.fr/CharteGraphiqueBundle.git"
+      },
+      ...
+    ], 
+   ...
+</code></pre>
+
+h2. 2. Mettre à jour de *AppKernel.php*
+
+<pre><code class="php">$bundles = array(
+            ...
+            new Amu\CharteGraphiqueBundle\AmuCharteGraphiqueBundle(),
+            new Knp\Bundle\MenuBundle\KnpMenuBundle(),
+            ...)
+
+</code></pre>
+
+Faire un <pre><code class="php">php composer.phar update</code></pre>
+
+h2. 3. Mise à jour des configs
+
+- ajout du fichier charteConfig.yml dans le fichier config.yml
+<pre><code class="php">imports:
+    - ...
+    - { resource: charteConfig.yml }
+</code></pre>
+
+- copie du fichier charteConfig.yml dans le répertoire config
+
+h2. 4. Assets
+
+<pre><code>app/console assets:install</code></pre>
+
+h1. 2. Utilisation
+
+Vous pouvez :
+- soit copier le fichier /vendor/amu/chart-graphique-bundle/Resources/views/amu.html.twig et le renommer en /app/Resources/views/base.html.twig
+- soit étendre votre fichier base.html.twig en indiquant comme seul contenu "{% extends 'AmuCharteGraphiqueBundle::amu.html.twig' %}"
+Dans le 2ème cas, il faut indiquer dans config.yml
+<pre><code class="php">assetics:
+    bundles:        ["AmuCharteGraphiqueBundle" ]
+</code></pre>
+Dans le 2ème cas vous bénéficiez des mises à jour du fichier amu.html.twig du bundle CharteGraphique sans intervention manuelle.
+
+5 paramètres/variables twig (charteConfig.yml) : 
+- auteur
+- apptitle
+- appslogan
+- appcontact
+- title
+
+Template principal pour l'ENT si env=ent dans la query string
+
+Blocs AMU surchargeables :
+- title (contenu de <title>)
+- css (dans le <head>)
+- footer (contenu de <footer id="amu-footer">)
+- app_js (après le </body>)
+
+Blocs de l'application à définir :
+- app_page qui contient :
+- app_header
+- app_menu
+- app_body
+- app_footer
+qui sont des contenus de div avec un style de même nom (ex <div id="app-page">{% block app_page %}{% endblock %}</div>)
+*Attention le style a un tiret (-), le bloc a un tiret souligné (_)*
+
+h1. Menu
+
+Classe Builder http://projets-dev.univ-amu.fr/documents/132 
+
+Documentation utilisateur http://projets-dev.univ-amu.fr/projects/menu/wiki 
+
+Cette classe est à insérer dans le bundle AppBundle dans le dossier suivant :
+
+src/AppBundle/Menu/Builder.php
+
+La méthode de configuration du menu principale s'appelle mainMenu
+
+Code à insérer dans un template pour afficher le menu : 
+
+<pre>
+<code>
+{% block app_menu %}
+{{ knp_menu_render('AppBundle:Builder:mainMenu') }}
+   <div class="clear"><hr /></div>
+{% endblock %}
+</code>
+</pre>
+La feuille de style app-menu.css s'applique si le menu est dans une <div id="app-menu">

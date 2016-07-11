@@ -1,0 +1,94 @@
+{% set env = app.environment == "ent" ? "ent" : "site" %}
+
+<!DOCTYPE html lang="fr">
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="Author" content="{{ auteur }}"/>
+    <meta name="description" content="{{ appslogan }}"/>
+    <meta name="application-name" content="{{ apptitle }}"/>
+    <title>{% block title %}{{ title }}{% endblock %}</title>
+    <link href="http://fonts.googleapis.com/css?family=Oswald:400,300,700" type="text/css" rel="stylesheet"/>
+    <link rel="icon" type="image/x-icon" href="{{ asset('bundles/amuchartegraphique/images/favicon.ico') }}"/>
+    {% stylesheets 'bundles/amuchartegraphique/css/*' filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}" type="text/css"/>
+    {% endstylesheets %}
+    {% block css %}{% endblock %}
+</head>
+
+<body class="{{ env }}-std">
+{% if env != "ent" %}
+    <div id="tools">
+        <nav class="outils">
+            <ul class="menu clearfix">
+                <li id="dhtml_menu-1415" class="first leaf dhtml-menu outils_element outils_element_intramu">
+                    <a class="" href="http://intramu.univ-amu.fr">intrAMU</a>
+                </li>
+                <li id="dhtml_menu-314" class="leaf dhtml-menu outils_element outils_element_clef">
+                    <a class="" href="http://ent.univ-amu.fr">Accès ENT</a>
+                </li>
+                <li id="dhtml_menu-315" class="leaf dhtml-menu outils_element outils_element_email">
+                    <a class="" href="http://annuaire.univ-amu.fr">Annuaire</a>
+                </li>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <li id="dhtml_menu-315" class="last leaf dhtml-menu outils_element outils_element_connexion">
+                        <a class="" href="{{ path('logout') }}">Déconnexion</a>
+                    </li>
+                {% else %}
+                    <li id="dhtml_menu-315" class="last leaf dhtml-menu outils_element outils_element_connexion">
+                        <a class="" href="{{ path('login') }}">Connexion</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+{% endif %}
+<div class="std-page" id="{{ env }}-page">
+    {% if env != "ent" %}
+        <header id="site-header">
+            <div class="logo">
+                <h1>
+                    <a href="http://www.univ-amu.fr" title="Accueil Aix-Marseille Université">
+                        <img src="{{ asset('bundles/amuchartegraphique/images/blank_logo.png') }}"
+                             alt="Accueil Aix-Marseille Université">
+                    </a>
+                </h1>
+            </div>
+
+            <div id="name-and-slogan">
+                <div id="site-name">
+                    <a rel="home" title="Accueil {{ apptitle }}" href="/">
+                        {{ apptitle }}
+                    </a>
+                </div>
+                <div id="site-slogan">
+                    <a rel="home" title="Accueil {{ appslogan }}" href="/">
+                        {{ appslogan }}
+                    </a>
+                </div>
+            </div>
+        </header>
+    {% endif %}
+
+    <header id="app-header">
+        {% block app_header %}{% endblock %}
+    </header>
+    <nav id="app-menu">
+        {% block app_menu %}{% endblock %}
+    </nav>
+    <div id="app-page">
+        {% block app_page %}{% endblock %}
+        {% block body %}{% endblock %}
+    </div>
+    <div id="app-footer">
+        {% block app_footer %}{% endblock %}
+    </div>
+    <footer id="amu-footer">
+        {% block footer %}
+            <div>Amu - Dosi Pôle développement {{ appcontact }}</div>
+        {% endblock %}
+    </footer>
+</div>
+{% block javascripts %}{% endblock %}
+</body>
+</html>

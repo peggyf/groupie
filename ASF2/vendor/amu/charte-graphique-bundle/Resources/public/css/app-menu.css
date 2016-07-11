@@ -1,0 +1,145 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 19 juin 2015, 11:33:37
+    Author     : arnaud
+*/
+
+#app-menu ul
+{
+    border-top: 2px solid #F80;
+    background-color: #EDECEC;
+    height:20px;
+    margin:0;
+    padding: 0;
+}
+
+#app-menu ul > li
+{
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    color: #474747;
+    float:left;
+    list-style-type: none;
+    margin-top: -2px;
+    padding: 0 15px;
+    position: relative;
+    white-space:nowrap;
+}
+
+#app-menu li:nth-child(7n +1)
+{
+    border-top: 2px solid #F80;
+}
+
+#app-menu li:nth-child(7n+2)
+{
+    border-top: 2px solid #F1DA10;
+}
+
+#app-menu li:nth-child(7n+3)
+{
+    border-top: 2px solid #94DC23;
+}
+
+#app-menu li:nth-child(7n+4)
+{
+    border-top: 2px solid #22BBEA;
+}
+
+#app-menu li:nth-child(7n+5)
+{
+    border-top: 2px solid #0071B9;
+}
+
+#app-menu li:nth-child(7n+6)
+{
+    border-top: 2px solid #5943FF;
+}
+
+#app-menu li:nth-child(7n+7)
+{
+    border-top: 2px solid #B243FF;
+}
+
+#app-menu li a
+{
+    color: #474747;
+    text-decoration: none;
+}
+
+#app-menu ul li:hover
+{
+    background-color: white;
+}
+
+#app-menu .menu_level_1
+{
+    background-color: transparent;
+    border: none;
+    display: none;
+    left:0px;
+    position: absolute;
+}
+#app-menu .menu_level_2
+{
+    background-color: transparent;
+    border: none;
+    display: none;
+    left:100%;
+    top: 0;
+    position: absolute;
+    white-space:nowrap;
+}
+
+#app-menu li:hover > ul.menu_level_1
+{
+    display: block;
+}
+
+#app-menu li:hover > ul.menu_level_2
+{
+    display: block;
+}
+
+
+#app-menu .menu_level_1 li
+{
+    background-color: white;
+    border-bottom: none;
+    border-left: 1px solid #EDECEC;
+    border-right: 1px solid #EDECEC;
+    border-top: none;
+    float:none;
+    width: 100%;
+}
+
+#app-menu .menu_level_1 li.first
+{
+    border-top: 1px solid #EDECEC;
+    border-radius: 10px 10px 0px 0px;
+}
+
+#app-menu .menu_level_1 li.last
+{
+    border-bottom: 1px solid #EDECEC;
+    border-radius: 0px 0px 10px 10px;
+}
+
+#app-menu .menu_level_1 li:hover
+{
+    background-color: #EDECEC;
+}
+
+#app-menu .clear
+{
+    clear:both;
+}
+
+#app-menu .clear hr
+{
+    display:none;
+}

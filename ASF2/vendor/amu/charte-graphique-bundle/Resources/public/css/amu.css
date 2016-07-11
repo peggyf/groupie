@@ -1,0 +1,227 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 1 juin 2015, 15:35:45
+    Author     : denoix
+*/
+body {
+    border: 0 none;
+    color: #666666;
+    font-family: sans-serif, helvetica;
+    font-size: 72%;
+    margin: auto;
+    outline: 0 none;
+    padding: 0;
+    word-wrap: break-word;
+
+}
+
+.site-std {
+    background: rgba(0, 0, 0, 0) url("../../../bundles/amuchartegraphique/images/fond.png") no-repeat scroll 50% 0;
+}
+
+.ent-std {
+}
+
+#tools {
+    clear: both;
+    height: 33px;
+    padding: 0;
+    text-align: center;
+    width: 80%;
+    margin: auto;
+}
+
+#tools .outils {
+    margin-right: auto;
+    margin-left: auto;
+    padding: 0;
+}
+
+.clearfix::after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+ul.menu {
+    border: medium none;
+    list-style: outside none none;
+    text-align: left;
+    display: inline;
+}
+
+#tools .outils_element.last {
+    border-right: 0;
+}
+
+#tools .outils_element {
+    border-right: 1px solid #999;
+    color: #22bbea;
+    display: inline;
+    font-family: Oswald;
+    font-size: 1.3em;
+    font-weight: 300;
+    height: 30px;
+    line-height: 20px;
+    margin: 0 0 0 10px;
+    padding: 0 15px 0 0;
+    width: 150px;
+}
+
+#tools .outils_element_intramu a {
+    background: transparent url("../../../bundles/amuchartegraphique/images/intramu.png") no-repeat scroll right center;
+    padding: 4px 28px 10px 0;
+}
+
+#tools .outils_element_clef a {
+    background: transparent url("../../../bundles/amuchartegraphique/images/clef_27.png") no-repeat scroll right center;
+    padding: 4px 28px 10px 0;
+}
+
+#tools .outils_element_email a {
+    background: transparent url("../../../bundles/amuchartegraphique/images/email_27.png") no-repeat scroll right center;
+    padding: 4px 28px 10px 0;
+}
+
+#tools .outils_element_connexion a {
+    background: transparent url("../../../bundles/amuchartegraphique/images/connexion_27.png") no-repeat scroll right center;
+    padding: 4px 28px 10px 0;
+}
+
+li a.active {
+    color: #000;
+}
+
+.std-page {
+    background-color: #fafafa;;
+}
+
+#site-page {
+    border-radius: 10px;
+    box-shadow: 1px 1px 12px #b8b8b8;
+    margin: 0 auto;
+    padding: 0;
+    width: 80%;
+}
+
+#ent-page {
+}
+
+#site-header {
+    background-image: url("../../../bundles/amuchartegraphique/images/bandeau-amu-gauche.png"), url("../../../bundles/amuchartegraphique/images/bandeau-amu-droite.png");
+    background-position: left center, right center;
+    background-color: #f4f4f4;
+    background-repeat: no-repeat, no-repeat;
+    border-radius: 10px 10px 0 0;
+    height: 110px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+#site-header .logo {
+    float: left;
+    padding-left: 95px;
+    padding-top: 23px;
+}
+
+.logo h1 {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #0071b9;
+    text-decoration: none;
+}
+
+#name-and-slogan {
+    border: 0 solid;
+    float: right;
+    margin: 40px 0 30px 330px;
+    padding-left: 0;
+    padding-right: 20px;
+    text-align: right;
+}
+
+#site-name {
+
+    font-size: 1.7em;
+    line-height: 1.7;
+    clear: right;
+}
+
+#site-slogan {
+    font-size: 1em;
+    line-height: 1;
+    clear: right;
+}
+
+#amu-footer {
+    background-color: #f1f1f1;
+    border-radius: 0 0 10px 10px;
+    clear: both;
+    padding: 10px 0;
+    text-align: center;
+
+}
+
+.clearfix::after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+* html .clearfix {
+    height: 1%;
+}
+
+:first-child + html .clearfix {
+    min-height: 1%;
+}
+
+fieldset {
+    margin-bottom: 1em;
+    padding: 0.5em;
+}
+
+form {
+    margin: 0;
+    padding: 0;
+}
+
+hr {
+    border: 1px solid gray;
+    height: 1px;
+}
+
+img {
+    border: 0 none;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th {
+    border-bottom: 3px solid #ccc;
+    padding-right: 1em;
+    text-align: left;
+}
+
+tbody {
+    border-top: 1px solid #ccc;
+}
+
+tr.even, tr.odd {
+    background-color: #eee;
+    border-bottom: 1px solid #ccc;
+    padding: 0.1em 0.6em;
+}

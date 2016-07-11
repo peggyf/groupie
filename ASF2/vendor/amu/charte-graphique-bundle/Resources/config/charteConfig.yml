@@ -1,0 +1,15 @@
+parameters:
+
+    amu_chartegraphique_title: "title TEST"
+    amu_chartegraphique_auteur: "auteur TEST"
+    amu_chartegraphique_apptitle: "apptitle TEST"
+    amu_chartegraphique_appslogan: "appslogan TEST"
+    amu_chartegraphique_appcontact: "appcontact TEST"
+    
+twig:
+    globals:
+        auteur: '%amu_chartegraphique_auteur%'
+        apptitle: '%amu_chartegraphique_apptitle%'
+        appslogan: '%amu_chartegraphique_appslogan%'
+        appcontact: '%amu_chartegraphique_appcontact%'
+        title: '%amu_chartegraphique_title%'

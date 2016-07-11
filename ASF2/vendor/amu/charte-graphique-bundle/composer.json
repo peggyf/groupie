@@ -1,0 +1,38 @@
+{
+    "name": "amu/charte-graphique-bundle",
+    "type": "symfony-bundle",
+    "description": "Bundle charte graphique pour le framework Amu",
+    "keywords": ["Charte graphique", "amu"],
+    "homepage": "https://www.univ-amu.fr",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Laure Denoix",
+            "email": "laure.denoix@univ-amu.fr"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Amu\\CharteGraphiqueBundle\\": ""
+        }
+    },
+    "require": {
+        "knplabs/knp-menu-bundle": "~2.0" 
+    },
+    "extra": {
+        "branch-alias": {
+            "master": "0.0.x-dev"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "Amu\\CharteGraphiqueBundle\\Composer\\ScriptHandler::installAmuCharteBundle"
+        ],
+        "pre-update-cmd": [
+            "echo 'toto'"
+        ],
+        "post-update-cmd": [
+            "Amu\\CharteGraphiqueBundle\\Composer\\ScriptHandler::installAmuCharteBundle"
+        ]
+    }
+}
