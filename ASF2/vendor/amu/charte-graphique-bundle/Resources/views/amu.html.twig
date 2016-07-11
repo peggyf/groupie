@@ -85,7 +85,17 @@
     </div>
     <footer id="amu-footer">
         {% block footer %}
-            <div>Amu - Dosi Pôle développement {{ appcontact }}</div>
+            <span style="float: left;  line-height: 0; font-size:smaller; padding: 10px; color: #0071b9"> <img align="absmiddle" src="{{ asset('bundles/amugroupie/images/user-valid.png') }}" title="Utilisateur connectÃ©" /> {{ app.security.token.attributes.cas_displayName }}</span>
+            {% if env == "ent" %}
+                <span style="font-variant: small-caps; padding: 10px">
+                    <a rel="home" title="Accueil {{ appslogan }}" href="/app_ent.php">
+                        {{ apptitle }} - {{ appslogan }}
+                    </a>
+                </span>
+            {%  else %}
+                <span style="font-variant: small-caps; padding: 10px"></span>
+            {%  endif %}
+            <span style="float: right; line-height: 0; padding: 10px">{{ appcontact }}</span>
         {% endblock %}
     </footer>
 </div>
