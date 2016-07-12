@@ -1,0 +1,49 @@
+# sample_security_cas_3.yml
+
+# Exemple pour configuration standard accès annonyme interdit
+# AVEC usage des Roles et de AmuUserProvider => initialisation des données ldap
+#
+security:
+      
+    providers:
+        in_memory:
+            memory: ~
+            
+        amu_users:
+            id: amu_user_provider
+
+      # Enchainement de plusieurs providers
+        my_chain_provider:
+            chain:
+                providers:          [ amu_users, in_memory ]
+                
+    firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false 
+        
+        secured_area:
+            pattern:  /*
+            
+
+            anonymous: false
+            provider: amu_users
+
+            cas:
+                cas_allow_anonymous: false
+                cas_server: ident.univ-amu.fr
+                cas_port: 443
+                cas_path: /cas/
+                ca_cert_path: ~
+                cas_protocol: "2.0" #S1
+                cas_mapping_attribute: username
+                check_path: /login_check
+                cas_logout: /logout       
+                login_path: /login_check
+
+                
+    role_hierarchy:
+        ROLE_DEVELOPER:       [ROLE_USER,ROLE_ALLOWED_TO_SWITCH]
+#        
+    access_control:
+        - { path: /*, roles: IS_AUTHENTICATED_ANONYMOUSLY }

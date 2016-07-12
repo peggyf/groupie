@@ -1,0 +1,18 @@
+#######################
+# AMU CAS 
+#######################
+
+amu_cas:
+   
+  timeout:
+      idle: 3600
+      # idle = durée d'inactivitée maximale
+      
+      # Attention le timout de session est défini par symfony dans :
+      # "app/config/config.yml"
+      #   => framework:  session:  cookie_lifetime: 7200
+      #   => framework:  session:  gc_maxlifetime: 3600
+
+  force_logout:
+      on_session_timeout: false
+      on_idle_timeout: false

@@ -1,0 +1,53 @@
+parameters:
+
+    auth_cas_listener_class: Amu\CasBundle\Security\Firewall\CasListener
+    auth_cas_entry_point.class: Amu\CasBundle\Security\Http\EntryPoint\CasAuthenticationEntryPoint
+    auth_cas_logout_handler.class: Amu\CasBundle\Security\Handler\LogoutSuccessHandler
+    
+    cas.security.factory.class: Amu\CasBundle\DependencyInjection\Security\Factory\CasFactory
+    cas.security.user.provider.class: Amu\CasBundle\Security\Authentication\User\PreUserProvider
+    cas.session.timeout.class: Amu\CasBundle\Listener\TimeoutListener
+
+    # MU 23/12/2015 add for compatibility SF >=2.8 (+ resolv bug > 2.7.5)
+    security.authentication.provider.pre_authenticated.class: Amu\CasBundle\Security\Authentication\Provider\PreAuthenticatedAuthenticationProvider
+
+services:
+  
+    amu.cas:
+        class: Amu\CasBundle\Service\Cas
+        arguments:  ['@service_container', '@logger']
+
+    session.cas_timeout_listener:
+        class: %cas.session.timeout.class%
+        arguments:  ['@service_container', '@logger']
+        tags: 
+            - { name: monolog.logger, channel: security }
+            - { name: kernel.event_subscriber }
+
+    security.user.provider.in_memory:
+        class: %cas.security.user.provider.class%
+        abstract: true
+        public: false
+        
+    security.authentication.factory.cas:
+        class: %cas.security.factory.class%
+        public : false
+        tags: 
+            - { name: security.listener.factory }
+            
+    cas.security.authentication.listener:
+        class: %auth_cas_listener_class%
+        parent: security.authentication.listener.abstract
+        abstract: true
+    
+    cas.security.handler.logout:
+        class: %auth_cas_logout_handler.class%
+        arguments:  ["", '@router']
+
+    cas.security.authentication.cas_entry_point:
+        class: %auth_cas_entry_point.class%
+        public: false
+        abstract: true
+        arguments:  ['@http_kernel']
+
+        
