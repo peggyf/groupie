@@ -71,7 +71,6 @@ class Client
 
         //echo $connect;
         $this->link = @ldap_connect($connect);
-        $this->link = @ldap_connect("ldapmaitre-test.univ-amu.fr", 389);
 
         if (!$this->link) {
             throw new \Exception('['.ldap_errno($this->link).'] '.ldap_error($this->link));

@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f7874709-6f66-4129-ba76-d9eb565dc20c" name="Default" comment="Mise à jour des vues mes_groupes, mes_appartenances, tous_les_groupes avec extends base.html">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ASF2/test.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ASF2/test_ldap.php" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASF2/app/config/routing.yml" afterPath="$PROJECT_DIR$/ASF2/app/config/routing.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASF2/vendor/amu/charte-graphique-bundle/Resources/views/amu.html.twig" afterPath="$PROJECT_DIR$/ASF2/vendor/amu/charte-graphique-bundle/Resources/views/amu.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASF2/vendor/amu/ldap-bundle/Ldap/Client.php" afterPath="$PROJECT_DIR$/ASF2/vendor/amu/ldap-bundle/Ldap/Client.php" />
     </list>
     <ignored path="CliGrouper.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -48,11 +44,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Client.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Client.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ASF2/vendor/amu/ldap-bundle/Ldap/Client.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-8.5161295">
-              <caret line="66" column="47" selection-start-line="66" selection-start-column="47" selection-end-line="66" selection-end-column="47" />
+            <state vertical-scroll-proportion="0.5506884">
+              <caret line="74" column="27" selection-start-line="74" selection-start-column="27" selection-end-line="74" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -73,18 +69,8 @@
       <file leaf-file-name="amu.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ASF2/vendor/amu/charte-graphique-bundle/Resources/public/css/amu.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="22.419355">
+            <state vertical-scroll-proportion="-19.161291">
               <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="routing.yml" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ASF2/app/config/routing.yml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.18554217">
-              <caret line="7" column="24" selection-start-line="7" selection-start-column="24" selection-end-line="7" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -205,9 +191,9 @@
         <option value="$PROJECT_DIR$/ASF2/vendor/amu/charte-graphique-bundle/Resources/public/css/amu.css" />
         <option value="$PROJECT_DIR$/ASF2/app/config/charteConfig.yml" />
         <option value="$PROJECT_DIR$/ASF2/vendor/amu/charte-graphique-bundle/Resources/views/amu.html.twig" />
-        <option value="$PROJECT_DIR$/ASF2/vendor/amu/ldap-bundle/Ldap/Client.php" />
         <option value="$PROJECT_DIR$/ASF2/app/config/security_cas.yml" />
         <option value="$PROJECT_DIR$/ASF2/app/config/routing.yml" />
+        <option value="$PROJECT_DIR$/ASF2/vendor/amu/ldap-bundle/Ldap/Client.php" />
       </list>
     </option>
   </component>
@@ -1809,26 +1795,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/app/config/charteConfig.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="24" column="57" selection-start-line="24" selection-start-column="57" selection-end-line="24" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ASF2/vendor/amu/charte-graphique-bundle/Resources/views/amu.html.twig">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-19.580645">
           <caret line="82" column="25" selection-start-line="82" selection-start-column="25" selection-end-line="82" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/vendor/amu/ldap-bundle/Ldap/Client.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.5161295">
-          <caret line="66" column="47" selection-start-line="66" selection-start-column="47" selection-end-line="66" selection-end-column="47" />
           <folding />
         </state>
       </provider>
@@ -1859,18 +1829,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/app/config/routing.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.47710842">
+          <caret line="18" column="12" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ASF2/vendor/amu/charte-graphique-bundle/Resources/public/css/amu.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="22.419355">
+        <state vertical-scroll-proportion="-19.161291">
           <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/app/config/routing.yml">
+    <entry file="file://$PROJECT_DIR$/ASF2/app/config/charteConfig.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.18554217">
-          <caret line="7" column="24" selection-start-line="7" selection-start-column="24" selection-end-line="7" selection-end-column="24" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="24" column="57" selection-start-line="24" selection-start-column="57" selection-end-line="24" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/vendor/amu/ldap-bundle/Ldap/Client.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5506884">
+          <caret line="74" column="27" selection-start-line="74" selection-start-column="27" selection-end-line="74" selection-end-column="27" />
           <folding />
         </state>
       </provider>
