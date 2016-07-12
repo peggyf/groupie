@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f7874709-6f66-4129-ba76-d9eb565dc20c" name="Default" comment="Mise à jour des vues mes_groupes, mes_appartenances, tous_les_groupes avec extends base.html">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASF2/app/config/roles.yml" afterPath="$PROJECT_DIR$/ASF2/app/config/roles.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASF2/app/config/config.yml" afterPath="$PROJECT_DIR$/ASF2/app/config/config.yml" />
     </list>
     <ignored path="CliGrouper.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,11 +24,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="roles.yml" pinned="false" current-in-tab="true">
+      <file leaf-file-name="roles.yml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ASF2/app/config/roles.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.84096384">
-              <caret line="33" column="104" selection-start-line="33" selection-start-column="104" selection-end-line="33" selection-end-column="104" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="8" column="9" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="security_cas.yml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/ASF2/app/config/security_cas.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.68192774">
+              <caret line="45" column="58" selection-start-line="45" selection-start-column="58" selection-end-line="45" selection-end-column="58" />
               <folding />
             </state>
           </provider>
@@ -38,7 +48,7 @@
         <entry file="file://$PROJECT_DIR$/ASF2/app/config/config.yml">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
+              <caret line="103" column="9" selection-start-line="103" selection-start-column="9" selection-end-line="103" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -157,7 +167,6 @@
         <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/Group/searchres.html.twig" />
         <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/User/searchadd.html.twig" />
         <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/DependencyInjection/Configuration.php" />
-        <option value="$PROJECT_DIR$/ASF2/app/config/config.yml" />
         <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Entity/User.php" />
         <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Resources/views/User/search.html.twig" />
         <option value="$PROJECT_DIR$/ASF2/src/Amu/GroupieBundle/Form/UserSearchType.php" />
@@ -194,6 +203,7 @@
         <option value="$PROJECT_DIR$/ASF2/app/config/routing.yml" />
         <option value="$PROJECT_DIR$/ASF2/vendor/amu/ldap-bundle/Ldap/Client.php" />
         <option value="$PROJECT_DIR$/ASF2/app/config/roles.yml" />
+        <option value="$PROJECT_DIR$/ASF2/app/config/config.yml" />
       </list>
     </option>
   </component>
@@ -1758,14 +1768,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/app/config/charteConfig.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="24" column="57" selection-start-line="24" selection-start-column="57" selection-end-line="24" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ASF2/app/config/config_dev.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.4313253">
@@ -1814,14 +1816,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/app/config/config.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ASF2/app/config/routing.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.47710842">
@@ -1846,14 +1840,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ASF2/app/config/security_cas.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.1927711">
-          <caret line="45" column="58" selection-start-line="45" selection-start-column="58" selection-end-line="45" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ASF2/app/config/services.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.21204819">
@@ -1862,10 +1848,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/app/config/config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="103" column="9" selection-start-line="103" selection-start-column="9" selection-end-line="103" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/app/config/charteConfig.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="24" column="57" selection-start-line="24" selection-start-column="57" selection-end-line="24" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ASF2/app/config/roles.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.84096384">
-          <caret line="33" column="104" selection-start-line="33" selection-start-column="104" selection-end-line="33" selection-end-column="104" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="8" column="9" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASF2/app/config/security_cas.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.68192774">
+          <caret line="45" column="58" selection-start-line="45" selection-start-column="58" selection-end-line="45" selection-end-column="58" />
           <folding />
         </state>
       </provider>
