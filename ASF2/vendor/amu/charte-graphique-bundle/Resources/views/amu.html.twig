@@ -22,13 +22,13 @@
         <nav class="outils">
             <ul class="menu clearfix">
                 <li id="dhtml_menu-1415" class="first leaf dhtml-menu outils_element outils_element_intramu">
-                    <a class="" href="http://intramu.univ-amu.fr">intrAMU</a>
+                    <a class="" href="{{ urlintranet }}">{{ nomintranet }}</a>
                 </li>
                 <li id="dhtml_menu-314" class="leaf dhtml-menu outils_element outils_element_clef">
-                    <a class="" href="http://ent.univ-amu.fr">Accès ENT</a>
+                    <a class="" href="{{ urlent }}">Accès ENT</a>
                 </li>
                 <li id="dhtml_menu-315" class="leaf dhtml-menu outils_element outils_element_email">
-                    <a class="" href="http://annuaire.univ-amu.fr">Annuaire</a>
+                    <a class="" href="{{ urlannuaire }}">Annuaire</a>
                 </li>
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <li id="dhtml_menu-315" class="last leaf dhtml-menu outils_element outils_element_connexion">
@@ -48,9 +48,9 @@
         <header id="site-header">
             <div class="logo">
                 <h1>
-                    <a href="http://www.univ-amu.fr" title="Accueil Aix-Marseille Université">
+                    <a href="{{ urlsite }}" title="{{ accueil }}">
                         <img src="{{ asset('bundles/amuchartegraphique/images/blank_logo.png') }}"
-                             alt="Accueil Aix-Marseille Université">
+                             alt="{{ accueil }}">
                     </a>
                 </h1>
             </div>
