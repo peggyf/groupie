@@ -1,0 +1,18 @@
+parameters:
+    amu_user_provider.class: Amu\RoleBundle\Security\User\AmuUserProvider
+    arguments: ["", %kernel.cache_dir%/security/nonces]
+
+services:
+
+    amu.networks:
+        class: Amu\RoleBundle\Service\Networks
+        arguments:  ['@service_container']
+
+    amu.roles:
+        class: Amu\RoleBundle\Service\Roles
+        arguments:  ['@service_container',"amu.ldap"]
+        
+    amu_user_provider:
+        class: "%amu_user_provider.class%"
+        arguments: [ '@service_container', '@session' ]
+

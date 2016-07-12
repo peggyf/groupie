@@ -1,0 +1,64 @@
+#############
+#   ROLES   #
+#############
+amu_role:
+        
+    roles:
+      # SAMPLE Roles en fonction d'une variable de session précisée via "link:" ET ayant une ou plusieurs valeurs possibles, définie(s) via "values:"
+        - { name: "ROLE_SESSION_TEST1", type: "session",  link: "session_variable_1",  values: "valeurOK" }
+        - { name: "ROLE_SESSION_TEST2", type: "session",  link: "session_variable_2",  values: ["valeurOK1","valeurOK1"] }
+        
+      # SAMPLE LDAP 1 détection d'appartenance à un groupe ldap (usage link:"isMember")
+        - { name: "ROLE_BETA",          type: "ldap",     link: "isMember",               values: "amu:app:grp:appliname:beta" }
+        - { name: "ROLE_DOSI",          type: "ldap",     link: "isMember",               values: "amu:svc:dosi:tous" }
+
+      # SAMPLE LDAP 2 intérrogation standard, avec "link" la variable ldap à intéroger et "values" la ou les valeur(s) possible(s)
+        - { name: "ROLE_STUDENT",       type: "ldap",     link: "eduPersonAffiliation",   values: ["student","alum"] }
+        
+      # SAMPLE LDAP 3 intérrogation avancé avec "filtrer" la chaine d'intérrogation personnalisée
+        - { name: "ROLE_LUMINY",  type: "ldap2",  link: "uid",  values: "$login", filter: "(&(amuCampus=L)(|(eduPersonAffiliation=employee)(eduPersonAffiliation=staff)(eduPersonAffiliation=faculty)(eduPersonAffiliation=researcher)))" }
+        - { name: "ROLE_CNRS",    type: "ldap2",  link: "ip",   values: "$ip",    filter: "(&(amuCampus=L)(|(eduPersonAffiliation=employee)(eduPersonAffiliation=staff)(eduPersonAffiliation=faculty)(eduPersonAffiliation=researcher)))" }
+      # Liste des varaibles jockers disponibles (spécialement pour intérrogation de type : "ldap2" )
+      #
+      #   $login  => identifiant utilisateur symfony (user du token de sécurité)
+      #   $ip     => à l'adresse ip de poste client connecté
+
+      # SAMPLE d'affectation d'un rôle sur détection d'appartenance à une liste d'ip ou de plage ip
+        - { name: "ROLE_IS_INTO_LABO_TEST_NETWORK", type: "ip", link: "ip",  values: ["192.1.3.12","192.1.3.13","192.1.1.0/24","192.1.2.0/24"] }
+
+
+    attributes:
+        # SSI = true , permet d'enregistrer les attributs LDAP en variable de sessions avec le préfix "session_prefix_vars"
+        into_session: false
+        # Prefixe des variables stokées en session
+        session_prefix_vars: "_attributes_ldap."
+        list: ['uid','supannCivilite','cn','sn','givenName','displayName','mail']
+        #
+        #     Autres champs ldap disponibles...
+        #
+        # Personnels: 'supannEmpId','amuPerimetre','amuCampus','amuComposante', 'amuSite'
+        # Affectations: 'eduPersonAffiliation','eduPersonPrimaryAffiliation','supannOrganisme','supannEtablissement','supannAffectation','supannEntiteAffectation','supannEntiteAffectationPrincipale'
+        # Students: 'supannEtuId','supannEtuEtape','supannEtuDiplome','supannAnneeInscription','supannAffectation','eduPersonPrimaryAffiliation','supannEntiteAffectation','supannEntiteAffectationPrincipale'
+        # Divers: 'postalAddress','Phone','telephoneNumber','facsimileTelephoneNumber','supannAutreTelephone','Fax','eduPersonAffiliation','schacDateOfBirth','supannEmpCorps']  
+        
+
+    networks: 
+    # les paramètres de "networks" : {...}" permettent d'assigné automatiquement des ROLES en fonction de la configuration réseau du client (ROLE_INTRANET/ROLE_EXTRANET...)
+        - { type: "VPN", plage: [ "10.193.1.1"] }
+        - { type: "P1", plage: [ "147.94.0.0/16", "193.49.33.0/24", "193.49.34.0/24", "193.50.45.0/24", "193.50.62.0/24", "193.50.65.0/24", "193.50.127.0/24", "193.50.128.0/24", "193.50.130.0/24", "193.50.131.0/24", "193.51.5.0/24", "193.51.105.0/24", "194.57.187.0/24", "194.57.195.0/24", "194.57.197.0/24", "194.167.168.0/24", "194.214.98.0/24", "194.214.99.0/24", "194.214.100.0/24", "194.214.101.0/24", "195.221.102.0/24", "195.221.212.0/24", "195.83.32.0/24", "195.83.115.0/24", "195.83.116.0/24", "195.83.220.0/24" ] }
+        - { type: "P2", plage: [ "139.124.0.0/16", "147.94.38.0/24", "147.94.39.0/24", "195.83.116.0/24", "192.134.94.0/24", "193.50.84.0/24", "193.50.125.0/24", "194.214.98.0/24", "194.214.99.0/24", "194.214.100.0/24", "194.214.101.0/24" ] }
+        - { type: "P3", plage: [ "139.124.20.14", "139.124.20.14", "147.94.58.200", "193.50.65.21", "82.66.193.68", "147.94.208.80", "10.0.0.0/8", "193.252.0.90", "80.11.212.7",  "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "192.134.100.0/24", "193.51.60.0/24", "193.51.61.0/24", "193.51.62.0/24", "193.51.63.0/24", "193.51.108.0/24", "193.51.109.0/24", "193.51.110.0/24", "193.51.111.0/24", "193.51.216.0/24", "193.51.217.0/24", "193.51.218.0/24", "193.51.219.0/24", "193.51.220.0/24", "193.51.221.0/24", "193.51.222.0/24", "193.51.223.0/24", "194.167.109.0/24", "194.167.161.0/24", "194.167.206.0/24", "194.167.228.0/24", "194.167.229.0/24", "194.167.230.0/24", "194.167.249.0/24", "194.167.251.0/24", "194.199.136.0/24", "194.199.137.0/24", "194.214.88.0/24", "195.220.228.0/24", "195.221.207.0/24", "195.221.208.0/24", "195.221.209.0/24", "195.221.217.0/24", "195.221.218.0/24", "195.221.219.0/24", "195.221.220.0/24", "193.49.98.0/24", "193.49.99.0/24" ] }
+        
+    developers:
+    # permet d'assigner automatiquement le ROLE_DEVELOPER en fonction des ip/uid des clients listés
+        - { name: "VPN",                               ip: "10.193.1.1",      uid: "mubeda"           }
+        - { name: "Localhost",                         ip: "127.0.0.1",       uid: "*"                }
+        - { name: "Pascal AVALLE (AIX)",               ip: "193.51.62.38",    uid: "a03a2867"         }
+        - { name: "Pascal AVALLE (MRS)",               ip: "195.221.209.70",  uid: "a03a2867"         }
+        - { name: "Christophe CAVALIER (MRS)",         ip: "195.221.209.13",  uid: "christophe"       }
+        - { name: "Jean-Philippe FLORET (MRS)",        ip: "195.221.209.47",  uid: "a04a3347"         }
+        - { name: "Arnaud SALVUCCI (LMY)",             ip: "139.124.44.37",   uid: "salvucci"         }
+        - { name: "Arnaud SALVUCCI (MRS)",             ip: "195.221.209.xx",  uid: "salvucci"         }
+        - { name: "Michel UBEDA (MRS)",                ip: "195.221.209.45",  uid: "mubeda"           }
+        - { name: "Michel UBEDA (portable)",           ip: "195.221.209.46",  uid: "mubeda"           }
+        - { name: "Peggy FERNANDEZ BLANCO",            ip: "147.94.140.8",    uid: "pfernandezblanco" }

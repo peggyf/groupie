@@ -1,0 +1,30 @@
+{
+  "name": "amu/role-bundle",
+  "type": "symfony-bundle",
+  "description": "Ajout de la gestion des ROLES/Attributes des Users Symfony (plugins/userProvider pour security.firewalls de symfony)",
+  "keywords": ["amu", "role", "attribute"],
+  "homepage": "http://dosi.univ-amu.fr/",
+  "license": "GPL",
+  "authors": [
+    {
+      "name": "UBEDA Michel",
+      "email": "michel.ubeda@univ-amu.fr"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.2",
+    "symfony/symfony": ">=2.7"
+  },
+  "autoload": {
+    "psr-0": {
+      "Amu\\RoleBundle": ""
+    },
+    "classmap": [
+      "Amu/RoleBundle/Service/Networks.php",
+      "Amu/RoleBundle/Service/Roles.php"
+    ]
+  },
+  "target-dir": "Amu/RoleBundle",
+  "minimum-stability": "dev"
+
+}
