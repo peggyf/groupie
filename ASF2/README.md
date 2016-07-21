@@ -1,4 +1,4 @@
-Gestionnaire de groupe GROUPIE V2
+Gestionnaire de groupe GROUPIE 
 ==========================================================================
 Groupie est un logiciel de gestion de groupes.
 
@@ -34,29 +34,30 @@ Au niveau LDAP
     - amuGroupFilter : filtre LDAP si le groupe est alimenté automatiquement
     - amuGroupAdmin : dn du ou des administrateurs du groupe
 - Scripts d'alimentation qui tournent régulièrement sont sur la machine LDAP
-    - SyncAllGroups.pl : met à jour les groupes alimentés avec des filtres LDAP.
+    - SyncAllGroups.pl : met à jour les groupes alimentés par des filtres LDAP ou par une table d'une base Oracle.
     - SyncADGroups.pl : met à jour les groupes dans l'AD.
-    - bidule.pl : met à jour les groupes alimentés à partir d'une table d'une base de données.
 
-NB: Le nommage peut être changé et est paramétrable dans l'application.
+NB: Le nommage dans le LDAP peut être changé et est paramétrable dans l'application.
 
 Au niveau de l'interface
 ==========================================================================
 Les rôles
 --------------------------------------------------------------------------
-On identifie 5 rôles pour l'application :
+On identifie 6 rôles dans l'application :
 
 - ROLE_MEMBRE : C'est le rôle de base. L'utilisateur est seulement membre d'un ou de groupes. Il a seulement accès à la visualisation des groupes dont il fait partie.
-filtre LDAP : "(|(edupersonaffiliation=employee)(edupersonaffiliation=faculty)(edupersonaffiliation=researcher))"
+Appartenance au groupe LDAP : "amu:glob:ldap:personnel"
 - ROLE_GESTIONNAIRE : l'utilisateur est administrateur d'un ou de groupes. Il a accès en visualisation aux groupes dont il fait partie, et il peut modifier les membres des groupes qu'il gère.
-filtre LDAP : "(memberof=cn=amu:app:grp:grouper:grouper-ent,ou=groups,dc=univ-amu,dc=fr)"
+Appartenance au groupe LDAP : "amu:app:grp:grouper:grouper-ent"
 - ROLE_DOSI : l'utilisateur est membre de la DOSI, il accède en visualisation à toutes les infos des groupes.
-filtre LDAP : "(memberof=cn=amu:svc:dosi:tous,ou=groups,dc=univ-amu,dc=fr)"
+Appartenance au groupe LDAP : "amu:svc:dosi:tous"
+- ROLE_PRIVE : l'utilisateur peut accéder à la partie "groupes privés". 
+Appartenance au groupe LDAP : "amu:svc:dosi:tous"
 - ROLE_ADMIN : l'utilisateur a tous les droits sur tous les groupes, ainsi que les droits de création/modification/suppression de groupes.
-filtre LDAP : "(memberof=cn=amu:adm:app:groupie,ou=groups,dc=univ-amu,dc=fr)"
+Appartenance au groupe LDAP : "amu:adm:app:groupie"
 - ROLE_SUPER_ADMIN : partie développeur
 
-NB: Le nom des groupes peut être changé et est paramétrable dans l'application.
+NB: Les groupes sont paramétrables
 
 Les vues
 --------------------------------------------------------------------------
@@ -131,6 +132,40 @@ Le paramétrage s'effectue dans les fichiers de config dans ASF2\app\config
                 private_branch: ou=private                              Branche pour les groupes privés
                 prefix: amu:perso                                       Préfixe systématique des groupes privés
 
+* security_cas.yml : paramètrage du CAS et hiérarchie des rôles
+
+        firewalls:
+            dev:
+                pattern:  ^/(_(profiler|wdt)|css|images|js)/
+                security: false     secured_area:
+            pattern:  /*
+            anonymous: false
+            provider: amu_users
+            cas:
+                cas_allow_anonymous: false
+                cas_server: cas.univ.fr                                 URL du CAS
+                cas_port: 443
+                cas_path: /cas/
+                ca_cert_path: ~
+                cas_protocol: "2.0" #S1
+                cas_mapping_attribute: uid
+                check_path: /login_check
+                cas_logout: /logout       
+                login_path: /login_check
+        role_hierarchy:
+            ROLE_ADMIN: [ROLE_MEMBRE, ROLE_GESTIONNAIRE, ROLE_DOSI, ROLE_PRIVE]
+            ROLE_DEVELOPER: [ROLE_USER,ROLE_ALLOWED_TO_SWITCH]
+
+* roles.yml : Il faut configurer les groupes qui auront les différents droits dans l'application
+
+        roles:
+            - { name: "ROLE_MEMBRE",         type: "ldap",    link: "isMember",  values: "amu:glob:ldap:personnel" }
+            - { name: "ROLE_GESTIONNAIRE",   type: "ldap",    link: "isMember",  values: "amu:app:grp:grouper:grouper-ent" } 
+            - { name: "ROLE_DOSI",           type: "ldap",    link: "isMember",  values: "amu:svc:dosi:tous" }
+            - { name: "ROLE_PRIVE",          type: "ldap",    link: "isMember",  values: "amu:svc:dosi:tous" }
+            - { name: "ROLE_ADMIN",          type: "ldap",    link: "isMember",  values: "amu:adm:app:groupie" }
+            - { name: "ROLE_SUPER_ADMIN",    type: "session",  link: "_isDevelopper",  values: "1" }
+
 * charteConfig.yml : La partie à configurer concerne l'affichage de l'application
 
     parameters:
@@ -140,9 +175,9 @@ Le paramétrage s'effectue dans les fichiers de config dans ASF2\app\config
         amu_chartegraphique_apptitle: "Groupie"
         amu_chartegraphique_appslogan: "Gestion des groupes"
         amu_chartegraphique_appcontact: "AMU - DOSI Pôle Environnement Numérique"
-        amu_chartegraphique_url_intranet: "http://intramu.univ-amu.fr"
+        amu_chartegraphique_url_intranet: "http://intramu.univ-amu.fr"      Intranet de l'université
         amu_chartegraphique_nom_intranet: "intrAMU"
-        amu_chartegraphique_url_ent: "http://ent.univ-amu.fr"
-        amu_chartegraphique_url_annuaire: "http://annuaire.univ-amu.fr"
-        amu_chartegraphique_url_site: "http://www.univ-amu.fr"
+        amu_chartegraphique_url_ent: "http://ent.univ-amu.fr"               ENT
+        amu_chartegraphique_url_annuaire: "http://annuaire.univ-amu.fr"     Annuaire
+        amu_chartegraphique_url_site: "http://www.univ-amu.fr"              Site de l'université
         amu_chartegraphique_accueil: "Accueil Aix-Marseille Université"
