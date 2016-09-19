@@ -184,8 +184,8 @@ Le paramétrage s'effectue dans les fichiers de config dans ASF2\app\config
 
 Scripts PERL LDAP pour peupler des groupes basés sur des filtres (plus efficace que dynlist)
 --------------------------------------------------------------------------------------------
-On met sous /var/ldap les répertoires etc cron et lib
-Ils doivent s'exécuter sur un LDAP Maitre
+Chez nous les scripts et autres définitions sont sous /var/ldap dans les répertoires etc cron et lib
+Ils doivent s'exécuter sur un LDAP Maitre (lecture du slapd.conf de OpenLDAP et du password root (en clair))
 
 * Dans etc:
 	fichier hosts contient des définitions
@@ -193,8 +193,10 @@ Ils doivent s'exécuter sur un LDAP Maitre
 	utils2.pm librairie pour lire /etc/openldap/slapd.conf (rootdn rootpw suffix..)
 * Dans cron (modifier les quelques variables si besoin)  
 	SyncAllGroups.pl synchronise les membres des groupes qui ont un attribut contenant un filtre de type LDAP ou SQL
-	* amuGroupFilter SQL: dbi:mysql:host=apogee.univ.fr;port=3306;database=fwa2|user|pass|SELECT * from V_USERS_APOGEE
-	* amuGroupFilter LDAP: (&(amudatevalidation=*)(amuComposante=odontologie)(eduPersonAffiliation=faculty))
+	exemples de filtres dans l'attribut amuGroupfilter:
+	* SQL: dbi:mysql:host=apogee.univ.fr;port=3306;database=fwa2|user|pass|SELECT * from V_USERS_APOGEE
+	* LDAP: (&(amudatevalidation=*)(amuComposante=odontologie)(eduPersonAffiliation=faculty))
+	
 	SyncADGroups.pl synchronise la branche ou=groups LDAP avec une branche ou=groups Active Directory
 
 Schéma LDAP
