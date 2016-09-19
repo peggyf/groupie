@@ -1,0 +1,5 @@
+ADhost:cd1.ad.univ.fr
+ADadmindn:cn=cn=---,dc=ad,dc=univ,dc=fr
+ADadminpass:---
+ADbase:dc=ad,dc=univ,dc=fr
+
