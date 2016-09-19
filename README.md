@@ -181,3 +181,40 @@ Le paramétrage s'effectue dans les fichiers de config dans ASF2\app\config
         amu_chartegraphique_url_annuaire: "http://annuaire.univ-amu.fr"     Annuaire
         amu_chartegraphique_url_site: "http://www.univ-amu.fr"              Site de l'université
         amu_chartegraphique_accueil: "Accueil Aix-Marseille Université"
+
+Scrpits PERL LDAP pour peupler des groupes basés sur des filtres (plus efficace que dynlist)
+----------------------------------------------------------------------------------
+On met sous /var/ldap les répertoires etc cron et lib
+Ils doivent s'exécuter sur un LDAP Maitre
+
+* Dans etc:
+	fichier hosts contient des définitions
+* Dans lib:
+	utils2.pm librairie pour lire /etc/openldap/slapd.conf (rootdn rootpw suffix..)
+* Dans cron (modifier les quelques variables si besoin)  
+	SyncAllGroups.pl synchronise les membres des groupes qui ont un attribut contenant un filtre de type LDAP ou SQL
+	* amuGroupFilter SQL: dbi:mysql:host=apogee.univ.fr;port=3306;database=fwa2|user|pass|SELECT * from V_USERS_APOGEE
+	* amuGroupFilter LDAP: (&(amudatevalidation=*)(amuComposante=odontologie)(eduPersonAffiliation=faculty))
+	SyncADGroups.pl synchronise la branche ou=groups LDAP avec une branche ou=groups Active Directory
+
+Schéma LDAP
+----------------------------------------------------------------------------------
+
+		objectclass   ( 1.3.6.1.4.1.7135.1.1.2.2.7 NAME 'AMUGroup' SUP top AUXILIARY
+			 DESC 'Groupes spécifiques AMU '
+			 MAY ( amuGroupFilter $ amuGroupAdmin $ amuGroupAD $ amuGroupMember ))
+
+		attributetype (  1.3.6.1.4.1.7135.1.3.131.3.40 NAME 'amuGroupAdmin'
+			DESC 'RFC2256: admin of a group'
+			SUP distinguishedName )
+
+		attributetype ( 1.3.6.1.4.1.7135.1.3.131.3.41 NAME 'amuGroupFilter'
+			DESC 'Filtre LDAP pour les groupes'
+			 EQUALITY caseIgnoreMatch
+			 SUBSTR caseIgnoreSubstringsMatch
+			 SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{256} )
+
+		attributetype (  1.3.6.1.4.1.7135.1.3.131.3.45 NAME 'amuGroupMember'
+			DESC 'manual member of a group in a group by filter using ldapadd'
+			SUP distinguishedName )
+
