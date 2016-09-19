@@ -182,8 +182,8 @@ Le paramétrage s'effectue dans les fichiers de config dans ASF2\app\config
         amu_chartegraphique_url_site: "http://www.univ-amu.fr"              Site de l'université
         amu_chartegraphique_accueil: "Accueil Aix-Marseille Université"
 
-Scrpits PERL LDAP pour peupler des groupes basés sur des filtres (plus efficace que dynlist)
-----------------------------------------------------------------------------------
+Scripts PERL LDAP pour peupler des groupes basés sur des filtres (plus efficace que dynlist)
+--------------------------------------------------------------------------------------------
 On met sous /var/ldap les répertoires etc cron et lib
 Ils doivent s'exécuter sur un LDAP Maitre
 
