@@ -219,4 +219,10 @@ Schéma LDAP
 		attributetype (  1.3.6.1.4.1.7135.1.3.131.3.45 NAME 'amuGroupMember'
 			DESC 'manual member of a group in a group by filter using ldapadd'
 			SUP distinguishedName )
+			
+		attributetype ( 1.3.6.1.4.1.7135.1.3.131.3.42 NAME 'amuGroupAD'
+           DESC 'Export AD '
+           EQUALITY booleanMatch
+           SINGLE-VALUE
+          SYNTAX 1.3.6.1.4.1.1466.115.121.1.7 )	
 
