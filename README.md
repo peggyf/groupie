@@ -83,8 +83,8 @@ On dispose de 5 onglets et de plusieurs sous-menus :
     
 L'installation
 --------------
-Pour installer Groupie, il faut disposer d'un serveur web avec PHP 5 (version en production 5.5.9)
-La version de Symfony est la 2.7, la documentation d'installation est ici http://symfony.com/doc/2.7/setup.html
+Pour installer Groupie, il faut disposer d'un serveur web avec PHP 5 (version en production 5.5.9).
+La version de Symfony est la 2.7, la documentation d'installation est ici http://symfony.com/doc/2.7/setup.html.
 Il faut ensuite paramétrer le serveur web pour pointer vers le répertoire ASF2. 
     
 
