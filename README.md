@@ -2,7 +2,7 @@ Gestionnaire de groupes GROUPIE
 ===============================
 Groupie est un logiciel de gestion de groupes.
 
-Il se compose d'une interface web développée sous Symfony et de plusieurs scripts effectuant des opérations sur le LDAP.
+Il se compose d'une interface web développée sous Symfony 2.7 et de plusieurs scripts effectuant des opérations sur le LDAP.
 
 
 Groupie permet de gérer 2 types de groupes :
@@ -80,6 +80,13 @@ On dispose de 5 onglets et de plusieurs sous-menus :
 * Aide
     * Aide groupes institutionnels
     * Aide groupes privés
+    
+L'installation
+--------------
+Pour installer Groupie, il faut disposer d'un serveur web avec PHP 5 (version en production 5.5.9)
+La version de Symfony est la 2.7, la documentation d'installation est ici http://symfony.com/doc/2.7/setup.html
+Il faut ensuite paramétrer le serveur web pour pointer vers le répertoire ASF2. 
+    
 
 Le paramétrage
 --------------------------------------------------------------------------
