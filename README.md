@@ -1,5 +1,5 @@
-Gestionnaire de groupe GROUPIE 
-==========================================================================
+Gestionnaire de groupes GROUPIE 
+===============================
 Groupie est un logiciel de gestion de groupes.
 
 Il se compose d'une interface web développée sous Symfony et de plusieurs scripts effectuant des opérations sur le LDAP.
