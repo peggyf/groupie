@@ -1,0 +1,31 @@
+## YAML Template.
+---
+#############
+
+#   ROLES   #
+
+#############
+
+amu_role:
+
+    roles:
+        - { name: "ROLE_MEMBRE",         type: "ldap",    link: "isMember",  values: "grp:personnel" }
+        - { name: "ROLE_GESTIONNAIRE",   type: "ldap",    link: "isMember",  values: "grp:gest" }
+        - { name: "ROLE_DOSI",           type: "ldap",    link: "isMember",  values: "grp:dosi" }
+        - { name: "ROLE_PRIVE",          type: "ldap",    link: "isMember",  values: "grp:personnel" }
+        - { name: "ROLE_ADMIN",          type: "ldap",    link: "isMember",  values: "grp:adm" }
+        - { name: "ROLE_SUPER_ADMIN",    type: "session",  link: "_isDevelopper",  values: "1" }
+        
+    attributes:
+        into_session: false
+        session_prefix_vars: "_attributes_ldap."
+        list: ['uid','supannCivilite','cn','sn','givenName','displayName','mail']
+        
+    networks:
+    # les paramètres de "networks" : {...}" permettent d'assigner automatiquement des ROLES en fonction de la configuration réseau du client (ROLE_INTRANET/ROLE_EXTRANET...)
+        - { type: "VPN", plage: [ ""] }
+
+
+    developers:
+    # permet d'assigner automatiquement le ROLE_DEVELOPER en fonction des ip/uid des clients listés
+        - { name: "Localhost",                         ip: "127.0.0.1",       uid: "*"                }

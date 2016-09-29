@@ -1,0 +1,51 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/book/security.html
+
+# Exemple pour configuration standard accès annonyme interdit
+# AVEC usage des Roles et de AmuUserProvider => initialisation des données ldap
+#
+
+security:
+
+    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    providers:
+        in_memory:
+            memory: ~
+
+        amu_users:
+            id: amu_user_provider
+            
+        my_chain_provider:
+            chain:
+                providers: [amu_users, in_memory]
+                
+    firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false 
+
+        secured_area:
+            pattern:  /*
+            anonymous: false
+            provider: amu_users
+
+            cas:
+                cas_allow_anonymous: false
+                cas_server: cas.univ.fr
+                cas_port: 443
+                cas_path: /cas/
+                ca_cert_path: ~
+                cas_protocol: "2.0" #S1
+                cas_mapping_attribute: uid
+                check_path: /login_check
+                cas_logout: /logout       
+                login_path: /login_check
+                
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_MEMBRE, ROLE_GESTIONNAIRE, ROLE_DOSI, ROLE_PRIVE]
+        ROLE_DEVELOPER: [ROLE_USER,ROLE_ALLOWED_TO_SWITCH]
+
+        
+    access_control:
+        - { path: /*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
