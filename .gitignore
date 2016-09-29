@@ -1,6 +1,8 @@
 /AmuBundles
 /nbproject/private/
 /ASF2/app/config/config.yml
+/ASF2/app/config/roles.yml
+/ASF2/app/config/security_cas.yml
 /ASF2/app/cache/*
 /ASF2/app/logs/*
 *~
