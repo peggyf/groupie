@@ -87,12 +87,14 @@ Pour installer Groupie, il faut disposer d'un serveur web avec PHP 5 (version en
 
 La version de Symfony est la 2.7, la documentation d'installation est ici http://symfony.com/doc/2.7/setup.html.
 
+Se placer dans le répertoire ASF2, puis lancer la commande **composer update** : cela va mettre à jour Symfony et les librairies dans le répertoire vendor.
+
 Il faut ensuite paramétrer le serveur web pour pointer vers le répertoire ASF2. 
     
 
 Le paramétrage
 --------------------------------------------------------------------------
-Le paramétrage s'effectue dans les fichiers de config dans ASF2\app\config
+Le paramétrage s'effectue dans les fichiers de config dans ASF2\app\config. Il faut renommer les fichiers "_sample" et adapter les paramètres.
 
 * config.yml : La partie à configurer concerne le ldap et groupie
     
