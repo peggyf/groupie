@@ -11,7 +11,7 @@ body {
     border: 0 none;
     color: #666666;
     font-family: sans-serif, helvetica;
-    font-size: 72%;
+    font-size: 85%;
     margin: auto;
     outline: 0 none;
     padding: 0;
@@ -143,7 +143,7 @@ a {
 #name-and-slogan {
     border: 0 solid;
     float: right;
-    margin: 40px 0 30px 330px;
+    margin: 40px 0 0 0;
     padding-left: 0;
     padding-right: 20px;
     text-align: right;
