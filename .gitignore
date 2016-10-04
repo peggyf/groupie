@@ -5,8 +5,10 @@
 /ASF2/app/config/security_cas.yml
 /ASF2/app/cache/*
 /ASF2/app/logs/*
+/ASF2/vendor/*
 *~
 *.swp
 *.bak
 *.bck
+*.lock
 Thumbs.db
