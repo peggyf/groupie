@@ -70,8 +70,8 @@ class Client
         $connect = implode(',', $servers);
 
         //echo $connect;
-        //$this->link = @ldap_connect($connect);
-        $this->link = @ldap_connect("ldapmaitre-test.univ-amu.fr",389);
+        $this->link = @ldap_connect($connect);
+
 
         if (!$this->link) {
             throw new \Exception('['.ldap_errno($this->link).'] '.ldap_error($this->link));
