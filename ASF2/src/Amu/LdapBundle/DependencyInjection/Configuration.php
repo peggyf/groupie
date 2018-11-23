@@ -41,6 +41,7 @@ class Configuration implements ConfigurationInterface
                                     ->children()
                                         ->scalarNode('host')->isRequired()->end()
                                         ->integerNode('port')->isRequired()->end()
+                                        ->booleanNode('ssl')->defaultValue(false)->end()
                                     ->end()
                                 ->end()
                             ->end()
