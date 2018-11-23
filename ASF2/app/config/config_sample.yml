@@ -99,6 +99,7 @@ amu_ldap:
             network_timeout: 3
             protocol_version: 3
             base_dn: dc=univ-amu,dc=fr
+            objectclass_group: groupOfNames,AMUGroup,top
 
 amu_groupie:
     logs:

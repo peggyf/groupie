@@ -170,13 +170,11 @@ public function getFlag()
 {
     return($this->flag);
 }
-  /**
 
- * @return  \Amu\AppBundle\Service\Ldap
-
- */
-
- public function infosGroupeLdap() 
+ /**
+  * @return  \Amu\AppBundle\Service\Ldap
+  */
+ public function infosGroupeLdap($parameters)
  {
    $infogroupe = array();
    $addgroup = array();
@@ -184,39 +182,35 @@ public function getFlag()
    $addgroup['cn'] = $this->cn;
    $addgroup['description'] = $this->description;
    if ($this->amugroupfilter != "") {
-        $addgroup['amuGroupFilter'] = $this->amugroupfilter;
+      $filter_field = $parameters['groupfilter'];
+      $addgroup[$filter_field] = $this->amugroupfilter;
    }
-   
-   $addgroup['objectClass'][0] = "groupOfNames";
-   $addgroup['objectClass'][1] = "AMUGroup";
-   $addgroup['objectClass'][2] = "top";
-   
-   $infogroupe['dn'] = "cn=".$this->cn.", ou=groups, dc=univ-amu, dc=fr";
 
-   $infogroupe['infos'] = $addgroup;  
+   $addgroup['objectClass'] = $parameters['objectclasses'];
+
+   $infogroupe['dn'] = sprintf('cn=%s, %s', $this->cn, $parameters['ou']);
+
+   $infogroupe['infos'] = $addgroup;
 
     return($infogroupe);
  }
- 
- public function infosGroupePriveLdap($uid) 
+
+ public function infosGroupePriveLdap($parameters)
  {
    $infogroupe = array();
    $addgroup = array();
 
    // on préfixe le nom du groupe avec l'uid de l'utilisateur qui crée le groupe
-   $addgroup['cn'] = 'amu:perso:'.$uid.':'.$this->cn;
+   $addgroup['cn'] = $parameters['prefix'].':'.$this->cn;
    $addgroup['description'] = $this->description;
-      
-   $addgroup['objectClass'][0] = "groupOfNames";
-   $addgroup['objectClass'][1] = "AMUGroup";
-   $addgroup['objectClass'][2] = "top";
-   
-   $infogroupe['dn'] = "cn=amu:perso:".$uid.':'.$this->cn.", ou=private, ou=groups, dc=univ-amu, dc=fr";
 
-   $infogroupe['infos'] = $addgroup;  
+   $addgroup['objectClass'] = $parameters['objectclasses'];
+
+   $infogroupe['dn'] = sprintf('cn=%s, %s', $addgroup['cn'], $parameters['ou']);
+
+   $infogroupe['infos'] = $addgroup;
 
     return($infogroupe);
  }
 
-  
 };

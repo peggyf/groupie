@@ -47,6 +47,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('relative_dn')->isRequired()->end()
                             ->scalarNode('password')->isRequired()->end()
                             ->scalarNode('base_dn')->defaultValue('ou=people,dc=univ-amu,dc=fr')->end()
+                            ->scalarNode('objectclass_group')->defaultValue('groupOfNames,AMUGroup,top')->end()
                             ->integerNode('network_timeout')->isRequired()->end()
                             ->integerNode('protocol_version')->isRequired()->end()
                             ->integerNode('referrals')->end()
