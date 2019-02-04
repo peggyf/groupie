@@ -23,7 +23,8 @@ function initdatatable(elt) {
                 "next":       "Suivant",
                 "previous":   "Précédent"
             }
-        }
+        },
+        "iDisplayLength": 25
     })
 };
 
@@ -50,11 +51,11 @@ function initdatatable_groupupdate(elt) {
             }
         },
         "columns": [
-            null, null,null, null,
+            null, null,null, null, null, null,
             { "orderDataType": "dom-checkbox" },
             { "orderDataType": "dom-checkbox" }
-        ]
-
+        ],
+        "iDisplayLength": 25
     })
 };
 
@@ -85,8 +86,8 @@ function initdatatable_userupdate(elt) {
             null,
             { "orderDataType": "dom-checkbox" },
             { "orderDataType": "dom-checkbox" }
-        ]
-
+        ],
+        "iDisplayLength": 25
     })
 };
 
@@ -116,7 +117,7 @@ function initdatatable_add(elt) {
             null, null,
             { "orderDataType": "dom-checkbox" },
             { "orderDataType": "dom-checkbox" }
-        ]
-
+        ],
+        "iDisplayLength": 25
     })
 };

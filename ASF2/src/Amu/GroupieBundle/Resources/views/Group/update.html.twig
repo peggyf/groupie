@@ -61,6 +61,8 @@
                         <th>Identifiant</th>
                         <th>Mail</th>
                         <th>Téléphone</th>
+                        <th>Type</th>
+                        <th>Affectation principale</th>
                         <th>Membre</th>
                         <th>Admin</th>
                     </tr>
@@ -71,8 +73,10 @@
                         <tr>
                             <td style="vertical-align: middle;"> {{ group.members[loop.index0].displayname }} </td>
                             <td style="vertical-align: middle;"> {{ group.members[loop.index0].uid }} </td>
-                            <td style="vertical-align: middle;"> <a href="mailto:{{group.members[loop.index0].mail}}"> {{ group.members[loop.index0].mail }} </td>
+                            <td style="vertical-align: middle;"> <a href="mailto:{{group.members[loop.index0].mail}}"> {{ group.members[loop.index0].mail }} </a></td>
                             <td style="vertical-align: middle;"> {{ group.members[loop.index0].tel }} </td>
+                            <td style="vertical-align: middle;"> {{ group.members[loop.index0].primaff }} </td>
+                            <td style="vertical-align: middle;"> {{ group.members[loop.index0].aff }} </td>
                             <td style="vertical-align: middle;"> {{ form_widget(m.member) }} </td>
                             <td style="vertical-align: middle;"> {{ form_widget(m.admin) }} </td>
                         </tr>

@@ -478,7 +478,7 @@ class GroupController extends Controller {
     public function searchmodAction(Request $request) {
         return $this->redirect($this->generateUrl('group_search', array('opt' => 'mod', 'uid'=>'')));
     }
-    
+
     /**
      * Ajout de personnes dans un groupe
      *
@@ -758,6 +758,15 @@ class GroupController extends Controller {
                 $users[$i]->setTel($arUsers[$i][$this->config_users['tel']][0]);
             else 
                 $users[$i]->setTel("");
+            if (isset($arUsers[$i][$this->config_users['primaff']][0]))
+                $users[$i]->setPrimAff($arUsers[$i][$this->config_users['primaff']][0]);
+            else
+                $users[$i]->setPrimAff("");
+            if (isset($arUsers[$i][$this->config_users['aff']][0]))
+                $users[$i]->setAff($arUsers[$i][$this->config_users['aff']][0]);
+            else
+                $users[$i]->setAff("");
+
         }
         
         // Recherche des administrateurs du groupe
@@ -780,6 +789,14 @@ class GroupController extends Controller {
                 $admins[$i]->setTel($result[0][$this->config_users['tel']][0]);
             else 
                 $admins[$i]->setTel("");
+            if (isset($result[0][$this->config_users['aff']][0]))
+                $admins[$i]->setAff($result[0][$this->config_users['aff']][0]);
+            else
+                $admins[$i]->setAff("");
+            if (isset($result[0][$this->config_users['primaff']][0]))
+                $admins[$i]->setPrimAff($result[0][$this->config_users['primaff']][0]);
+            else
+                $admins[$i]->setPrimAff("");
             
         }
         }
@@ -1518,6 +1535,14 @@ class GroupController extends Controller {
                 $members[$i]->setTel($arUsers[$i][$this->config_users['tel']][0]);
             else
                 $members[$i]->setTel("");
+            if (isset($arUsers[$i][$this->config_users['aff']][0]))
+                $members[$i]->setAff($arUsers[$i][$this->config_users['aff']][0]);
+            else
+                $members[$i]->setAff("");
+            if (isset($arUsers[$i][$this->config_users['primaff']][0]))
+                $members[$i]->setPrimAff($arUsers[$i][$this->config_users['primaff']][0]);
+            else
+                $members[$i]->setPrimAff("");
             $members[$i]->setMember(TRUE);
             $members[$i]->setAdmin(FALSE);
            
@@ -1533,6 +1558,14 @@ class GroupController extends Controller {
                 $membersini[$i]->setTel($arUsers[$i][$this->config_users['tel']][0]);
             else
                 $membersini[$i]->setTel("");
+            if (isset($arUsers[$i][$this->config_users['aff']][0]))
+                $membersini[$i]->setAff($arUsers[$i][$this->config_users['aff']][0]);
+            else
+                $membersini[$i]->setAff("");
+            if (isset($arUsers[$i][$this->config_users['primaff']][0]))
+                $membersini[$i]->setPrimAff($arUsers[$i][$this->config_users['primaff']][0]);
+            else
+                $membersini[$i]->setPrimAff("");
             $membersini[$i]->setMember(TRUE);
             $membersini[$i]->setAdmin(FALSE);
             
@@ -1568,6 +1601,14 @@ class GroupController extends Controller {
                         $memb->setTel($result[0][$this->config_users['tel']][0]);
                     else
                         $memb->setTel("");
+                    if (isset($result[0][$this->config_users['aff']][0]))
+                        $memb->setAff($result[0][$this->config_users['aff']][0]);
+                    else
+                        $memb->setAff("");
+                    if (isset($result[0][$this->config_users['primaff']][0]))
+                        $memb->setPrimAff($result[0][$this->config_users['primaff']][0]);
+                    else
+                        $memb->setPrimAff("");
                     $memb->setMember(FALSE);
                     $memb->setAdmin(TRUE);
                     $members[] = $memb;
@@ -1584,6 +1625,14 @@ class GroupController extends Controller {
                         $membini->setTel($result[0][$this->config_users['tel']][0]);
                     else
                         $membini->setTel("");
+                    if (isset($result[0][$this->config_users['aff']][0]))
+                        $membini->setAff($result[0][$this->config_users['aff']][0]);
+                    else
+                        $membini->setAff("");
+                    if (isset($result[0][$this->config_users['primaff']][0]))
+                        $membini->setPrimAff($result[0][$this->config_users['primaff']][0]);
+                    else
+                        $membini->setPrimAff("");
                     $membini->setMember(FALSE);
                     $membini->setAdmin(TRUE);
                     $membersini[] = $membini;

@@ -18,6 +18,8 @@ class Member {
   protected $displayname;
   protected $mail;
   protected $tel;
+  protected $aff;
+  protected $primaff;
   protected $member;
   protected $admin;
   
@@ -79,7 +81,28 @@ class Member {
  public function setTel($tel)
  {
     $this->tel = $tel;
- } 
+ }
+
+    /**
+     * Set supannEntiteAffectationPrincipale
+     *
+     * @param string $aff
+     */
+    public function setAff($aff)
+    {
+        $this->aff = $aff;
+    }
+
+    /**
+     * Set eduPersonPrimaryAffiliation
+     *
+     * @param string $primaff
+     */
+    public function setPrimAff($primaff)
+    {
+        $this->primaff = $primaff;
+    }
+
  /**
   * Get uid
   *
@@ -112,6 +135,23 @@ class Member {
  {
     return ($this->tel);
  }
+    /**
+     * Get supannEntiteAffectation
+     *
+     */
+    public function getAff()
+    {
+        return ($this->aff);
+    }
+
+    /**
+     * Get supannEntitePrimaryAffectation
+     *
+     */
+    public function getPrimAff()
+    {
+        return ($this->primaff);
+    }
  /**
   * Get member
   *

@@ -87,7 +87,7 @@ class User {
     $this->comp = $comp;
  } 
  /**
-  * Set supannEntiteAffectation
+  * Set supannEntiteAffectationPrincipale
   *
   * @param string $aff
  */
@@ -97,7 +97,7 @@ class User {
  }
 
 /**
- * Set supannEntiteAffectationPrincipale
+ * Set eduPersonPrimaryAffiliation
  *
  * @param string $primaff
  */

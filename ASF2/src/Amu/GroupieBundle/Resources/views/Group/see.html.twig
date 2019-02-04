@@ -55,7 +55,9 @@
                 <thead>
                     <tr>
                         <th>Nom complet</th>
-                        <th>Identifiant</th>
+                        {%  if mail == 1 %}
+                            <th>Identifiant</th>
+                        {% endif %}
                         <th>Mail</th>
                         <th>Téléphone</th>
                     </tr>
@@ -64,7 +66,9 @@
                     {% for admin in admins %}
                         <tr>
                             <td style="vertical-align: middle;">{{admin.displayname }}</td>
-                            <td style="vertical-align: middle;">{{admin.uid }}</td>
+                            {%  if mail == 1 %}
+                                <td style="vertical-align: middle;">{{admin.uid }}</td>
+                            {% endif %}
                             <td style="vertical-align: middle;"><a href="mailto:{{admin.mail}}">{{admin.mail }}</td>
                             <td style="vertical-align: middle;">{{admin.tel }}</td>
                         </tr>
@@ -84,22 +88,26 @@
                 <thead>
                     <tr>
                         <th>Nom complet</th>
-                        <th>Identifiant</th>
                         {%  if mail == 1 %}
+                            <th>Identifiant</th>
                             <th>Mail</th>
+                            <th>Téléphone</th>
                         {%  endif %}
-                        <th>Téléphone</th>
+                        <th>Type</th>
+                        <th>Affectation principale</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for user in users %}
                     <tr >
                         <td style="vertical-align: middle;">{{user.displayname }}</td>
-                        <td style="vertical-align: middle;">{{user.uid }}</td>
                         {%  if mail == 1 %}
+                            <td style="vertical-align: middle;">{{user.uid }}</td>
                             <td style="vertical-align: middle;"><a href="mailto:{{user.mail}}">{{user.mail }}</td>
+                            <td style="vertical-align: middle;">{{user.tel }}</td>
                         {%  endif %}
-                        <td style="vertical-align: middle;">{{user.tel }}</td>
+                        <td style="vertical-align: middle;">{{user.primaff }}</td>
+                        <td style="vertical-align: middle;">{{user.aff }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

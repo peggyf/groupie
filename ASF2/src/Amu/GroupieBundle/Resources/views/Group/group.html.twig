@@ -48,23 +48,26 @@
         <div>
             {{ form_label(form.cn) }}
             {{ form_errors(form.cn) }}
-            {{ form_widget(form.cn) }}
+            {{ form_widget(form.cn, { 'attr': { 'size' : 32 } }) }}
         </div>
         <br>
         <div>
             {{ form_label(form.description) }}
             {{ form_errors(form.description) }}
-            {{ form_widget(form.description) }}
+            {{ form_widget(form.description,  { 'attr': { 'size' : 100 } }) }}
 
         </div>
         <br>
         <div>
             {{ form_label(form.amugroupfilter) }}
             {{ form_errors(form.amugroupfilter) }}
-            {{ form_widget(form.amugroupfilter) }}
+            {{ form_widget(form.amugroupfilter, { 'attr': { 'size' : 128 } }) }}
+
 
         </div>
         <br>
+        Exemple de filtre à partir d'une requête SQL : dbi:mysql:host=server.univ.fr;port=3306;database=name|user|pwduser|SELECT * from V_USERS
+        <br><br>
         <p>
             <div class="buttons">
                 <button type="submit" name="btCreer"><img align="absmiddle" src="{{ asset('bundles/amugroupie/images/add-2.png') }}" />&nbsp;Créer&nbsp;</button>
