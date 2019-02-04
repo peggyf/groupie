@@ -37,6 +37,9 @@ class GroupController extends Controller {
     protected $config_groups;
     protected $config_private;
     protected $base;
+    protected $ou;
+    protected $private_ou;
+    protected $objectclasses;
 
     protected function init_config()
     {
@@ -53,6 +56,21 @@ class GroupController extends Controller {
             $profils = $this->container->getParameter('amu.ldap.profils');
             $profil = $profils[$profil_name];
             $this->base = $profil['base_dn'];
+        }
+
+        if (isset($this->ou) === false) {
+            // OU des groupes institutionnels.
+            $this->ou = sprintf('%s,%s', $this->config_groups['group_branch'], $this->base);
+        }
+
+        if (isset($this->private_ou) === false) {
+            // OU des groupes privés.
+            $this->private_ou = sprintf('%s,%s', $this->config_private['private_branch'], $this->base);
+        }
+
+        if (isset($this->objectclasses) === false) {
+            // ObjectClasses LDAP nécessaires pour créer une nouvelle entrée Group.
+            $this->objectclasses = explode(',', $profil['objectclass_group']);
         }
     }
 
@@ -896,7 +914,12 @@ class GroupController extends Controller {
             $adm = $request->getSession()->get('phpCAS_user');
                 
             // Création du groupe dans le LDAP
-            $infogroup = $group->infosGroupeLdap();
+            $parameters = array();
+            $parameters['objectclasses'] = $this->objectclasses;
+            $parameters['ou'] = $this->ou;
+            $parameters['groupfilter'] = $this->config_groups['groupfilter'];
+            $infogroup = $group->infosGroupeLdap($parameters);
+
             // On récupère le service ldapfonctions
             $ldapfonctions = $this->container->get('groupie.ldapfonctions');
             $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
@@ -987,7 +1010,12 @@ class GroupController extends Controller {
                 $ldapfonctions->SetLdap($this->get('amu.ldap'), $this->config_users, $this->config_groups, $this->config_private);
 
                 // Création du groupe dans le LDAP
-                $infogroup = $group->infosGroupePriveLdap($adm);
+                $parameters = array();
+                $parameters['objectclasses'] = $this->objectclasses;
+                $parameters['ou'] = $this->ou;
+                $parameters['prefix'] = $this->config_private['prefix'].$adm;
+                $infogroup = $group->infosGroupePriveLdap($parameters);
+
                 $b = $ldapfonctions->createGroupeLdap($infogroup['dn'], $infogroup['infos']);
                 if ($b==true) { 
                     //Le groupe a bien été créé
