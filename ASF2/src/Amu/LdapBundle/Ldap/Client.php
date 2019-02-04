@@ -62,16 +62,16 @@ class Client
         }
 
         $servers = [];
-        
         foreach ($this->profil['servers'] as $server) {
-            $servers[] = implode(':', $server);
+            if ($server['ssl'] === true) {
+                $servers[] = sprintf('ldaps://%s:%s', $server['host'], $server['port']);
+            } else {
+                $servers[] = sprintf('ldap://%s:%s', $server['host'], $server['port']);
+            }
         }
-        
-        $connect = implode(',', $servers);
 
-        //echo $connect;
+        $connect = implode(' ', $servers);
         $this->link = @ldap_connect($connect);
-
 
         if (!$this->link) {
             throw new \Exception('['.ldap_errno($this->link).'] '.ldap_error($this->link));
