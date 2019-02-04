@@ -124,8 +124,8 @@ Le paramétrage s'effectue dans les fichiers de config dans ASF2\app\config. Il 
                 mail: mail
                 tel: telephonenumber
                 comp: amucomposante
-                aff: supannentiteaffectation
-                primaff: supannentiteaffectationprincipale
+                aff: supannentiteaffectationprincipale
+                primaff: edupersonprimaryaffiliation
                 campus: amucampus
                 site: amusite
                 filter: (&(!(edupersonprimaryaffiliation=student))(!(edupersonprimaryaffiliation=alum))(!(edupersonprimaryaffiliation=oldemployee))(amudatevalidation=*))
