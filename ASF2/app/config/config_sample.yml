@@ -94,11 +94,13 @@ amu_ldap:
                 primary:
                     host: ldap.univ.fr
                     port: 389
+                    ssl: false
             relative_dn: cn=admgroup,ou=system,dc=univ-amu,dc=fr
             password: pwdadmgroup
             network_timeout: 3
             protocol_version: 3
             base_dn: dc=univ-amu,dc=fr
+            objectclass_group: groupOfNames,AMUGroup,top
 
 amu_groupie:
     logs:
