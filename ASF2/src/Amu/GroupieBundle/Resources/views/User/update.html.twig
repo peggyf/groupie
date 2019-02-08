@@ -116,7 +116,7 @@
     </div>
 
     {# Ajout d'une fonction javascript pour gérer les lignes cachées de la datatable #}
-    <script type="text/javascript" src="http://cdn.datatables.net/plug-ins/1.10.7/api/fnGetHiddenNodes.js"></script>
+    <script type="text/javascript" src="{{ asset('bundles/amugroupie/js/fnGetHiddenNodes.js') }}"></script>
     <script type="text/javascript">
         $('#useredit').submit( function() {
             oTable = $('#memb').dataTable();
